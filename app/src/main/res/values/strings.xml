@@ -24,4 +24,12 @@
     <!-- General instructions in the main activity. -->
     <string name="search_instructions">Press the search key to look up a word</string>
 
+    <string name="age">Age:</string>
+    <string name="language">Language:</string>
+    <string name="nationality">Nationality:</string>
+    <string name="tags">Tags:</string>
+    <string name="distance">Distance:</string>
+
+    <string name="placeholder">placeholder</string>
+
 </resources>

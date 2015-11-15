@@ -14,6 +14,7 @@ import android.view.View;
 
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentPeople;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentStories;
+import at.ac.tuwien.inso.refugeestories.utils.Consts;
 import at.ac.tuwien.inso.refugeestories.utils.MockFactory;
 import at.ac.tuwien.inso.refugeestories.utils.adapters.ViewPagerAdapter;
 
@@ -39,12 +40,12 @@ public class MainActivity extends FragmentActivity {
 
     private void doMySearch(String query) {
         int position = viewPager.getCurrentItem();
-        if(position == 0) {
+        if(position == Consts.STORIES) {
             FragmentStories fragmentStories = (FragmentStories) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + position);
-            fragmentStories.updateStoriesList(MockFactory.getStories(6));
-        } else if(position == 1) {
+            fragmentStories.updateStoriesList(MockFactory.getPeople(6));
+        } else if(position == Consts.PEOPLE) {
             FragmentPeople fragmentPeople = (FragmentPeople) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + position);
-            // XXX @ ASA TODO
+            fragmentPeople.updateStoriesList(MockFactory.getPeople(7));
         } else {
             throw new IllegalArgumentException("Unknown Fragment");
         }
