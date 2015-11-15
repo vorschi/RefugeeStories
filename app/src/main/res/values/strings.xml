@@ -1,6 +1,27 @@
 <resources>
     <string name="app_name">RefugeeStories</string>
 
+    <string name="app_label">Label</string>
+
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string name="contact">find a contact&#8230;</string>
+    <string name="search">Search</string>
+
+    <!-- The label for use as a searchable item -->
+    <string name="search_label">Dictionary</string>
+
+    <!-- The hint text that appears in the search box. -->
+    <string name="search_hint">Search the dictionary</string>
+
+    <!-- The menu entry that invokes search. -->
+    <string name="menu_search">Search</string>
+
+    <!-- The description that will show up in the search settings for this source.  -->
+    <string name="settings_description">Definitions of words</string>
+
+    <!-- General instructions in the main activity. -->
+    <string name="search_instructions">Press the search key to look up a word</string>
+
 </resources>
