@@ -51,11 +51,11 @@ public class MockFactory {
 
     private static Story createDummyStory() {
         Story s = new Story();
-        s.setAuthor("John Doe");
+        s.setAuthor("Amer Kamakawiwoʻole");
         s.setTitle("Some title");
         s.setText(Consts.STORY_TEXT);
         s.setDate(DateTime.now());
-        s.setLocation("Wien");
+        s.setLocation("Rudolfsheim-Fünfhaus");
         s.setImgResId(R.drawable.wien);
         return s;
     }
