@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_selected="true"
-        android:drawable="@drawable/not_sel" />
+        android:drawable="@drawable/ic_add_alert_white_18dp_selected" />
     <item
         android:state_selected="false"
-        android:drawable="@drawable/not" />
+        android:drawable="@drawable/ic_add_alert_white_18dp" />
 </selector>

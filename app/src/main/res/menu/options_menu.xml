@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:myApp="http://schemas.android.com/apk/res-auto">
-
-    <item android:id="@+id/search"
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/user"
+        android:icon="@drawable/ic_account_circle_white_24dp"
+        android:title="user"
+        android:showAsAction="always"/>
+    <item android:id="@+id/filter"
+        android:icon="@drawable/ic_filter_list_white_24dp"
         android:title="@string/search"
-        myApp:showAsAction="always"
-        android:actionViewClass="android.widget.SearchView" />
+        android:showAsAction="ifRoom"/>
+
 </menu>

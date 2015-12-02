@@ -38,7 +38,6 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
 
         mTabHost = (TabHost) findViewById(android.R.id.tabhost);
-
         mTabHost.setup();
 
         if (savedInstanceState != null) {
@@ -53,6 +52,9 @@ public class MainActivity extends FragmentActivity {
             mTabHost.setOnTabChangedListener(listener);
             initializeTabs();
         }
+
+        mTabHost.setCurrentTabByTag(TAB_EXPLORE);
+
     }
 
     private View createTabView(final int id, final String text) {
@@ -78,8 +80,6 @@ public class MainActivity extends FragmentActivity {
                 return findViewById(R.id.realtabcontent);
             }
         });
-
-        //spec.setIndicator(getString(R.string.tab_tags, getResources().getDrawable(R.drawable.mystories_selector)));
         spec.setIndicator(createTabView(R.drawable.mystories_selector, getString(R.string.tab_tags)));
         mTabHost.addTab(spec);
 
@@ -89,10 +89,8 @@ public class MainActivity extends FragmentActivity {
                 return findViewById(R.id.realtabcontent);
             }
         });
-        //spec.setIndicator(getString(R.string.tab_map, getResources().getDrawable(R.drawable.explore_selector)));
         spec.setIndicator(createTabView(R.drawable.explore_selector, getString(R.string.tab_map)));
         mTabHost.addTab(spec);
-
 
         spec = mTabHost.newTabSpec(TAB_NOTIFICATIONS);
         spec.setContent(new TabHost.TabContentFactory() {
@@ -100,7 +98,6 @@ public class MainActivity extends FragmentActivity {
                 return findViewById(R.id.realtabcontent);
             }
         });
-        //spec.setIndicator(getString(R.string.tab_settings, getResources().getDrawable(R.drawable.notifications_selector)));
         spec.setIndicator(createTabView(R.drawable.notifications_selector, getString(R.string.tab_settings)));
         mTabHost.addTab(spec);
 
@@ -125,7 +122,6 @@ public class MainActivity extends FragmentActivity {
                 pushFragments(new FragmentNotification(), false,
                         false, null);
             }
-
         }
     };
 
@@ -183,84 +179,13 @@ public class MainActivity extends FragmentActivity {
         super.onBackPressed();
     }
 
-
-    /*
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        setTitle("Explore");
-
-        // Check that the activity is using the layout version with
-        // the fragment_container FrameLayout
-        if (findViewById(R.id.fragment_container) != null) {
-
-            if (savedInstanceState != null) {
-                return;
-            }
-
-            FragmentExplore firstFragment = new FragmentExplore();
-            firstFragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, firstFragment).commit();
-        }
-    }
-
-    public void openStories(View v){
-        this.fragmentTransacton(new FragmentStory());
-    }
-    public void openExplore(View v){
-        this.fragmentTransacton(new FragmentExplore());
-    }
-    public void openNotifications(View v){
-        this.fragmentTransacton(new FragmentNotification());
-    }
-
-    private void fragmentTransacton(Fragment newFragment){
-        Bundle args = new Bundle();
-        //args.putInt(newFragment.ARG_POSITION, position);
-        newFragment.setArguments(args);
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.fragment_container, newFragment);
-        transaction.addToBackStack(null);
-
-        transaction.commit();
-    }
-
-    /*
-    private void doMySearch(String query) {
-        int position = viewPager.getCurrentItem();
-        if(position == Consts.STORIES) {
-            FragmentStory fragmentStories = (FragmentStory) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + position);
-            fragmentStories.updateStoriesList(MockFactory.getPeople(6));
-        } else if(position == Consts.PEOPLE) {
-            FragmentNotification fragmentPeople = (FragmentNotification) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + position);
-            fragmentPeople.updateStoriesList(MockFactory.getPeople(7));
-        } else {
-            throw new IllegalArgumentException("Unknown Fragment");
-        }
-    }
-    */
-
-@Override
-public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
         return true;
-        }
+    }
 
-@Override
-public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        case R.id.search:
-        onSearchRequested();
-        return true;
-default:
-        return false;
-        }
-        }
 /*
     @Override
     protected void onNewIntent(Intent intent) {
@@ -277,4 +202,4 @@ default:
     */
 
 
-        }
+}

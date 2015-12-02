@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_selected="true"
-        android:drawable="@drawable/my_story_sel" />
+        android:drawable="@drawable/ic_create_white_18dp_selected" />
     <item
         android:state_selected="false"
-        android:drawable="@drawable/my_story" />
+        android:drawable="@drawable/ic_create_white_18dp" />
 </selector>
