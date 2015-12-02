@@ -1,5 +1,7 @@
 package at.ac.tuwien.inso.refugeestories.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import at.ac.tuwien.inso.refugeestories.R;
+import at.ac.tuwien.inso.refugeestories.utils.RecyclerItemClickListener;
 import at.ac.tuwien.inso.refugeestories.utils.adapters.StoryAdapter;
 import at.ac.tuwien.inso.refugeestories.utils.MockFactory;
 
@@ -19,6 +22,8 @@ import at.ac.tuwien.inso.refugeestories.utils.MockFactory;
  * Created by Vorschi, Amer Salkovic on 02.12.2015.
  */
 public class FragmentExplore extends Fragment {
+
+    private Context context;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -33,21 +38,17 @@ public class FragmentExplore extends Fragment {
         mRecyclerView = (RecyclerView) mFragmentLayout.findViewById(R.id.my_recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
-        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(new StoryAdapter(MockFactory.getStories(6)));
 
-        mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-            }
-        });
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Toast.makeText(context, "Story: " + position + " clicked!", Toast.LENGTH_SHORT).show();
+                    }
+                }));
 
         return mFragmentLayout;
     }
@@ -57,6 +58,11 @@ public class FragmentExplore extends Fragment {
         return f;
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.context = activity;
+    }
 }
 /*
     @Override
