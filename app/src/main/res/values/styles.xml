@@ -12,7 +12,7 @@
     </style>
 
     <style name="ActionBarTitleStyle" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">@android:color/secondary_text_dark</item>
     </style>
 
 </resources>

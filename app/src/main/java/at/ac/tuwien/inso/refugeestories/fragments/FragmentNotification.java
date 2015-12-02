@@ -14,23 +14,17 @@ import java.util.List;
 import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.domain.Person;
 import at.ac.tuwien.inso.refugeestories.utils.MockFactory;
-import at.ac.tuwien.inso.refugeestories.utils.adapters.PeopleAdapter;
 
 /**
- * Created by nn on 14.11.2015.
+ * Created by Amer Salkovic on 14.11.2015.
  */
-public class FragmentNotifications extends Fragment {
+public class FragmentNotification extends Fragment {
 
-    private ListView lvPeople;
-    private PeopleAdapter peopleAdapter;
     private Context context;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View contentView = inflater.inflate(R.layout.fragment_notifications, container, false);
-
-        lvPeople = (ListView) contentView.findViewById(R.id.lv_people);
-        updateStoriesList(MockFactory.getPeople(7));
 
         return contentView;
     }
@@ -41,13 +35,8 @@ public class FragmentNotifications extends Fragment {
         this.context = activity;
     }
 
-    public void updateStoriesList(List<Person> people) {
-        peopleAdapter = new PeopleAdapter(context, people);
-        lvPeople.setAdapter(peopleAdapter);
-    }
-
-    public static FragmentNotifications getInstance() {
-        FragmentNotifications f = new FragmentNotifications();
+    public static FragmentNotification getInstance() {
+        FragmentNotification f = new FragmentNotification();
         return f;
     }
 }

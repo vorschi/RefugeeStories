@@ -1,25 +1,41 @@
 package at.ac.tuwien.inso.refugeestories.fragments;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
 import at.ac.tuwien.inso.refugeestories.R;
+import at.ac.tuwien.inso.refugeestories.utils.adapters.StoryAdapter;
+import at.ac.tuwien.inso.refugeestories.utils.MockFactory;
 
 /**
- * Created by Vorschi on 02.12.2015.
+ * Created by Vorschi, Amer Salkovic on 02.12.2015.
  */
 public class FragmentExplore extends Fragment {
 
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+
+    private RelativeLayout mFragmentLayout;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_explore, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        mFragmentLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_explore, container, false);
+
+        mRecyclerView = (RecyclerView) mFragmentLayout.findViewById(R.id.my_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+
+        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(new StoryAdapter(MockFactory.getStories(6)));
+
+        return mFragmentLayout;
     }
 
     public static FragmentExplore getInstance() {
