@@ -19,8 +19,8 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentExplore;
-import at.ac.tuwien.inso.refugeestories.fragments.FragmentNotifications;
-import at.ac.tuwien.inso.refugeestories.fragments.FragmentStories;
+import at.ac.tuwien.inso.refugeestories.fragments.FragmentNotification;
+import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory;
 
 public class MainActivity extends FragmentActivity {
 
@@ -112,13 +112,13 @@ public class MainActivity extends FragmentActivity {
             mCurrentTab = tabId;
 
             if (tabId.equals(TAB_TAGS)) {
-                pushFragments(FragmentStories.getInstance(), false,
+                pushFragments(FragmentStory.getInstance(), false,
                         false, null);
             } else if (tabId.equals(TAB_MAP)) {
                 pushFragments(FragmentExplore.getInstance(), false,
                         false, null);
             } else if (tabId.equals(TAB_SETTINGS)) {
-                pushFragments(new FragmentNotifications(), false,
+                pushFragments(new FragmentNotification(), false,
                         false, null);
             }
 
@@ -203,13 +203,13 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void openStories(View v){
-        this.fragmentTransacton(new FragmentStories());
+        this.fragmentTransacton(new FragmentStory());
     }
     public void openExplore(View v){
         this.fragmentTransacton(new FragmentExplore());
     }
     public void openNotifications(View v){
-        this.fragmentTransacton(new FragmentNotifications());
+        this.fragmentTransacton(new FragmentNotification());
     }
 
     private void fragmentTransacton(Fragment newFragment){
@@ -229,10 +229,10 @@ public class MainActivity extends FragmentActivity {
     private void doMySearch(String query) {
         int position = viewPager.getCurrentItem();
         if(position == Consts.STORIES) {
-            FragmentStories fragmentStories = (FragmentStories) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + position);
+            FragmentStory fragmentStories = (FragmentStory) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + position);
             fragmentStories.updateStoriesList(MockFactory.getPeople(6));
         } else if(position == Consts.PEOPLE) {
-            FragmentNotifications fragmentPeople = (FragmentNotifications) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + position);
+            FragmentNotification fragmentPeople = (FragmentNotification) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + position);
             fragmentPeople.updateStoriesList(MockFactory.getPeople(7));
         } else {
             throw new IllegalArgumentException("Unknown Fragment");

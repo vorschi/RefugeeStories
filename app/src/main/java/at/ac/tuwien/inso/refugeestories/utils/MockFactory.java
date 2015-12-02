@@ -7,12 +7,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.domain.Person;
+import at.ac.tuwien.inso.refugeestories.domain.Story;
 
 /**
  * Created by Amer Salkovic on 14.11.2015.
  */
 public class MockFactory {
+
+    public static List<Story> getStories(int content) {
+        List<Story> stories = new ArrayList<>();
+        for(int i = 0; i < content; i++) {
+            stories.add(createDummyStory());
+        }
+        return stories;
+    }
 
     public static List<Person> getPeople(int limit) {
         int count = getRandomNumber(limit);
@@ -37,5 +47,16 @@ public class MockFactory {
         p.setDateTime(DateTime.now());
         p.setStory(Consts.STORY_TEXT);
         return p;
+    }
+
+    private static Story createDummyStory() {
+        Story s = new Story();
+        s.setAuthor("Amer Kamakawiwoʻole");
+        s.setTitle("Some title");
+        s.setText(Consts.STORY_TEXT);
+        s.setDate(DateTime.now());
+        s.setLocation("Rudolfsheim-Fünfhaus");
+        s.setImgResId(R.drawable.wien);
+        return s;
     }
 }

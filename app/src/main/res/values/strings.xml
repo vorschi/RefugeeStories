@@ -35,4 +35,7 @@
     <string name="tab_tags">My Stories</string>
     <string name="tab_map">Explore</string>
     <string name="tab_settings">Notifications</string>
+    <string name="title_activity_my">MyActivity</string>
+
+>>>>>>> Stashed changes
 </resources>
