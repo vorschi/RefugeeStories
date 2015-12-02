@@ -31,5 +31,8 @@
     <string name="distance">Distance:</string>
 
     <string name="placeholder">placeholder</string>
-
+    
+    <string name="tab_tags">My Stories</string>
+    <string name="tab_map">Explore</string>
+    <string name="tab_settings">Notifications</string>
 </resources>

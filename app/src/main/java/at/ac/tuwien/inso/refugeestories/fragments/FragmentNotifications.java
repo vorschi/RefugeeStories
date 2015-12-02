@@ -45,4 +45,9 @@ public class FragmentNotifications extends Fragment {
         peopleAdapter = new PeopleAdapter(context, people);
         lvPeople.setAdapter(peopleAdapter);
     }
+
+    public static FragmentNotifications getInstance() {
+        FragmentNotifications f = new FragmentNotifications();
+        return f;
+    }
 }

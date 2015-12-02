@@ -14,39 +14,37 @@
 
     </FrameLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <TabHost
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@android:id/tabhost"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="bottom">
+        android:layout_height="match_parent">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="My Stories"
-            android:id="@+id/myStoriesBtn"
-            android:layout_weight="1"
-            android:onClick="openStories"
-            android:gravity="center"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Explore"
-            android:id="@+id/exploreBtn"
-            android:layout_weight="1"
-            android:onClick="openExplore"
-            android:gravity="center"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Notifications"
-            android:id="@+id/notificationsBtn"
-            android:layout_weight="1"
-            android:onClick="openNotifications"
-            android:gravity="center"/>
-    </LinearLayout>
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="0"/>
+            <FrameLayout
+                android:id="@+id/realtabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+                <!--android:background="@drawable/bg_main_app_gradient"-->
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:background="#000000"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"/>
+        </LinearLayout>
+    </TabHost>
 
 </LinearLayout>
 

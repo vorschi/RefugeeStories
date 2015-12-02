@@ -45,4 +45,9 @@ public class FragmentStories extends Fragment {
         storiesAdapter = new StoriesAdapter(context, people);
         lvStories.setAdapter(storiesAdapter);
     }
+
+    public static FragmentStories getInstance() {
+        FragmentStories f = new FragmentStories();
+        return f;
+    }
 }
