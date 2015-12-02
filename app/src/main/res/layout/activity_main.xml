@@ -1,51 +1,52 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_centerVertical="true"
+    android:layout_centerHorizontal="true">
 
-    tools:context=".MainActivity">
-
-    <!--
-    <EditText
-        android:id="@+id/searchView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-        -->
+        android:layout_height="match_parent"
+        android:id="@+id/fragment_container"
+        android:layout_weight="1">
 
-    <!--
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="fill_parent"
+    </FrameLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/search_instructions"
-        android:textColor="?android:textColorPrimary"
-        android:textSize="17dp" />
-        -->
+        android:gravity="bottom">
 
-    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v4.view.PagerTabStrip
-            android:layout_width="match_parent"
+        <Button
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:background="@color/background_material_dark"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:textColor="@color/primary_text_default_material_dark" />
+            android:text="My Stories"
+            android:id="@+id/myStoriesBtn"
+            android:layout_weight="1"
+            android:onClick="openStories"
+            android:gravity="center"/>
 
-        <!--
-        <ImageView
-            android:id="@+id/img_tagcloud"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:src="@drawable/tagcloud" />
-            -->
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Explore"
+            android:id="@+id/exploreBtn"
+            android:layout_weight="1"
+            android:onClick="openExplore"
+            android:gravity="center"/>
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notifications"
+            android:id="@+id/notificationsBtn"
+            android:layout_weight="1"
+            android:onClick="openNotifications"
+            android:gravity="center"/>
+    </LinearLayout>
 
-    </android.support.v4.view.ViewPager>
+</LinearLayout>
 
-
-</RelativeLayout>

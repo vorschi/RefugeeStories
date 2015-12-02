@@ -19,7 +19,7 @@ import at.ac.tuwien.inso.refugeestories.utils.adapters.PeopleAdapter;
 /**
  * Created by nn on 14.11.2015.
  */
-public class FragmentPeople extends Fragment {
+public class FragmentNotifications extends Fragment {
 
     private ListView lvPeople;
     private PeopleAdapter peopleAdapter;
@@ -27,7 +27,7 @@ public class FragmentPeople extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View contentView = inflater.inflate(R.layout.fragment_people, container, false);
+        View contentView = inflater.inflate(R.layout.fragment_notifications, container, false);
 
         lvPeople = (ListView) contentView.findViewById(R.id.lv_people);
         updateStoriesList(MockFactory.getPeople(7));

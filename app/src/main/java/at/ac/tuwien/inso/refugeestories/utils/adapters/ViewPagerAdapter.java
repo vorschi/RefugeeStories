@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.List;
 
+import at.ac.tuwien.inso.refugeestories.fragments.FragmentNotifications;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentStories;
-import at.ac.tuwien.inso.refugeestories.fragments.FragmentPeople;
 
 /**
  * Created by Amer Salkovic on 14.11.2015.
@@ -40,8 +40,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
             // Open People
             case 1:
-                FragmentPeople fragmentPeople = new FragmentPeople();
-                return fragmentPeople;
+                FragmentNotifications fragmentNotifications = new FragmentNotifications();
+                return fragmentNotifications;
         }
         return null;
     }
