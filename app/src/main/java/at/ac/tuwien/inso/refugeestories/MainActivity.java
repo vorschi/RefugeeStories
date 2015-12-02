@@ -28,9 +28,9 @@ public class MainActivity extends FragmentActivity {
     private TabHost mTabHost;
     private String mCurrentTab;
 
-    public static final String TAB_TAGS = "TAB_TAGS";
-    public static final String TAB_MAP = "TAB_MAP";
-    public static final String TAB_SETTINGS = "TAB_SETTINGS";
+    public static final String TAB_MYSTORIES = "MY_STORIES";
+    public static final String TAB_EXPLORE = "EXPLORE";
+    public static final String TAB_NOTIFICATIONS = "NOTIFICATIONS";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,32 +72,36 @@ public class MainActivity extends FragmentActivity {
 
         TabHost.TabSpec spec;
 
-        spec = mTabHost.newTabSpec(TAB_TAGS);
+        spec = mTabHost.newTabSpec(TAB_MYSTORIES);
         spec.setContent(new TabHost.TabContentFactory() {
             public View createTabContent(String tag) {
                 return findViewById(R.id.realtabcontent);
             }
         });
-        spec.setIndicator(createTabView(R.drawable.tab_tag_drawable, getString(R.string.tab_tags)));
+
+        //spec.setIndicator(getString(R.string.tab_tags, getResources().getDrawable(R.drawable.mystories_selector)));
+        spec.setIndicator(createTabView(R.drawable.mystories_selector, getString(R.string.tab_tags)));
         mTabHost.addTab(spec);
 
-        spec = mTabHost.newTabSpec(TAB_MAP);
+        spec = mTabHost.newTabSpec(TAB_EXPLORE);
         spec.setContent(new TabHost.TabContentFactory() {
             public View createTabContent(String tag) {
                 return findViewById(R.id.realtabcontent);
             }
         });
-        spec.setIndicator(createTabView(R.drawable.tab_map_drawable, getString(R.string.tab_map)));
+        //spec.setIndicator(getString(R.string.tab_map, getResources().getDrawable(R.drawable.explore_selector)));
+        spec.setIndicator(createTabView(R.drawable.explore_selector, getString(R.string.tab_map)));
         mTabHost.addTab(spec);
 
 
-        spec = mTabHost.newTabSpec(TAB_SETTINGS);
+        spec = mTabHost.newTabSpec(TAB_NOTIFICATIONS);
         spec.setContent(new TabHost.TabContentFactory() {
             public View createTabContent(String tag) {
                 return findViewById(R.id.realtabcontent);
             }
         });
-        spec.setIndicator(createTabView(R.drawable.tab_settings_drawable, getString(R.string.tab_settings)));
+        //spec.setIndicator(getString(R.string.tab_settings, getResources().getDrawable(R.drawable.notifications_selector)));
+        spec.setIndicator(createTabView(R.drawable.notifications_selector, getString(R.string.tab_settings)));
         mTabHost.addTab(spec);
 
     }
@@ -111,13 +115,13 @@ public class MainActivity extends FragmentActivity {
 
             mCurrentTab = tabId;
 
-            if (tabId.equals(TAB_TAGS)) {
+            if (tabId.equals(TAB_MYSTORIES)) {
                 pushFragments(FragmentStory.getInstance(), false,
                         false, null);
-            } else if (tabId.equals(TAB_MAP)) {
+            } else if (tabId.equals(TAB_EXPLORE)) {
                 pushFragments(FragmentExplore.getInstance(), false,
                         false, null);
-            } else if (tabId.equals(TAB_SETTINGS)) {
+            } else if (tabId.equals(TAB_NOTIFICATIONS)) {
                 pushFragments(new FragmentNotification(), false,
                         false, null);
             }
