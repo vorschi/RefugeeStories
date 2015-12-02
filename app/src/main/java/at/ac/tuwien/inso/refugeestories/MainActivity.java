@@ -20,60 +20,36 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("Explore");
 
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
         if (findViewById(R.id.fragment_container) != null) {
 
-            // However, if we're being restored from a previous state,
-            // then we don't need to do anything and should return or else
-            // we could end up with overlapping fragments.
             if (savedInstanceState != null) {
                 return;
             }
 
-            // Create a new Fragment to be placed in the activity layout
             FragmentExplore firstFragment = new FragmentExplore();
-
-            // In case this activity was started with special instructions from an
-            // Intent, pass the Intent's extras to the fragment as arguments
             firstFragment.setArguments(getIntent().getExtras());
-
-            // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, firstFragment).commit();
         }
-
     }
 
     public void openStories(View v){
-        FragmentStories newFragment = new FragmentStories();
-        Bundle args = new Bundle();
-        newFragment.setArguments(args);
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.fragment_container, newFragment);
-        transaction.addToBackStack(null);
-
-        transaction.commit();
+        this.fragmentTransacton(new FragmentStories());
     }
     public void openExplore(View v){
-        FragmentExplore newFragment = new FragmentExplore();
-        Bundle args = new Bundle();
-        newFragment.setArguments(args);
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.fragment_container, newFragment);
-        transaction.addToBackStack(null);
-
-        transaction.commit();
-
+        this.fragmentTransacton(new FragmentExplore());
     }
     public void openNotifications(View v){
-        FragmentNotifications newFragment = new FragmentNotifications();
+        this.fragmentTransacton(new FragmentNotifications());
+    }
+
+    private void fragmentTransacton(Fragment newFragment){
         Bundle args = new Bundle();
+        //args.putInt(newFragment.ARG_POSITION, position);
         newFragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
