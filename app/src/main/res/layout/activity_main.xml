@@ -4,6 +4,8 @@
     android:layout_height="match_parent"
     android:layout_centerHorizontal="true"
     android:layout_centerVertical="true"
+
+    android:background="@color/black"
     android:orientation="vertical">
 
     <FrameLayout
@@ -35,12 +37,13 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
             <!--android:background="@drawable/bg_main_app_gradient"-->
+
             <TabWidget
                 android:id="@android:id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:background="#000000"
+                android:background="#263238"
                 android:orientation="horizontal" />
         </LinearLayout>
     </TabHost>

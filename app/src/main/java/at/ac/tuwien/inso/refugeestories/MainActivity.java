@@ -1,7 +1,6 @@
 package at.ac.tuwien.inso.refugeestories;
 
 import android.app.Activity;
-
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -51,10 +49,8 @@ public class MainActivity extends FragmentActivity {
         } else {
             mTabHost.setOnTabChangedListener(listener);
             initializeTabs();
+            mTabHost.setCurrentTabByTag(TAB_EXPLORE);
         }
-
-        mTabHost.setCurrentTabByTag(TAB_EXPLORE);
-
     }
 
     private View createTabView(final int id, final String text) {
@@ -103,10 +99,6 @@ public class MainActivity extends FragmentActivity {
 
     }
 
-    /*
-    first time listener will be trigered immediatelly after first: mTabHost.addTab(spec);
-    for set correct Tab in setmTabHost.setCurrentTabByTag ignore first call of listener
-    */
     TabHost.OnTabChangeListener listener = new TabHost.OnTabChangeListener() {
         public void onTabChanged(String tabId) {
 
@@ -125,13 +117,6 @@ public class MainActivity extends FragmentActivity {
         }
     };
 
-    /*
-    Example of starting nested fragment from another fragment:
-
-    Fragment newFragment = ManagerTagFragment.newInstance(tag.getMac());
-                    TagsActivity tAct = (TagsActivity)getActivity();
-                    tAct.pushFragments(newFragment, true, true, null);
-     */
     public void pushFragments(Fragment fragment,
                               boolean shouldAnimate, boolean shouldAdd, String tag) {
         FragmentManager manager = getSupportFragmentManager();
@@ -139,6 +124,11 @@ public class MainActivity extends FragmentActivity {
 
         ft.replace(R.id.realtabcontent, fragment, tag);
 
+        if (shouldAnimate){
+            /*
+            here you can implement animations for fragment changes
+             */
+        }
 
         if (shouldAdd) {
             /*
