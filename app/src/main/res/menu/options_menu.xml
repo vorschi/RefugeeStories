@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/user"
         android:icon="@drawable/ic_account_circle_white_24dp"
         android:title="user"
-        android:showAsAction="always"/>
+        android:showAsAction="always"
+        tools:ignore="AppCompatResource" />
     <item android:id="@+id/filter"
         android:icon="@drawable/ic_filter_list_white_24dp"
         android:title="@string/search"
-        android:showAsAction="ifRoom">
+        android:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource">
         <menu>
             <item
                 android:id="@+id/menuSortNewest"
@@ -17,10 +20,10 @@
                 android:title="Sort by oldest" />
             <item
                 android:id="@+id/menuSortNearest"
-                android:title="Sort by nearest" />
+                android:title="Sort by nearset" />
             <item
                 android:id="@+id/menuSortFarthest"
-                android:title="Sort by farthest" />
+                android:title="Sort by farthest"/>
         </menu>
     </item>
 

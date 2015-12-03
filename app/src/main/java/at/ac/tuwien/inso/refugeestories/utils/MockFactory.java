@@ -18,9 +18,15 @@ public class MockFactory {
 
     public static List<Story> getStories(int content) {
         List<Story> stories = new ArrayList<>();
-        for(int i = 0; i < content; i++) {
-            stories.add(createDummyStory());
-        }
+        stories.add(createDummyStory());
+        stories.add(createDummyStory1());
+        stories.add(createDummyStory2());
+        stories.add(createDummyStory3());
+        stories.add(createDummyStory4());
+        stories.add(createDummyStory5());
+
+
+
         return stories;
     }
 
@@ -51,12 +57,63 @@ public class MockFactory {
 
     private static Story createDummyStory() {
         Story s = new Story();
-        s.setAuthor("Amer Kamakawiwoʻole");
-        s.setTitle("Some title");
+        s.setAuthor("Some ordinary user");
+        s.setTitle("Fancy title");
         s.setText(Consts.STORY_TEXT);
         s.setDate(DateTime.now());
-        s.setLocation("Rudolfsheim-Fünfhaus");
+        s.setLocation("Wien");
         s.setImgResId(R.drawable.wien);
+        return s;
+    }
+
+    private static Story createDummyStory1() {
+        Story s = new Story();
+        s.setAuthor("Halil Topru");
+        s.setTitle("The story of my life");
+        s.setText(Consts.STORY_TEXT);
+        s.setDate(DateTime.now());
+        s.setLocation("Salzburg");
+        s.setImgResId(R.drawable.running);
+        return s;
+    }
+    private static Story createDummyStory2() {
+        Story s = new Story();
+        s.setAuthor("Tutanchamun");
+        s.setTitle("Ich Pharao");
+        s.setText(Consts.STORY_TEXT);
+        s.setDate(DateTime.now());
+        s.setLocation("Unterpremstätten");
+        s.setImgResId(R.drawable.tutanchamun);
+        return s;
+    }
+    private static Story createDummyStory3() {
+        Story s = new Story();
+        s.setAuthor("Lilly Abraham");
+        s.setTitle("Interssante Dinge aus meinem Leben");
+        s.setText(Consts.STORY_TEXT);
+        s.setDate(DateTime.now());
+        s.setLocation("Freistadt");
+        s.setImgResId(R.drawable.woman);
+        return s;
+    }
+    private static Story createDummyStory4() {
+        Story s = new Story();
+        s.setAuthor("Some creepy user");
+        s.setTitle("Creatures in my garden");
+        s.setText(Consts.STORY_TEXT);
+        s.setDate(DateTime.now());
+        s.setLocation("Wiener Neustadt");
+        s.setImgResId(R.drawable.dog);
+        return s;
+    }
+    private static Story createDummyStory5() {
+        Story s = new Story();
+        s.setAuthor("Markus Hartl");
+        s.setTitle("Der Weg nach Salzburg");
+        s.setText(Consts.STORY_TEXT);
+        s.setDate(DateTime.now());
+        s.setLocation("Böheimkirchen");
+        s.setImgResId(R.drawable.woman2);
         return s;
     }
 }

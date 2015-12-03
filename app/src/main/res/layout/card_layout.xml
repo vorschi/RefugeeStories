@@ -10,8 +10,9 @@
         android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         card_view:cardBackgroundColor="@color/dark_blue"
-        card_view:cardCornerRadius="10dp"
+        card_view:cardCornerRadius="16dp"
         card_view:cardElevation="5dp">
 
         <LinearLayout
@@ -83,7 +84,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:ellipsize="end"
-                    android:maxLines="3"
+                    android:maxLines="2"
                     android:scrollHorizontally="true"
                     android:text="@string/placeholder"
                     android:textColor="@color/white" />

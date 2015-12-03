@@ -1,17 +1,22 @@
 package at.ac.tuwien.inso.refugeestories;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -30,10 +35,13 @@ public class MainActivity extends FragmentActivity {
     public static final String TAB_EXPLORE = "EXPLORE";
     public static final String TAB_NOTIFICATIONS = "NOTIFICATIONS";
 
+    private TextView label;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_main);
+        this.setTitle(R.string.app_name);
 
         mTabHost = (TabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup();
@@ -51,6 +59,9 @@ public class MainActivity extends FragmentActivity {
             initializeTabs();
             mTabHost.setCurrentTabByTag(TAB_EXPLORE);
         }
+
+
+        showActionBar();
     }
 
     private View createTabView(final int id, final String text) {
@@ -60,6 +71,18 @@ public class MainActivity extends FragmentActivity {
         TextView textView = (TextView) view.findViewById(R.id.tab_text);
         textView.setText(text);
         return view;
+    }
+
+    private void showActionBar() {
+        LayoutInflater inflator = (LayoutInflater) this
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflator.inflate(R.layout.custom_bar, null);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setCustomView(v);
     }
 
     /*
@@ -103,16 +126,24 @@ public class MainActivity extends FragmentActivity {
         public void onTabChanged(String tabId) {
 
             mCurrentTab = tabId;
+            label = (TextView)findViewById(R.id.label);
 
             if (tabId.equals(TAB_MYSTORIES)) {
                 pushFragments(FragmentStory.getInstance(), false,
                         false, null);
+                if (label!=null)
+                    label.setText(R.string.mystories);
             } else if (tabId.equals(TAB_EXPLORE)) {
                 pushFragments(FragmentExplore.getInstance(), false,
                         false, null);
+                if (label != null)
+                    label.setText(R.string.explore);
             } else if (tabId.equals(TAB_NOTIFICATIONS)) {
                 pushFragments(new FragmentNotification(), false,
                         false, null);
+                if (label!=null)
+                    label.setText(R.string.notifications);
+
             }
         }
     };
@@ -168,13 +199,31 @@ public class MainActivity extends FragmentActivity {
     public void onBackPressed(){
         super.onBackPressed();
     }
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
         return true;
+    }*/
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.user_btn:
+                //left button, do something
+                return true;
+            case R.id.filter_btn:
+                // right button
+                return true;
+            case R.id.user:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
+
+
 
 /*
     @Override
