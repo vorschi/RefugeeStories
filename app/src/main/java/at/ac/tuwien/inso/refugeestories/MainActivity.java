@@ -9,7 +9,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+
 import android.text.Layout;
+
+import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,8 +28,11 @@ import android.widget.TextView;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentExplore;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentNotification;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory;
+import at.ac.tuwien.inso.refugeestories.fragments.FragmentTimeline;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements FragmentExplore.OnStorySelectedListener {
+
+    private final String TAG = this.getClass().getSimpleName();
 
     public static final String M_CURRENT_TAB = "M_CURRENT_TAB";
     private TabHost mTabHost;
@@ -37,11 +44,15 @@ public class MainActivity extends FragmentActivity {
 
     private TextView label;
 
+    private FragmentManager manager;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_main);
         this.setTitle(R.string.app_name);
+
+        manager = getSupportFragmentManager();
 
         mTabHost = (TabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup();
@@ -150,7 +161,6 @@ public class MainActivity extends FragmentActivity {
 
     public void pushFragments(Fragment fragment,
                               boolean shouldAnimate, boolean shouldAdd, String tag) {
-        FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction ft = manager.beginTransaction();
 
         ft.replace(R.id.realtabcontent, fragment, tag);
@@ -223,9 +233,19 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
+    @Override
+    public void onStorySelected(int position) {
+        //Log.e(TAG, "Story: " + position);
+        FragmentTimeline timeline = FragmentTimeline.getInstance();
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.replace(R.id.realtabcontent, timeline, FragmentTimeline.class.getSimpleName());
+        ft.addToBackStack(null);
+        ft.commit();
+        manager.executePendingTransactions();
+        timeline.setTargetStory(position);
+    }
 
-
-/*
+    /*
     @Override
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
@@ -239,6 +259,5 @@ public class MainActivity extends FragmentActivity {
         }
     }
     */
-
 
 }

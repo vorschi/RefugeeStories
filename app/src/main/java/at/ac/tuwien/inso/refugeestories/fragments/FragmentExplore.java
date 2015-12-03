@@ -2,7 +2,10 @@ package at.ac.tuwien.inso.refugeestories.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+
 import android.graphics.Point;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,6 +42,8 @@ public class FragmentExplore extends Fragment {
     private float allPixels;
     private int mLastPosition;
 
+    OnStorySelectedListener mStoryCallback;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -63,7 +68,7 @@ public class FragmentExplore extends Fragment {
                 new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Toast.makeText(context, "Story: " + position + " clicked!", Toast.LENGTH_SHORT).show();
+                        mStoryCallback.onStorySelected(position);
                     }
                 }));
 
@@ -98,6 +103,16 @@ public class FragmentExplore extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.context = activity;
+
+        try {
+            mStoryCallback = (OnStorySelectedListener) activity;
+        } catch (ClassCastException ex) {
+            throw new ClassCastException(activity.toString() + " must implement OnStorySelectedListener");
+        }
+    }
+
+    public interface OnStorySelectedListener {
+        public void onStorySelected(int position);
     }
 
 
