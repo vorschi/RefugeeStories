@@ -67,7 +67,7 @@ public class FragmentExplore extends Fragment {
                     }
                 }));
 
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        /*mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -84,7 +84,7 @@ public class FragmentExplore extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
                 allPixels += dx;
             }
-        });
+        });*/
 
         return mFragmentLayout;
     }
