@@ -9,6 +9,7 @@ import java.util.List;
  */
 public class Person {
 
+    private int id;
     private String username;
     private String password;
     private String email;

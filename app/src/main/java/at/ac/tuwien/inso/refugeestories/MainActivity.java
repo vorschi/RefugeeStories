@@ -242,7 +242,7 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
         ft.addToBackStack(null);
         ft.commit();
         manager.executePendingTransactions();
-        timeline.setTargetStory(position);
+        //timeline.setTargetStory(position);
     }
 
     /*

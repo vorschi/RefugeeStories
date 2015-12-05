@@ -7,6 +7,8 @@ import org.joda.time.DateTime;
  */
 public class Story {
 
+    private int id;
+    private int authorId;
     private int imgResId;
     private String author;
     private String title;
@@ -16,13 +18,32 @@ public class Story {
 
     public Story() { }
 
-    public Story(int imgResId, String author, String title, String text, DateTime date, String location) {
+    public Story(int id, int authorId, int imgResId, String author,
+                 String title, String text, DateTime date, String location) {
+        this.id = id;
+        this.authorId = authorId;
         this.imgResId = imgResId;
         this.author = author;
         this.title = title;
         this.text = text;
         this.date = date;
         this.location = location;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
     }
 
     public int getImgResId() {

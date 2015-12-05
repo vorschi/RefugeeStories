@@ -24,9 +24,6 @@ public class MockFactory {
         stories.add(createDummyStory3());
         stories.add(createDummyStory4());
         stories.add(createDummyStory5());
-
-
-
         return stories;
     }
 
