@@ -236,7 +236,7 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
     @Override
     public void onStorySelected(int position) {
         //Log.e(TAG, "Story: " + position);
-        FragmentTimeline timeline = FragmentTimeline.getInstance();
+        FragmentTimeline timeline = new FragmentTimeline();
         FragmentTransaction ft = manager.beginTransaction();
         ft.replace(R.id.realtabcontent, timeline, FragmentTimeline.class.getSimpleName());
         ft.addToBackStack(null);

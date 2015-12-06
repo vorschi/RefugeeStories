@@ -8,11 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import at.ac.tuwien.inso.refugeestories.MainActivity;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.Toast;
+
 import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.utils.MockFactory;
 import at.ac.tuwien.inso.refugeestories.utils.adapters.TimelineAdapter;
@@ -33,6 +36,9 @@ public class FragmentTimeline extends Fragment {
     private ListView timeline;
     private TimelineAdapter timelineAdapter;
 
+    private boolean loading = false;
+    private boolean allStoriesLoaded = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -41,12 +47,28 @@ public class FragmentTimeline extends Fragment {
         timelineAdapter = new TimelineAdapter(context);
         timelineAdapter.updateStories(MockFactory.getStories(6));
         timeline.setAdapter(timelineAdapter);
+
+
+        timeline.setOnScrollListener(new OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) { /* ignore */ }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                //if the bottom of the list is reached
+                if ( (firstVisibleItem + visibleItemCount) == totalItemCount ) {
+                    //TODO load items
+                }
+            }
+        });
+
         return mFragmentLayout;
     }
 
     public static FragmentTimeline getInstance() {
         //instance = (FragmentTimeline) ((MainActivity)context).getSupportFragmentManager().findFragmentByTag(TAG);
-        if(instance == null) {
+        if (instance == null) {
             instance = new FragmentTimeline();
         }
         return instance;
@@ -58,4 +80,21 @@ public class FragmentTimeline extends Fragment {
         context = activity;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        //Log.i(TAG, "PAUSE");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        //Log.i(TAG, "STOPPED");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //Log.i(TAG, "DESTROYED");
+    }
 }
