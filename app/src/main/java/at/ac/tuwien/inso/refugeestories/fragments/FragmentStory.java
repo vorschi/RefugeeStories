@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-
-import java.util.List;
+import android.widget.Button;
+import android.widget.Toast;
 
 import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.domain.Person;
@@ -26,7 +27,18 @@ public class FragmentStory extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View contentView = inflater.inflate(R.layout.fragment_stories, container, false);
 
+        Button btn = (Button) contentView.findViewById(R.id.btn_createstory);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.realtabcontent, FragmentNewStory.getInstance());
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
         return contentView;
+
     }
 
     @Override
