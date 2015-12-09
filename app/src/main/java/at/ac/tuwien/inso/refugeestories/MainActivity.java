@@ -10,17 +10,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
-import android.text.Layout;
-
-import android.util.Log;
-
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -46,6 +39,8 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
 
     private FragmentManager manager;
 
+    private LayoutInflater inflater;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
@@ -53,6 +48,7 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
         this.setTitle(R.string.app_name);
 
         manager = getSupportFragmentManager();
+        inflater = getLayoutInflater();
 
         mTabHost = (TabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup();
@@ -85,9 +81,7 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
     }
 
     private void showActionBar() {
-        LayoutInflater inflator = (LayoutInflater) this
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflator.inflate(R.layout.custom_bar, null);
+        View v = inflater.inflate(R.layout.custom_bar, null);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setDisplayShowHomeEnabled(false);
@@ -137,12 +131,12 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
         public void onTabChanged(String tabId) {
 
             mCurrentTab = tabId;
-            label = (TextView)findViewById(R.id.label);
+            label = (TextView) findViewById(R.id.label);
 
             if (tabId.equals(TAB_MYSTORIES)) {
                 pushFragments(FragmentStory.getInstance(), false,
                         false, null);
-                if (label!=null)
+                if (label != null)
                     label.setText(R.string.mystories);
             } else if (tabId.equals(TAB_EXPLORE)) {
                 pushFragments(FragmentExplore.getInstance(), false,
@@ -152,7 +146,7 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
             } else if (tabId.equals(TAB_NOTIFICATIONS)) {
                 pushFragments(new FragmentNotification(), false,
                         false, null);
-                if (label!=null)
+                if (label != null)
                     label.setText(R.string.notifications);
 
             }
@@ -165,7 +159,7 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
 
         ft.replace(R.id.realtabcontent, fragment, tag);
 
-        if (shouldAnimate){
+        if (shouldAnimate) {
             /*
             here you can implement animations for fragment changes
              */
@@ -206,7 +200,7 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         super.onBackPressed();
     }
 /*

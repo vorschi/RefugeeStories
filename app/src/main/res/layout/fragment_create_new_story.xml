@@ -1,107 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp"
-    android:id="@+id/new_story_layout">
+    android:fitsSystemWindows="true">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/story_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/titleBox">
+        android:orientation="vertical"
+        android:padding="16dp">
+
         <TextView
+            android:id="@+id/lbl_new_story_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Title"
-            android:layout_marginLeft="4dp"
-            android:textStyle="bold"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_alignParentTop="true"
-            android:id="@+id/titleLabel" />
+            android:layout_marginBottom="4dp"
+            android:text="@string/lbl_title"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
         <EditText
+            android:id="@+id/new_story_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/titleText"
-            android:layout_below="@+id/titleLabel"
-            android:hint="Enter Title here"
+            android:hint="@string/title_hint"
             android:singleLine="true" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/locationBox"
-        android:layout_below="@+id/titleBox">
-        <TextView
-            android:layout_marginLeft="4dp"
-            android:textStyle="bold"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Location"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/locationLabel"/>
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPostalAddress"
-            android:ems="10"
-            android:id="@+id/locationText"
-            android:hint="Enter location here"
-            android:layout_below="@+id/locationLabel"/>
-</RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/dateBox"
-        android:layout_below="@+id/locationBox">
 
         <TextView
-            android:layout_marginLeft="4dp"
-            android:textStyle="bold"
+            android:id="@+id/lbl_new_story_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/dateLabel"/>
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/lbl_location"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <EditText
+            android:id="@+id/new_story_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="date"
-            android:ems="10"
-            android:hint="Type in date"
-            android:id="@+id/dateText"
-            android:layout_below="@id/dateLabel"/>
-    </RelativeLayout>
+            android:hint="@string/location_hint"
+            android:singleLine="true" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textBox"
-        android:layout_below="@+id/dateBox">
         <TextView
-            android:layout_marginLeft="4dp"
-            android:textStyle="bold"
+            android:id="@+id/lbl_new_story_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Text"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/textLabel"/>
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:inputType="textMultiLine"
-            android:ems="10"
-            android:gravity="top"
-            android:hint="Write your story"
-            android:id="@+id/textText"
-            android:layout_below="@id/textLabel"/>
-    </RelativeLayout>
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/lbl_date"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
-</RelativeLayout>
-    </ScrollView>
+        <TextView
+            android:id="@+id/new_story_date"
+            style="@android:style/Widget.DeviceDefault.Light.Spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/lbl_new_story_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/lbl_story_text"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <ScrollView
+            android:id="@+id/story_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="150dp">
+
+            <EditText
+                android:id="@+id/new_story_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/story_hint"
+                android:inputType="textMultiLine" />
+        </ScrollView>
+
+        <Button
+            android:id="@+id/btn_add_story"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/btn_add_story" />
+
+    </LinearLayout>
+
+</ScrollView>

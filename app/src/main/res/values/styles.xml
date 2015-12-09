@@ -6,6 +6,7 @@
         <item name="android:actionBarStyle">@style/AppActionBarStyle</item>
     </style>
 
+    <!--ActionBar-->
     <style name="AppActionBarStyle" parent="@android:style/Widget.Material.ActionBar.Solid">
         <item name="android:background">@color/dark_blue</item>
         <item name="android:titleTextStyle">@style/ActionBarTitleStyle</item>

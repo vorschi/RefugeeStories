@@ -26,7 +26,7 @@ public class FragmentStory extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View contentView = inflater.inflate(R.layout.fragment_stories, container, false);
 
-        fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager = getFragmentManager();
 
         fab = (FloatingActionButton) contentView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -37,7 +37,6 @@ public class FragmentStory extends Fragment {
                     .addToBackStack(null)
                     .commit();
                 fragmentManager.executePendingTransactions();
-
             }
         });
 

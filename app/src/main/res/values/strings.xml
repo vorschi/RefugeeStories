@@ -40,5 +40,18 @@
     <string name="tab_settings">Notifications</string>
     <string name="title_activity_my">MyActivity</string>
 
->>>>>>> Stashed changes
+    <!--New Story-->
+    <string name="lbl_title">Title</string>
+    <string name="title_hint">story title</string>
+
+    <string name="lbl_location">Location</string>
+    <string name="location_hint">story location</string>
+
+    <string name="lbl_date">Date</string>
+
+    <string name="lbl_story_text">Story</string>
+    <string name="story_hint">story</string>
+
+    <string name="btn_add_story">Add story</string>
+
 </resources>
