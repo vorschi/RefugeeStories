@@ -42,15 +42,18 @@
 
     <!--New Story-->
     <string name="lbl_title">Title</string>
-    <string name="title_hint">story title</string>
+    <string name="title_hint">Your title</string>
 
     <string name="lbl_location">Location</string>
-    <string name="location_hint">story location</string>
+    <string name="location_hint">Story-location here</string>
 
     <string name="lbl_date">Date</string>
 
     <string name="lbl_story_text">Story</string>
-    <string name="story_hint">story</string>
+    <string name="story_hint">Your story here (max. 200 words)</string>
+    <string name="lbl_story_picture">Pictures</string>
+
+    <string name="btn_add_picture">Add pictures</string>
 
     <string name="btn_add_story">Add story</string>
 

@@ -15,12 +15,12 @@
             android:id="@+id/lbl_new_story_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
             android:text="@string/lbl_title"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <EditText
             android:id="@+id/new_story_title"
+            android:backgroundTint="@color/dark_blue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/title_hint"
@@ -30,8 +30,7 @@
             android:id="@+id/lbl_new_story_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="@string/lbl_location"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -40,44 +39,54 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/location_hint"
+            android:backgroundTint="@color/dark_blue"
             android:singleLine="true" />
 
         <TextView
             android:id="@+id/lbl_new_story_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="@string/lbl_date"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
             android:id="@+id/new_story_date"
             style="@android:style/Widget.DeviceDefault.Light.Spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="40dp" />
 
         <TextView
             android:id="@+id/lbl_new_story_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="@string/lbl_story_text"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
-        <ScrollView
-            android:id="@+id/story_wrapper"
+        <EditText
+            android:id="@+id/new_story_text"
             android:layout_width="match_parent"
-            android:layout_height="150dp">
+            android:layout_height="200dp"
+            android:gravity="top"
+            android:background="@drawable/multiline_textview"
+            android:hint="@string/story_hint"
+            android:inputType="textMultiLine" />
 
-            <EditText
-                android:id="@+id/new_story_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/story_hint"
-                android:inputType="textMultiLine" />
-        </ScrollView>
+        <TextView
+            android:id="@+id/lbl_new_story_picture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/lbl_story_picture"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <Button
+            android:id="@+id/btn_add_pictures"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/btn_add_picture" />
 
         <Button
             android:id="@+id/btn_add_story"
