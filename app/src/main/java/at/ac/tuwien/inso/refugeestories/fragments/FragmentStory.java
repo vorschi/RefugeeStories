@@ -4,36 +4,43 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
+
+import com.github.clans.fab.FloatingActionButton;
 
 import at.ac.tuwien.inso.refugeestories.R;
 
 /**
- * Created by Amer Salkovic on 14.11.2015.
+ * Created by Amer Salkovic, Mario Vorstandlechner on 14.11.2015.
  */
 public class FragmentStory extends Fragment {
 
     private Context context;
+    private FloatingActionButton fab;
+    private FragmentManager fragmentManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View contentView = inflater.inflate(R.layout.fragment_stories, container, false);
 
-        Button btn = (Button) contentView.findViewById(R.id.btn_createstory);
-        btn.setOnClickListener(new View.OnClickListener() {
+        fragmentManager = getActivity().getSupportFragmentManager();
+
+        fab = (FloatingActionButton) contentView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.realtabcontent, FragmentNewStory.getInstance());
-                transaction.addToBackStack(null);
-                transaction.commit();
+            public void onClick(View view) {
+                fragmentManager.beginTransaction()
+                    .replace(R.id.realtabcontent, FragmentCreateNewStory.getInstance())
+                    .addToBackStack(null)
+                    .commit();
+                fragmentManager.executePendingTransactions();
+
             }
         });
+
         return contentView;
     }
 
@@ -44,7 +51,7 @@ public class FragmentStory extends Fragment {
     }
 
     public static FragmentStory getInstance() {
-        FragmentStory f = new FragmentStory();
-        return f;
+        FragmentStory instance = new FragmentStory();
+        return instance;
     }
 }

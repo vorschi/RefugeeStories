@@ -11,15 +11,15 @@ import android.view.ViewGroup;
 import at.ac.tuwien.inso.refugeestories.R;
 
 /**
- * Created by Amer Salkovic on 14.11.2015.
+ * Created by Mario Vorstandlechner, Amer Salkovic on 14.11.2015.
  */
-public class FragmentNewStory extends Fragment {
+public class FragmentCreateNewStory extends Fragment {
 
     private Context context;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View contentView = inflater.inflate(R.layout.fragment_newstory, container, false);
+        View contentView = inflater.inflate(R.layout.fragment_create_new_story, container, false);
 
         return contentView;
     }
@@ -30,8 +30,8 @@ public class FragmentNewStory extends Fragment {
         this.context = activity;
     }
 
-    public static FragmentNewStory getInstance() {
-        FragmentNewStory f = new FragmentNewStory();
+    public static FragmentCreateNewStory getInstance() {
+        FragmentCreateNewStory f = new FragmentCreateNewStory();
         return f;
     }
 }
