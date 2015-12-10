@@ -33,13 +33,13 @@ public class FragmentStory extends Fragment {
             @Override
             public void onClick(View view) {
                 fragmentManager.beginTransaction()
-                    .replace(R.id.realtabcontent, FragmentCreateNewStory.getInstance())
-                    .addToBackStack(null)
-                    .commit();
+                        .replace(R.id.realtabcontent, FragmentCreateNewStory.getInstance())
+                        .addToBackStack(null)
+                        .commit();
                 fragmentManager.executePendingTransactions();
+                getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
             }
-        });
-
+    });
         return contentView;
     }
 

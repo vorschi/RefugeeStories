@@ -11,6 +11,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -45,7 +47,7 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_main);
-        this.setTitle(R.string.app_name);
+        this.setTitle(R.string.explore);
 
         manager = getSupportFragmentManager();
         inflater = getLayoutInflater();
@@ -68,7 +70,7 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
         }
 
 
-        showActionBar();
+        //showActionBar();
     }
 
     private View createTabView(final int id, final String text) {
@@ -136,18 +138,19 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
             if (tabId.equals(TAB_MYSTORIES)) {
                 pushFragments(FragmentStory.getInstance(), false,
                         false, null);
-                if (label != null)
-                    label.setText(R.string.mystories);
+                getWindow().setTitle(getResources().getString(R.string.mystories));
+
             } else if (tabId.equals(TAB_EXPLORE)) {
                 pushFragments(FragmentExplore.getInstance(), false,
                         false, null);
-                if (label != null)
-                    label.setText(R.string.explore);
+                getWindow().setTitle(getResources().getString(R.string.explore));
             } else if (tabId.equals(TAB_NOTIFICATIONS)) {
                 pushFragments(new FragmentNotification(), false,
                         false, null);
-                if (label != null)
-                    label.setText(R.string.notifications);
+               /* if (label != null)
+                    label.setText(R.string.notifications);*/
+
+                getWindow().setTitle(getResources().getString(R.string.notifications));
 
             }
         }
@@ -201,26 +204,27 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+            super.onBackPressed();
     }
-/*
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
         return true;
-    }*/
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                getSupportFragmentManager().popBackStack();
+                getActionBar().setDisplayHomeAsUpEnabled(false);
             case R.id.user_btn:
                 //left button, do something
                 return true;
             case R.id.filter_btn:
                 // right button
-                return true;
-            case R.id.user:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -236,6 +240,7 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
         ft.addToBackStack(null);
         ft.commit();
         manager.executePendingTransactions();
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         //timeline.setTargetStory(position);
     }
 
