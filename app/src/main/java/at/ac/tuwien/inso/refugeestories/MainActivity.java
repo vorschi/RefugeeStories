@@ -23,19 +23,17 @@ import android.widget.TextView;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentExplore;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentNotification;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory;
+import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory.OnStorySelectedListener;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentTimeline;
+import at.ac.tuwien.inso.refugeestories.utils.Consts;
 
-public class MainActivity extends FragmentActivity implements FragmentExplore.OnStorySelectedListener {
+public class MainActivity extends FragmentActivity implements OnStorySelectedListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
     public static final String M_CURRENT_TAB = "M_CURRENT_TAB";
     private TabHost mTabHost;
     private String mCurrentTab;
-
-    public static final String TAB_MYSTORIES = "MY_STORIES";
-    public static final String TAB_EXPLORE = "EXPLORE";
-    public static final String TAB_NOTIFICATIONS = "NOTIFICATIONS";
 
     private TextView label;
 
@@ -66,7 +64,7 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
         } else {
             mTabHost.setOnTabChangedListener(listener);
             initializeTabs();
-            mTabHost.setCurrentTabByTag(TAB_EXPLORE);
+            mTabHost.setCurrentTabByTag(Consts.TAB_EXPLORE);
         }
 
 
@@ -100,7 +98,7 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
 
         TabHost.TabSpec spec;
 
-        spec = mTabHost.newTabSpec(TAB_MYSTORIES);
+        spec = mTabHost.newTabSpec(Consts.TAB_MYSTORIES);
         spec.setContent(new TabHost.TabContentFactory() {
             public View createTabContent(String tag) {
                 return findViewById(R.id.realtabcontent);
@@ -109,7 +107,7 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
         spec.setIndicator(createTabView(R.drawable.mystories_selector, getString(R.string.tab_tags)));
         mTabHost.addTab(spec);
 
-        spec = mTabHost.newTabSpec(TAB_EXPLORE);
+        spec = mTabHost.newTabSpec(Consts.TAB_EXPLORE);
         spec.setContent(new TabHost.TabContentFactory() {
             public View createTabContent(String tag) {
                 return findViewById(R.id.realtabcontent);
@@ -118,7 +116,7 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
         spec.setIndicator(createTabView(R.drawable.explore_selector, getString(R.string.tab_map)));
         mTabHost.addTab(spec);
 
-        spec = mTabHost.newTabSpec(TAB_NOTIFICATIONS);
+        spec = mTabHost.newTabSpec(Consts.TAB_NOTIFICATIONS);
         spec.setContent(new TabHost.TabContentFactory() {
             public View createTabContent(String tag) {
                 return findViewById(R.id.realtabcontent);
@@ -135,24 +133,29 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
             mCurrentTab = tabId;
             label = (TextView) findViewById(R.id.label);
 
-            if (tabId.equals(TAB_MYSTORIES)) {
-                pushFragments(FragmentStory.getInstance(), false,
-                        false, null);
+            //Use FragmentStory for both stories and explore
+            if ( tabId.equals(Consts.TAB_MYSTORIES) || tabId.equals(Consts.TAB_EXPLORE) ) {
+                pushFragments(FragmentStory.getInstance(), false, false, null);
                 getWindow().setTitle(getResources().getString(R.string.mystories));
-
-            } else if (tabId.equals(TAB_EXPLORE)) {
-                pushFragments(FragmentExplore.getInstance(), false,
-                        false, null);
-                getWindow().setTitle(getResources().getString(R.string.explore));
-            } else if (tabId.equals(TAB_NOTIFICATIONS)) {
-                pushFragments(new FragmentNotification(), false,
-                        false, null);
-               /* if (label != null)
-                    label.setText(R.string.notifications);*/
-
+            } else {
+                pushFragments(new FragmentNotification(), false, false, null);
                 getWindow().setTitle(getResources().getString(R.string.notifications));
-
             }
+
+            /**
+             * mario's old code
+             *
+            if (tabId.equals(Consts.TAB_MYSTORIES)) {
+                pushFragments(FragmentStory.getInstance(), false, false, null);
+                getWindow().setTitle(getResources().getString(R.string.mystories));
+            } else if (tabId.equals(Consts.TAB_EXPLORE)) {
+                pushFragments(FragmentExplore.getInstance(), false, false, null);
+                getWindow().setTitle(getResources().getString(R.string.explore));
+            } else if (tabId.equals(Consts.TAB_NOTIFICATIONS)) {
+                pushFragments(new FragmentNotification(), false, false, null);
+                getWindow().setTitle(getResources().getString(R.string.notifications));
+            }
+             */
         }
     };
 
@@ -186,16 +189,6 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
         ft.commit();
     }
 
-    /*
-    If you want to start this activity from another
-     */
-    public static void startUrself(Activity context) {
-        Intent newActivity = new Intent(context, MainActivity.class);
-        newActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(newActivity);
-        context.finish();
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(M_CURRENT_TAB, mCurrentTab);
@@ -204,7 +197,7 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
 
     @Override
     public void onBackPressed() {
-            super.onBackPressed();
+        super.onBackPressed();
     }
 
     @Override
@@ -233,7 +226,6 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
 
     @Override
     public void onStorySelected(int position) {
-        //Log.e(TAG, "Story: " + position);
         FragmentTimeline timeline = new FragmentTimeline();
         FragmentTransaction ft = manager.beginTransaction();
         ft.replace(R.id.realtabcontent, timeline, FragmentTimeline.class.getSimpleName());
@@ -241,22 +233,10 @@ public class MainActivity extends FragmentActivity implements FragmentExplore.On
         ft.commit();
         manager.executePendingTransactions();
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        //timeline.setTargetStory(position);
     }
 
-    /*
-    @Override
-    protected void onNewIntent(Intent intent) {
-        setIntent(intent);
-        handleIntent(intent);
+    public String getCurrentTabId() {
+        return mCurrentTab;
     }
-
-    private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            doMySearch(query);
-        }
-    }
-    */
 
 }

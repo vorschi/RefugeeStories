@@ -58,4 +58,11 @@
 
     <string name="btn_add_story">Add story</string>
 
+    <string name="msg_no_stories">You haven\'t added any stories yet</string>
+    
+    <array name="story_options">
+        <item>Edit story</item>
+        <item>Delete story</item>
+    </array>
+
 </resources>

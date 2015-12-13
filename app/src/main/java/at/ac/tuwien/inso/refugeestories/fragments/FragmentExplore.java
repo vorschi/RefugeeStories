@@ -55,8 +55,11 @@ public class FragmentExplore extends Fragment {
 
         mLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(new StoryAdapter(MockFactory.getStories(6)));
+        StoryAdapter storyAdapter = new StoryAdapter();
+        mRecyclerView.setAdapter(storyAdapter);
+        storyAdapter.updateStories(MockFactory.getStories(6));
 
+        /*
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
@@ -64,7 +67,7 @@ public class FragmentExplore extends Fragment {
                         mStoryCallback.onStorySelected(position);
                     }
                 }));
-
+        */
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
@@ -105,7 +108,7 @@ public class FragmentExplore extends Fragment {
     }
 
     public interface OnStorySelectedListener {
-        public void onStorySelected(int position);
+        void onStorySelected(int position);
     }
 
 
@@ -128,41 +131,3 @@ public class FragmentExplore extends Fragment {
         }
     }
 }
-/*
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        final HorizontalScrollView scroll = (HorizontalScrollView)getView().findViewById(R.id.story_scroll_view);
-        scroll.setOnScrollStopListener(new OnScrollStopListener() {
-
-            @Override
-            public void onScrollStopped) {
-
-                //get the center
-                int center = scroll.getScrollX() + scroll.getWidth() / 2;
-                LinearLayout linearLayout = ((LinearLayout) scroll.findViewById(R.id.story_container_layout));
-                int chilrenNum = linearLayout.getChildCount();
-                for (int i = 0; i < chilrenNum; i++) {
-                    View v = linearLayout.getChildAt(i);
-                    if (v.getClass() != TextView.class) {
-                        // you do no care about that view
-                        continue;
-                    }
-                    int viewLeft = v.getLeft();
-                    int viewWidth = v.getWidth();
-                    if (center >= viewLeft && center <= viewLeft + viewWidth) {
-                        Log.d("Center", "CENTER THIS : " + ((viewLeft + viewWidth / 2) - center));
-                        scroll.scrollBy((viewLeft + viewWidth / 2) - center, 0);
-                        break;
-                    }
-                }
-            }
-
-            return false;
-        }
-    });
-*/
-
-
-

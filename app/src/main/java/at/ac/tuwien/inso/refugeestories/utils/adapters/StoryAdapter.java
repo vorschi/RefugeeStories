@@ -15,14 +15,17 @@ import at.ac.tuwien.inso.refugeestories.domain.Story;
 import at.ac.tuwien.inso.refugeestories.utils.Utils;
 
 /**
- * Created by nn on 2.12.2015.
+ * Created by Amer Salkovic on 2.12.2015.
  */
 public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> {
 
     private List<Story> stories = Collections.<Story>emptyList();
 
-    public StoryAdapter(List<Story> stories) {
+    public StoryAdapter() {}
+
+    public void updateStories(List<Story> stories) {
         this.stories = stories;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -76,5 +79,9 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> 
             this.txtStoryTitle = (TextView) itemView.findViewById(R.id.txt_story_title);
             this.txtStoryText = (TextView) itemView.findViewById(R.id.txt_story_text);
         }
+    }
+
+    public Story getItem(int position) {
+        return stories.get(position);
     }
 }
