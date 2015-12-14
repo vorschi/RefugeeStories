@@ -1,11 +1,8 @@
 package at.ac.tuwien.inso.refugeestories;
 
 import android.app.ActionBar;
-import android.app.Activity;
-import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -19,9 +16,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import at.ac.tuwien.inso.refugeestories.fragments.FragmentExplore;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentNotification;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory.OnStorySelectedListener;
@@ -147,21 +142,6 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
                 pushFragments(new FragmentNotification(), false, false, null);
                 setTitleBar();
             }
-
-            /**
-             * mario's old code
-             *
-             if (tabId.equals(Consts.TAB_MYSTORIES)) {
-             pushFragments(FragmentStory.getInstance(), false, false, null);
-             getWindow().setTitle(getResources().getString(R.string.mystories));
-             } else if (tabId.equals(Consts.TAB_EXPLORE)) {
-             pushFragments(FragmentExplore.getInstance(), false, false, null);
-             getWindow().setTitle(getResources().getString(R.string.explore));
-             } else if (tabId.equals(Consts.TAB_NOTIFICATIONS)) {
-             pushFragments(new FragmentNotification(), false, false, null);
-             getWindow().setTitle(getResources().getString(R.string.notifications));
-             }
-             */
         }
     };
 
@@ -203,15 +183,18 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
 
     @Override
     public void onBackPressed() {
-        getSupportFragmentManager().popBackStack();
         getActionBar().setDisplayHomeAsUpEnabled(false);
         setTitleBar();
+        super.onBackPressed();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
+        if (getCurrentTabId().equals(Consts.TAB_EXPLORE))
+            inflater.inflate(R.menu.explore_menu, menu);
+        else
+            inflater.inflate(R.menu.others_menu, menu);
         return true;
     }
 
@@ -247,19 +230,21 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
     public void setTitleBar(){
         String tabId = getCurrentTabId();
 
-        if (tabId.equals(Consts.TAB_MYSTORIES))
+        if (tabId.equals(Consts.TAB_MYSTORIES)) {
             getWindow().setTitle(getResources().getString(R.string.mystories));
-
-        else if (tabId.equals(Consts.TAB_EXPLORE))
+            this.invalidateOptionsMenu();
+        }
+        else if (tabId.equals(Consts.TAB_EXPLORE)) {
             getWindow().setTitle(getResources().getString(R.string.explore));
-
-        else if (tabId.equals(Consts.TAB_NOTIFICATIONS))
+            this.invalidateOptionsMenu();
+        }
+        else if (tabId.equals(Consts.TAB_NOTIFICATIONS)){
             getWindow().setTitle(getResources().getString(R.string.notifications));
+            this.invalidateOptionsMenu();
+        }
     }
-
 
     public String getCurrentTabId() {
         return mCurrentTab;
     }
-
 }

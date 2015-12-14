@@ -133,13 +133,34 @@ public class FragmentStory extends Fragment {
                     Story targetStory = storyAdapter.getItem(position);
                     //TODO: pass the targetStory to the MainActivity, To the CreateNewStoryFragment
                 } else if(id == Consts.DELETE) {
-                    stories.remove(position);
-                    storyAdapter.updateStories(stories);
+                    //TODO: security check if story really should be deleted
+
+                    createDeleteDialog(position);
+                    optionDialog.show();
+
                 } else {
                     //ignore
                 }
             }
         });
+        optionDialog = builder.create();
+    }
+
+    private void createDeleteDialog(final int position) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.delete_check)
+                .setPositiveButton(R.string.delete_true, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        stories.remove(position);
+                        storyAdapter.updateStories(stories);
+                    }
+                })
+                .setNegativeButton(R.string.delete_false, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
         optionDialog = builder.create();
     }
 

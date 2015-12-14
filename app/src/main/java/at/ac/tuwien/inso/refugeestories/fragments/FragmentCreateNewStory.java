@@ -13,6 +13,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -37,17 +39,16 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
 
     private Button btnAddStory;
 
-    private ScrollView mContentView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mContentView = (ScrollView) inflater.inflate(R.layout.fragment_create_new_story, container, false);
+        View contentView = inflater.inflate(R.layout.fragment_create_new_story, container, false);
 
-        storyTitle = (TextView) mContentView.findViewById(R.id.new_story_title);
+        storyTitle = (TextView) contentView.findViewById(R.id.new_story_title);
 
-        storyLocation = (TextView) mContentView.findViewById(R.id.new_story_location);
+        storyLocation = (TextView) contentView.findViewById(R.id.new_story_location);
 
-        storyDate = (TextView) mContentView.findViewById(R.id.new_story_date);
+        storyDate = (TextView) contentView.findViewById(R.id.new_story_date);
         storyDate.setText(Utils.dtf.print(DateTime.now()));
         storyDate.setOnClickListener(new OnClickListener() {
             @Override
@@ -58,9 +59,9 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
             }
         });
 
-        storyText = (TextView) mContentView.findViewById(R.id.new_story_text);
+        storyText = (TextView) contentView.findViewById(R.id.new_story_text);
 
-        btnAddStory = (Button) mContentView.findViewById(R.id.btn_add_story);
+        btnAddStory = (Button) contentView.findViewById(R.id.btn_add_story);
         btnAddStory.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,7 +71,7 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
             }
         });
 
-        return mContentView;
+        return contentView;
     }
 
     @Override

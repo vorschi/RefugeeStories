@@ -34,6 +34,8 @@
     <string name="tags">Tags:</string>
     <string name="distance">Distance:</string>
 
+    <string name="search_title">Search</string>
+
     <string name="placeholder">placeholder</string>
     
     <string name="tab_tags">My Stories</string>
@@ -65,4 +67,7 @@
         <item>Delete story</item>
     </array>
 
+    <string name="delete_check">Do you really want to delete this story?</string>
+    <string name="delete_true">Delete</string>
+    <string name="delete_false">Cancel</string>
 </resources>
