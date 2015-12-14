@@ -27,10 +27,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
+        android:layout_margin="8dp"
         android:src="@drawable/ic_add_white_24dp"
         android:visibility="gone"
-        fab:fab_colorNormal="@color/dark_blue"
-        fab:fab_colorPressed="@color/gray" />
+        fab:fab_colorNormal="@color/white"
+        fab:fab_colorPressed="@color/dark_blue" />
 
 </FrameLayout>

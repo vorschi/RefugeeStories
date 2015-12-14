@@ -8,7 +8,7 @@
         android:id="@+id/header_timeline"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/dark_blue">
+        android:background="@drawable/timeline_header_shape">
 
         <TextView
             android:id="@+id/timeline_item_title"

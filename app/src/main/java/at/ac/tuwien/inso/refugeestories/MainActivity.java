@@ -68,7 +68,6 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
         }
 
 
-        //showActionBar();
     }
 
     private View createTabView(final int id, final String text) {
@@ -134,10 +133,16 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
             label = (TextView) findViewById(R.id.label);
 
             //Use FragmentStory for both stories and explore
-            if ( tabId.equals(Consts.TAB_MYSTORIES) || tabId.equals(Consts.TAB_EXPLORE) ) {
+            if (tabId.equals(Consts.TAB_MYSTORIES)) {
                 pushFragments(FragmentStory.getInstance(), false, false, null);
                 getWindow().setTitle(getResources().getString(R.string.mystories));
-            } else {
+
+            }
+            else if (tabId.equals(Consts.TAB_EXPLORE)) {
+            pushFragments(FragmentStory.getInstance(), false, false, null);
+            getWindow().setTitle(getResources().getString(R.string.explore));
+            }
+            else {
                 pushFragments(new FragmentNotification(), false, false, null);
                 getWindow().setTitle(getResources().getString(R.string.notifications));
             }
