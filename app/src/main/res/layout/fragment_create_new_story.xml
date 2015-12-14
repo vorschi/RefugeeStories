@@ -9,20 +9,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_margin="16dp"
+        android:padding="10dp"
+        android:background="@drawable/timeline_header_shape">
 
         <TextView
             android:id="@+id/lbl_new_story_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:layout_marginBottom="2dp"
+            android:textColor="@color/white"
             android:text="@string/lbl_title"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <EditText
             android:id="@+id/new_story_title"
-            android:backgroundTint="@color/dark_blue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/textview_newstories"
+            android:textSize="20dp"
+            android:textColor="@color/gray"
+            android:padding="2dp"
+            android:textColorHint="@color/light_gray"
             android:hint="@string/title_hint"
             android:singleLine="true" />
 
@@ -30,7 +39,10 @@
             android:id="@+id/lbl_new_story_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="16dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="2dp"
             android:text="@string/lbl_location"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -38,21 +50,28 @@
             android:id="@+id/new_story_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:padding="2dp"
+            android:textColor="@color/gray"
+            android:textColorHint="@color/light_gray"
+            android:background="@drawable/textview_newstories"
             android:hint="@string/location_hint"
-            android:backgroundTint="@color/dark_blue"
             android:singleLine="true" />
 
         <TextView
             android:id="@+id/lbl_new_story_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="16dp"
             android:layout_marginTop="8dp"
             android:text="@string/lbl_date"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
             android:id="@+id/new_story_date"
-            style="@android:style/Widget.DeviceDefault.Light.Spinner"
+            style="@android:style/Widget.Material.Spinner"
+            android:textSize="20dp"
             android:layout_width="wrap_content"
             android:layout_height="40dp" />
 
@@ -60,6 +79,9 @@
             android:id="@+id/lbl_new_story_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="16dp"
+            android:layout_marginBottom="2dp"
             android:layout_marginTop="8dp"
             android:text="@string/lbl_story_text"
             android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -68,8 +90,12 @@
             android:id="@+id/new_story_text"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:textSize="20dp"
+            android:padding="2dp"
+            android:textColor="@color/gray"
+            android:textColorHint="@color/light_gray"
             android:gravity="top"
-            android:background="@drawable/multiline_textview"
+            android:background="@drawable/textview_newstories"
             android:hint="@string/story_hint"
             android:inputType="textMultiLine" />
 
@@ -77,6 +103,8 @@
             android:id="@+id/lbl_new_story_picture"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textColor="@color/white"
             android:layout_marginTop="8dp"
             android:text="@string/lbl_story_picture"
             android:textAppearance="?android:attr/textAppearanceSmall" />

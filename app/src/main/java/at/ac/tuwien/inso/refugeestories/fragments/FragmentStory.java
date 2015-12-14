@@ -115,6 +115,7 @@ public class FragmentStory extends Fragment {
                             .commit();
                     fragmentManager.executePendingTransactions();
                     getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+                    getActivity().setTitle(R.string.newstory);
                 }
             });
 

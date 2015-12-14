@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:layout_centerHorizontal="true"
     android:layout_centerVertical="true"
-    android:background="@color/black"
     android:orientation="vertical">
 
     <TabHost xmlns:android="http://schemas.android.com/apk/res/android"

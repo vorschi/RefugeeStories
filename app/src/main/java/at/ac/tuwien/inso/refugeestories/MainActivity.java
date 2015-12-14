@@ -19,6 +19,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentExplore;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentNotification;
@@ -135,31 +136,31 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
             //Use FragmentStory for both stories and explore
             if (tabId.equals(Consts.TAB_MYSTORIES)) {
                 pushFragments(FragmentStory.getInstance(), false, false, null);
-                getWindow().setTitle(getResources().getString(R.string.mystories));
+                setTitleBar();
 
             }
             else if (tabId.equals(Consts.TAB_EXPLORE)) {
-            pushFragments(FragmentStory.getInstance(), false, false, null);
-            getWindow().setTitle(getResources().getString(R.string.explore));
+                pushFragments(FragmentStory.getInstance(), false, false, null);
+                setTitleBar();
             }
             else {
                 pushFragments(new FragmentNotification(), false, false, null);
-                getWindow().setTitle(getResources().getString(R.string.notifications));
+                setTitleBar();
             }
 
             /**
              * mario's old code
              *
-            if (tabId.equals(Consts.TAB_MYSTORIES)) {
-                pushFragments(FragmentStory.getInstance(), false, false, null);
-                getWindow().setTitle(getResources().getString(R.string.mystories));
-            } else if (tabId.equals(Consts.TAB_EXPLORE)) {
-                pushFragments(FragmentExplore.getInstance(), false, false, null);
-                getWindow().setTitle(getResources().getString(R.string.explore));
-            } else if (tabId.equals(Consts.TAB_NOTIFICATIONS)) {
-                pushFragments(new FragmentNotification(), false, false, null);
-                getWindow().setTitle(getResources().getString(R.string.notifications));
-            }
+             if (tabId.equals(Consts.TAB_MYSTORIES)) {
+             pushFragments(FragmentStory.getInstance(), false, false, null);
+             getWindow().setTitle(getResources().getString(R.string.mystories));
+             } else if (tabId.equals(Consts.TAB_EXPLORE)) {
+             pushFragments(FragmentExplore.getInstance(), false, false, null);
+             getWindow().setTitle(getResources().getString(R.string.explore));
+             } else if (tabId.equals(Consts.TAB_NOTIFICATIONS)) {
+             pushFragments(new FragmentNotification(), false, false, null);
+             getWindow().setTitle(getResources().getString(R.string.notifications));
+             }
              */
         }
     };
@@ -202,7 +203,9 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        getSupportFragmentManager().popBackStack();
+        getActionBar().setDisplayHomeAsUpEnabled(false);
+        setTitleBar();
     }
 
     @Override
@@ -218,6 +221,7 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
             case android.R.id.home:
                 getSupportFragmentManager().popBackStack();
                 getActionBar().setDisplayHomeAsUpEnabled(false);
+                setTitleBar();
             case R.id.user_btn:
                 //left button, do something
                 return true;
@@ -239,6 +243,20 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
         manager.executePendingTransactions();
         getActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
+    public void setTitleBar(){
+        String tabId = getCurrentTabId();
+
+        if (tabId.equals(Consts.TAB_MYSTORIES))
+            getWindow().setTitle(getResources().getString(R.string.mystories));
+
+        else if (tabId.equals(Consts.TAB_EXPLORE))
+            getWindow().setTitle(getResources().getString(R.string.explore));
+
+        else if (tabId.equals(Consts.TAB_NOTIFICATIONS))
+            getWindow().setTitle(getResources().getString(R.string.notifications));
+    }
+
 
     public String getCurrentTabId() {
         return mCurrentTab;
