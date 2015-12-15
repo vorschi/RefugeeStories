@@ -16,4 +16,11 @@ public class Consts {
     public static final int EDIT = 0;
     public static final int DELETE = 1;
 
+    //Gallery
+    public static final int SELECT_MULTIPLE_IMAGES = 200;
+
+    //Actions
+    public static final String ACTION_PICK = "luminous.ACTION_PICK";
+    public static final String ACTION_MULTIPLE_PICK = "luminous.ACTION_MULTIPLE_PICK";
+
 }

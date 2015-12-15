@@ -4,4 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="card_width">280dp</dimen>
     <dimen name="card_padding">16dp</dimen>
+
+    <dimen name="photo_width">110dp</dimen>
+    <dimen name="photo_height">110dp</dimen>
 </resources>

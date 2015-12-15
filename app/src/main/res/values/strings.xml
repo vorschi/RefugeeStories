@@ -82,4 +82,8 @@
     <string name="user_language">Spoken languages</string>
     <string name="user_interests">Interests</string>
     <string name="user_email">E-Mail</string>
+
+    <string name="title_activity_custom_gallery">Gallery</string>
+    <string name="btn_ok">OK</string>
+
 </resources>

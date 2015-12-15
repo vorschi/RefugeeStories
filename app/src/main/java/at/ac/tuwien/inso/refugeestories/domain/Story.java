@@ -2,33 +2,29 @@ package at.ac.tuwien.inso.refugeestories.domain;
 
 import org.joda.time.DateTime;
 
+import java.util.List;
+
 /**
- * Created by nn on 2.12.2015.
+ * Created by Amer Salkovic on 2.12.2015.
  */
 public class Story {
 
     private int id;
     private int authorId;
-    private int imgResId;
     private String author;
     private String title;
-    private String text;
-    private DateTime date;
     private String location;
+    private String dateAsString;
+    private List<String> images;
+    private String story;
+
+    //these attributes are going to be removed after db introduction
+    private DateTime date;
+    private int imgResId;
+    private String text;
+    //
 
     public Story() { }
-
-    public Story(int id, int authorId, int imgResId, String author,
-                 String title, String text, DateTime date, String location) {
-        this.id = id;
-        this.authorId = authorId;
-        this.imgResId = imgResId;
-        this.author = author;
-        this.title = title;
-        this.text = text;
-        this.date = date;
-        this.location = location;
-    }
 
     public int getId() {
         return id;
@@ -44,14 +40,6 @@ public class Story {
 
     public void setAuthorId(int authorId) {
         this.authorId = authorId;
-    }
-
-    public int getImgResId() {
-        return imgResId;
-    }
-
-    public void setImgResId(int imgResId) {
-        this.imgResId = imgResId;
     }
 
     public String getAuthor() {
@@ -70,12 +58,36 @@ public class Story {
         this.title = title;
     }
 
-    public String getText() {
-        return text;
+    public String getLocation() {
+        return location;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getDateAsString() {
+        return dateAsString;
+    }
+
+    public void setDateAsString(String dateAsString) {
+        this.dateAsString = dateAsString;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+
+    public String getStory() {
+        return story;
+    }
+
+    public void setStory(String story) {
+        this.story = story;
     }
 
     public DateTime getDate() {
@@ -86,11 +98,19 @@ public class Story {
         this.date = date;
     }
 
-    public String getLocation() {
-        return location;
+    public int getImgResId() {
+        return imgResId;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setImgResId(int imgResId) {
+        this.imgResId = imgResId;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 }

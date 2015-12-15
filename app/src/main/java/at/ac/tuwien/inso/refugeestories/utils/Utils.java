@@ -8,5 +8,5 @@ import org.joda.time.format.DateTimeFormatter;
  */
 public class Utils {
 
-    public static DateTimeFormatter dtf = DateTimeFormat.forPattern("DD.mm.yyyy");
+    public static DateTimeFormatter dtf = DateTimeFormat.forPattern("dd.MM.yyyy");
 }
