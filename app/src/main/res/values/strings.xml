@@ -70,4 +70,16 @@
     <string name="delete_check">Do you really want to delete this story?</string>
     <string name="delete_true">Delete</string>
     <string name="delete_false">Cancel</string>
+
+    <string name="btn_request_meeting">Request meeting</string>
+    <string name="btn_report">Report</string>
+    <string name="btn_send_invite">Friend request</string>
+
+    <string name="user_age">Age</string>
+    <string name="user_location">Location</string>
+    <string name="user_gender">Gender</string>
+    <string name="user_country">Country of origin</string>
+    <string name="user_language">Spoken languages</string>
+    <string name="user_interests">Interests</string>
+    <string name="user_email">E-Mail</string>
 </resources>

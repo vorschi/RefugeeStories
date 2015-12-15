@@ -16,11 +16,13 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentNotification;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory.OnStorySelectedListener;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentTimeline;
+import at.ac.tuwien.inso.refugeestories.fragments.FragmentUser;
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
 
 public class MainActivity extends FragmentActivity implements OnStorySelectedListener {
@@ -41,7 +43,6 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_main);
-        this.setTitle(R.string.explore);
 
         manager = getSupportFragmentManager();
         inflater = getLayoutInflater();
@@ -62,6 +63,8 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
             initializeTabs();
             mTabHost.setCurrentTabByTag(Consts.TAB_EXPLORE);
         }
+
+
 
 
     }
@@ -205,12 +208,27 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
                 getSupportFragmentManager().popBackStack();
                 getActionBar().setDisplayHomeAsUpEnabled(false);
                 setTitleBar();
-            case R.id.user_btn:
-                //left button, do something
                 return true;
-            case R.id.filter_btn:
+            case R.id.user_btn:
+                pushFragments(FragmentUser.getInstance(), false, true, null);
+                getActionBar().setDisplayHomeAsUpEnabled(true);
+                return true;
+
+            //TODO: implement filter-options
+            case R.id.menuSortNewest:
+                writeToast("sort by newest");
+                return true;
+            case R.id.menuSortOldest:
                 // right button
                 return true;
+            case R.id.menuSortNearest:
+                // right button
+                return true;
+            case R.id.menuSortFarthest:
+                // right button
+                return true;
+
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -246,5 +264,10 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
 
     public String getCurrentTabId() {
         return mCurrentTab;
+    }
+
+    private void writeToast(String text){
+        Toast toast = Toast.makeText(getBaseContext(), text, Toast.LENGTH_SHORT );
+        toast.show();
     }
 }
