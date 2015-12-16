@@ -16,7 +16,7 @@ import at.ac.tuwien.inso.refugeestories.domain.Story;
  */
 public class MockFactory {
 
-    public static List<Story> getStories(int content) {
+    /*public static List<Story> getStories(int content) {
         List<Story> stories = new ArrayList<>();
         stories.add(createDummyStory());
         stories.add(createDummyStory1());
@@ -112,5 +112,5 @@ public class MockFactory {
         s.setLocation("Böheimkirchen");
         s.setImgResId(R.drawable.woman2);
         return s;
-    }
+    }*/
 }

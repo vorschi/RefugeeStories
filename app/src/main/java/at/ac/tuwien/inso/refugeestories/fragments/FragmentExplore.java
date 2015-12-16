@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import at.ac.tuwien.inso.refugeestories.R;
+import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
+import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
 import at.ac.tuwien.inso.refugeestories.utils.RecyclerItemClickListener;
 import at.ac.tuwien.inso.refugeestories.utils.adapters.StoryAdapter;
 import at.ac.tuwien.inso.refugeestories.utils.MockFactory;
@@ -38,6 +40,8 @@ public class FragmentExplore extends Fragment {
 
     OnStorySelectedListener mStoryCallback;
 
+    private StoryControllerImpl storyControllerInstance;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -53,11 +57,15 @@ public class FragmentExplore extends Fragment {
         //cardPadding = (size.x - cardWidth) / 2;
         allPixels = 0;
 
+        StoryControllerImpl.initializeInstance(new MyDatabaseHelper(getActivity().getBaseContext()));
+        storyControllerInstance = StoryControllerImpl.getInstance();
+
         mLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         StoryAdapter storyAdapter = new StoryAdapter();
         mRecyclerView.setAdapter(storyAdapter);
-        storyAdapter.updateStories(MockFactory.getStories(6));
+        storyAdapter.updateStories(storyControllerInstance.getAllStories());
+        //storyAdapter.updateStories(MockFactory.getStories(6));
 
         /*
         mRecyclerView.addOnItemTouchListener(

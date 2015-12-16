@@ -16,7 +16,13 @@ import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Toast;
 
+import java.util.List;
+
 import at.ac.tuwien.inso.refugeestories.R;
+import at.ac.tuwien.inso.refugeestories.domain.Story;
+import at.ac.tuwien.inso.refugeestories.persistence.ImageControllerImpl;
+import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
+import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
 import at.ac.tuwien.inso.refugeestories.utils.MockFactory;
 import at.ac.tuwien.inso.refugeestories.utils.adapters.TimelineAdapter;
 
@@ -39,13 +45,28 @@ public class FragmentTimeline extends Fragment {
     private boolean loading = false;
     private boolean allStoriesLoaded = false;
 
+    private StoryControllerImpl storyControllerInstance;
+    private ImageControllerImpl imageControllerInstance;
+    private MyDatabaseHelper dbHelper;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        dbHelper = new MyDatabaseHelper(getActivity().getBaseContext());
+        StoryControllerImpl.initializeInstance(dbHelper);
+        storyControllerInstance = StoryControllerImpl.getInstance();
+        ImageControllerImpl.initializeInstance(dbHelper);
+        imageControllerInstance = ImageControllerImpl.getInstance();
 
         mFragmentLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_timeline, container, false);
         timeline = (ListView) mFragmentLayout.findViewById(R.id.lst_timeline);
         timelineAdapter = new TimelineAdapter(context);
-        timelineAdapter.updateStories(MockFactory.getStories(6));
+        List<Story> stories = storyControllerInstance.getAllStories();
+        for(Story story : stories) {
+            story.setImages(imageControllerInstance.getImagesByStoryId(story.getId()));
+        }
+        timelineAdapter.updateStories(stories);
+        //timelineAdapter.updateStories(MockFactory.getStories(6));
         timeline.setAdapter(timelineAdapter);
 
 

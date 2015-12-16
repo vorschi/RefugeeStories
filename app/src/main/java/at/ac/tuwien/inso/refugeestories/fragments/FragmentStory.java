@@ -22,6 +22,9 @@ import java.util.List;
 import at.ac.tuwien.inso.refugeestories.MainActivity;
 import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.domain.Story;
+import at.ac.tuwien.inso.refugeestories.persistence.ImageControllerImpl;
+import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
+import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
 import at.ac.tuwien.inso.refugeestories.utils.MockFactory;
 import at.ac.tuwien.inso.refugeestories.utils.RecyclerItemClickListener;
@@ -52,6 +55,10 @@ public class FragmentStory extends Fragment {
 
     OnStorySelectedListener mStoryCallback;
 
+    private StoryControllerImpl storyControllerInstance;
+    private ImageControllerImpl imageControllerInstance;
+    private MyDatabaseHelper dbHelper;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -66,6 +73,12 @@ public class FragmentStory extends Fragment {
         myStoriesView.setHasFixedSize(true);
         myStoriesView.setLayoutManager(mLayoutManager);
         myStoriesView.setAdapter(storyAdapter);
+
+        dbHelper = new MyDatabaseHelper(getActivity().getBaseContext());
+        StoryControllerImpl.initializeInstance(dbHelper);
+        storyControllerInstance = StoryControllerImpl.getInstance();
+        ImageControllerImpl.initializeInstance(dbHelper);
+        imageControllerInstance = ImageControllerImpl.getInstance();
 
         //add touch listener to the recyclerView
         myStoriesView.addOnItemTouchListener(new RecyclerItemClickListener(context,
@@ -87,15 +100,21 @@ public class FragmentStory extends Fragment {
         //add data to the recyclerView
         if (Consts.TAB_EXPLORE.equals(CURRENT_TAB)) {
 
-            //TODO get random stories from db. Ideally each user should have at least one story.
-            stories = MockFactory.getStories(6);
+            stories = storyControllerInstance.getRandomStories(10);
+            for(Story story : stories) {
+                story.setImages(imageControllerInstance.getImagesByStoryId(story.getId()));
+            }
+            //stories = MockFactory.getStories(6);
             storyAdapter.updateStories(stories);
 
         } else if (Consts.TAB_MYSTORIES.equals(CURRENT_TAB)) {
 
             //TODO get personal stories from the db.
-            //TODO stories = ...
-            stories = MockFactory.getStories(6);
+            stories = storyControllerInstance.getStoriesByUserId(1);
+            for(Story story : stories) {
+                story.setImages(imageControllerInstance.getImagesByStoryId(story.getId()));
+            }
+            //stories = MockFactory.getStories(6);
             if (stories.isEmpty()) {
                 noStoriesMsg = (TextView) contentView.findViewById(R.id.no_stories_msg);
                 noStoriesMsg.setVisibility(TextView.VISIBLE);

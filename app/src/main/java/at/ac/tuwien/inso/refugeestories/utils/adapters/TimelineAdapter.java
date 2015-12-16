@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.refugeestories.utils.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 import at.ac.tuwien.inso.refugeestories.R;
+import at.ac.tuwien.inso.refugeestories.domain.Image;
 import at.ac.tuwien.inso.refugeestories.domain.Story;
 import at.ac.tuwien.inso.refugeestories.utils.Utils;
 
@@ -88,6 +90,12 @@ public class TimelineAdapter extends BaseAdapter {
 
         ImageAdapter imageAdapter = new ImageAdapter(context);
         List<Integer> imgs = new ArrayList<>();
+        // TODO: get image for story
+        //int imageResource;
+        //for(Image image: story.getImages()) {
+        //    imageResource = context.getResources().getIdentifier(path, null, null);
+        //    imgs.add(imageResource);
+        //}
         imgs.add(R.drawable.tutanchamun);
         imgs.add(R.drawable.dog);
         imgs.add(R.drawable.woman2);

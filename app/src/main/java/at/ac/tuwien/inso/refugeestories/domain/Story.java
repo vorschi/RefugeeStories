@@ -10,43 +10,28 @@ import java.util.List;
 public class Story {
 
     private int id;
-    private int authorId;
-    private String author;
     private String title;
+    private String text;
+    private DateTime date;
     private String location;
-    private String dateAsString;
-    private List<String> images;
-    private String story;
+    private List<Image> images;
+    private Person author;
 
     //these attributes are going to be removed after db introduction
-    private DateTime date;
     private int imgResId;
-    private String text;
     //
 
     public Story() { }
 
-    public int getId() {
-        return id;
-    }
+    public int getId() { return id; }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public void setId(int id) { this.id = id; }
 
-    public int getAuthorId() {
-        return authorId;
-    }
-
-    public void setAuthorId(int authorId) {
-        this.authorId = authorId;
-    }
-
-    public String getAuthor() {
+    public Person getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Person author) {
         this.author = author;
     }
 
@@ -66,28 +51,20 @@ public class Story {
         this.location = location;
     }
 
-    public String getDateAsString() {
-        return dateAsString;
-    }
-
-    public void setDateAsString(String dateAsString) {
-        this.dateAsString = dateAsString;
-    }
-
-    public List<String> getImages() {
+    public List<Image> getImages() {
         return images;
     }
 
-    public void setImages(List<String> images) {
+    public void setImages(List<Image> images) {
         this.images = images;
     }
 
-    public String getStory() {
-        return story;
+    public String getText() {
+        return text;
     }
 
-    public void setStory(String story) {
-        this.story = story;
+    public void setText(String text) {
+        this.text = text;
     }
 
     public DateTime getDate() {
@@ -102,15 +79,5 @@ public class Story {
         return imgResId;
     }
 
-    public void setImgResId(int imgResId) {
-        this.imgResId = imgResId;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
+    public void setImgResId(int imgResId) { this.imgResId = imgResId; }
 }

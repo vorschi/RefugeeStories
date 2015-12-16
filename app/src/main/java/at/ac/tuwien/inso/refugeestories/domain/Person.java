@@ -1,146 +1,62 @@
 package at.ac.tuwien.inso.refugeestories.domain;
 
-import org.joda.time.DateTime;
-
 import java.util.List;
 
 /**
- * Created by Amer Salkovic on 14.11.2015.
+ * Created by mtraxler on 14.12.2015.
  */
 public class Person {
 
     private int id;
+    private String fistname;
+    private String lastname;
     private String username;
     private String password;
     private String email;
-    private boolean isTeller;
-
-    private String name;
     private String nationality;
-    private List<String> tags;
-    private List<String> spokenLanguages;
-    private String story;
-    private DateTime dateTime;
-    private long lat;
-    private long lng;
-    private boolean geoLocation;
-    private int distance;
+    private String img;
+    private List<Language> languages;
+    private List<Story> stories;
 
     public Person() { }
 
-    public Person(String story) {
-        this.story = story;
-    }
+    public int getId() { return id; }
 
-    public int getDistance() {
-        return distance;
-    }
+    public void setId(int id) { this.id = id; }
 
-    public void setDistance(int distance) {
-        this.distance = distance;
-    }
+    public String getFistname() { return fistname; }
 
-    public boolean isGeoLocation() {
-        return geoLocation;
-    }
+    public void setFistname(String fistname) { this.fistname = fistname; }
 
-    public void setGeoLocation(boolean geoLocation) {
-        this.geoLocation = geoLocation;
-    }
+    public String getLastname() { return lastname; }
 
-    public long getLng() {
-        return lng;
-    }
+    public void setLastname(String lastname) { this.lastname = lastname; }
 
-    public void setLng(long lng) {
-        this.lng = lng;
-    }
+    public String getUsername() { return username; }
 
-    public long getLat() {
-        return lat;
-    }
+    public void setUsername(String username) { this.username = username; }
 
-    public void setLat(long lat) {
-        this.lat = lat;
-    }
+    public String getPassword() { return password; }
 
-    public DateTime getDateTime() {
-        return dateTime;
-    }
+    public void setPassword(String password) { this.password = password; }
 
-    public void setDateTime(DateTime dateTime) {
-        this.dateTime = dateTime;
-    }
+    public String getEmail() { return email; }
 
-    public String getStory() {
-        return story;
-    }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setStory(String story) {
-        this.story = story;
-    }
+    public String getNationality() { return nationality; }
 
-    public List<String> getSpokenLanguages() {
-        return spokenLanguages;
-    }
+    public void setNationality(String nationality) { this.nationality = nationality; }
 
-    public void setSpokenLanguages(List<String> spokenLanguages) {
-        this.spokenLanguages = spokenLanguages;
-    }
+    public String getImg() { return img; }
 
-    public List<String> getTags() {
-        return tags;
-    }
+    public void setImg(String img) { this.img = img; }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
+    public List<Language> getLanguages() { return languages; }
 
-    public String getNationality() {
-        return nationality;
-    }
+    public void setLanguages(List<Language> languages) { this.languages = languages; }
 
-    public void setNationality(String nationality) {
-        this.nationality = nationality;
-    }
+    public List<Story> getStories() { return stories; }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isTeller() {
-        return isTeller;
-    }
-
-    public void setIsTeller(boolean isTeller) {
-        this.isTeller = isTeller;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public void setStories(List<Story> stories) { this.stories = stories; }
 }

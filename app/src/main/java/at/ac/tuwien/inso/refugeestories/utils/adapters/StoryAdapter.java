@@ -49,7 +49,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> 
         TextView txtStoryText = holder.txtStoryText;
 
         imgStoryPhoto.setImageResource(stories.get(position).getImgResId());
-        txtAuthor.setText(stories.get(position).getAuthor());
+        txtAuthor.setText(stories.get(position).getAuthor().getUsername());
         txtInfo.setText( Utils.dtf.print(stories.get(position).getDate()) + ", " + stories.get(position).getLocation() );
         txtStoryTitle.setText(stories.get(position).getTitle());
         txtStoryText.setText(stories.get(position).getText());

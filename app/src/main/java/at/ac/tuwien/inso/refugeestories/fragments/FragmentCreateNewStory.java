@@ -17,6 +17,8 @@ import android.widget.TextView;
 import android.app.DatePickerDialog.OnDateSetListener;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -46,6 +48,7 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
 
     String[] selectedImages;
 
+    DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("dd.MM.yyyy");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,8 +93,8 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
                 Story newStory = new Story();
                 newStory.setTitle(storyTitle.getText().toString());
                 newStory.setLocation(storyLocation.getText().toString());
-                newStory.setDateAsString(storyDate.getText().toString());
-                newStory.setStory(storyText.getText().toString());
+                newStory.setDate(dateFormatter.parseDateTime(storyDate.getText().toString()));
+                newStory.setText(storyText.getText().toString());
                 //TODO save story -> should return storyId
 
                 //Images
