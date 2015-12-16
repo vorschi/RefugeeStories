@@ -128,13 +128,8 @@ public class FragmentStory extends Fragment {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.realtabcontent, FragmentCreateNewStory.getInstance())
-                            .addToBackStack(null)
-                            .commit();
-                    fragmentManager.executePendingTransactions();
-                    getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-                    getActivity().setTitle(R.string.newstory);
+                    MainActivity activity = (MainActivity) getActivity();
+                    activity.pushFragments(FragmentCreateNewStory.getInstance(),true, Consts.TAB_NEWSTORY);
                 }
             });
 

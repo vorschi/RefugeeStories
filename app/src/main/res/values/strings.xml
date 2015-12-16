@@ -2,9 +2,11 @@
     <string name="app_name">REFUGEEDIARIES</string>
     <string name="explore">Explore</string>
     <string name="mystories">My Stories</string>
-    <string name="newstory">Create a new story</string>
-    <string name="notifications">Notifications
-    </string>
+    <string name="newstory">Add story</string>
+    <string name="notifications">Notifications</string>
+    <string name="myprofile">My Profile</string>
+    <string name="user">User XY</string>
+    <string name="timeline">UserXY stories</string>
     <string name="app_label">Label</string>
 
     <string name="hello_world">Hello world!</string>

@@ -63,10 +63,6 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
             initializeTabs();
             mTabHost.setCurrentTabByTag(Consts.TAB_EXPLORE);
         }
-
-
-
-
     }
 
     private View createTabView(final int id, final String text) {
@@ -76,16 +72,6 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
         TextView textView = (TextView) view.findViewById(R.id.tab_text);
         textView.setText(text);
         return view;
-    }
-
-    private void showActionBar() {
-        View v = inflater.inflate(R.layout.custom_bar, null);
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setCustomView(v);
     }
 
     /*
@@ -127,53 +113,33 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
 
     TabHost.OnTabChangeListener listener = new TabHost.OnTabChangeListener() {
         public void onTabChanged(String tabId) {
-
-            mCurrentTab = tabId;
-            label = (TextView) findViewById(R.id.label);
-
             //Use FragmentStory for both stories and explore
-            if (tabId.equals(Consts.TAB_MYSTORIES)) {
-                pushFragments(FragmentStory.getInstance(), false, false, null);
-                setTitleBar();
-
-            }
-            else if (tabId.equals(Consts.TAB_EXPLORE)) {
-                pushFragments(FragmentStory.getInstance(), false, false, null);
-                setTitleBar();
-            }
-            else {
-                pushFragments(new FragmentNotification(), false, false, null);
-                setTitleBar();
-            }
+            if (tabId.equals(Consts.TAB_MYSTORIES))
+                pushFragments(FragmentStory.getInstance(), false, tabId);
+            else if (tabId.equals(Consts.TAB_EXPLORE))
+                pushFragments(FragmentStory.getInstance(), false, tabId);
+            else
+                pushFragments(FragmentNotification.getInstance(), false, tabId);
         }
     };
 
-    public void pushFragments(Fragment fragment,
-                              boolean shouldAnimate, boolean shouldAdd, String tag) {
+    public void pushFragments(Fragment fragment, boolean shouldAdd, String tabId) {
+        mCurrentTab = tabId;
+        label = (TextView) findViewById(R.id.label);
         FragmentTransaction ft = manager.beginTransaction();
-
-        ft.replace(R.id.realtabcontent, fragment, tag);
-
-        if (shouldAnimate) {
-            /*
-            here you can implement animations for fragment changes
-             */
-        }
-
+        ft.replace(R.id.realtabcontent, fragment);
         if (shouldAdd) {
-            /*
-            here you can create named backstack for realize another logic.
-            ft.addToBackStack("name of your backstack");
-             */
+            //add to stack for back navigation
             ft.addToBackStack(null);
-        } else {
+            updateAppBar(getCurrentTabId());
+        }
+        else {
             /*
             and remove named backstack:
             manager.popBackStack("name of your backstack", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            or remove whole:
+            remove whole:*/
             manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-             */
-            manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            updateAppBar();
         }
         ft.commit();
     }
@@ -186,9 +152,13 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
 
     @Override
     public void onBackPressed() {
-        getActionBar().setDisplayHomeAsUpEnabled(false);
-        setTitleBar();
-        super.onBackPressed();
+        if (getSupportFragmentManager().getBackStackEntryCount()==0)
+            this.finish();
+
+        else{
+            super.onBackPressed();
+            updateAppBar();
+        }
     }
 
     @Override
@@ -206,12 +176,10 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
         switch (item.getItemId()) {
             case android.R.id.home:
                 getSupportFragmentManager().popBackStack();
-                getActionBar().setDisplayHomeAsUpEnabled(false);
-                setTitleBar();
+                updateAppBar();
                 return true;
             case R.id.user_btn:
-                pushFragments(FragmentUser.getInstance(), false, true, null);
-                getActionBar().setDisplayHomeAsUpEnabled(true);
+                pushFragments(FragmentUser.getInstance(), true, Consts.TAB_MYPROFILE);
                 return true;
 
             //TODO: implement filter-options
@@ -236,31 +204,9 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
 
     @Override
     public void onStorySelected(int position) {
-        FragmentTimeline timeline = new FragmentTimeline();
-        FragmentTransaction ft = manager.beginTransaction();
-        ft.replace(R.id.realtabcontent, timeline, FragmentTimeline.class.getSimpleName());
-        ft.addToBackStack(null);
-        ft.commit();
-        manager.executePendingTransactions();
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        pushFragments(FragmentTimeline.getInstance(), true, Consts.TAB_TIMELINE);
     }
 
-    public void setTitleBar(){
-        String tabId = getCurrentTabId();
-
-        if (tabId.equals(Consts.TAB_MYSTORIES)) {
-            getWindow().setTitle(getResources().getString(R.string.mystories));
-            this.invalidateOptionsMenu();
-        }
-        else if (tabId.equals(Consts.TAB_EXPLORE)) {
-            getWindow().setTitle(getResources().getString(R.string.explore));
-            this.invalidateOptionsMenu();
-        }
-        else if (tabId.equals(Consts.TAB_NOTIFICATIONS)){
-            getWindow().setTitle(getResources().getString(R.string.notifications));
-            this.invalidateOptionsMenu();
-        }
-    }
 
     public String getCurrentTabId() {
         return mCurrentTab;
@@ -269,5 +215,37 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
     private void writeToast(String text){
         Toast toast = Toast.makeText(getBaseContext(), text, Toast.LENGTH_SHORT );
         toast.show();
+    }
+
+    private void updateAppBar(String tabId){
+        if (tabId.equals(Consts.TAB_MYPROFILE))
+            setTitle(R.string.myprofile);
+
+        else if (tabId.equals(Consts.TAB_USER))
+            setTitle(R.string.user);
+
+        else if (tabId.equals(Consts.TAB_NEWSTORY))
+            setTitle(R.string.newstory);
+
+        else if(tabId.equals(Consts.TAB_TIMELINE))
+            setTitle(R.string.timeline);
+
+        invalidateOptionsMenu();
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void updateAppBar(){
+
+        if (mTabHost.getCurrentTabTag().equals(Consts.TAB_MYSTORIES))
+            setTitle(R.string.mystories);
+
+        else if (mTabHost.getCurrentTabTag().equals(Consts.TAB_EXPLORE))
+            setTitle(R.string.explore);
+
+        else if (mTabHost.getCurrentTabTag().equals(Consts.TAB_NOTIFICATIONS))
+            setTitle(R.string.notifications);
+
+        invalidateOptionsMenu();
+        getActionBar().setDisplayHomeAsUpEnabled(false);
     }
 }

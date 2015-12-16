@@ -11,6 +11,10 @@ public class Consts {
     public static final String TAB_MYSTORIES = "MY_STORIES";
     public static final String TAB_EXPLORE = "EXPLORE";
     public static final String TAB_NOTIFICATIONS = "NOTIFICATIONS";
+    public static final String TAB_TIMELINE = "TIMELINE";
+    public static final String TAB_USER = "USER";
+    public static final String TAB_MYPROFILE = "MYPROFILE";
+    public static final String TAB_NEWSTORY = "NEWSTORY";
 
     //STORY DIALOG OPTIONS
     public static final int EDIT = 0;
