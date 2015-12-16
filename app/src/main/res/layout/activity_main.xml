@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/gray"/>
+                android:background="@color/light_gray"/>
             <!--android:background="@drawable/bg_main_app_gradient"-->
 
             <TabWidget
@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:background="@color/gray"
+                android:background="@color/dark_gray"
                 android:orientation="horizontal" />
         </LinearLayout>
     </TabHost>

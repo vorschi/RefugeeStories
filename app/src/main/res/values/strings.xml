@@ -81,7 +81,7 @@
     <string name="user_location">Location</string>
     <string name="user_gender">Gender</string>
     <string name="user_country">Country of origin</string>
-    <string name="user_language">Spoken languages</string>
+    <string name="user_language">Languages</string>
     <string name="user_interests">Interests</string>
     <string name="user_email">E-Mail</string>
 
