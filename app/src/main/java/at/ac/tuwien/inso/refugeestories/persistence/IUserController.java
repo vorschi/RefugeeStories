@@ -7,7 +7,7 @@ import at.ac.tuwien.inso.refugeestories.domain.Person;
  */
 public interface IUserController {
 
-    boolean createRecord(Person person);
+    int createRecord(Person person);
     Person getSingleRecord(int id);
     boolean updateRecord(Person person);
     boolean deleteRecord(Person person);

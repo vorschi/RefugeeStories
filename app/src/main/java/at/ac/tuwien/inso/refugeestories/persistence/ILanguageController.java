@@ -10,7 +10,7 @@ import at.ac.tuwien.inso.refugeestories.domain.Person;
  */
 public interface ILanguageController {
 
-    boolean createRecord(Person person, Language language);
+    int createRecord(Person person, Language language);
     Language getSingleLanguage(int id);
     List<Language> getLanguagesByUserId(int userId);
     List<Language> getAllLanguages();

@@ -1,7 +1,6 @@
 package at.ac.tuwien.inso.refugeestories.domain;
 
-import org.joda.time.DateTime;
-
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,7 +11,7 @@ public class Story {
     private int id;
     private String title;
     private String text;
-    private DateTime date;
+    private Date date;
     private String location;
     private List<Image> images;
     private Person author;
@@ -67,11 +66,11 @@ public class Story {
         this.text = text;
     }
 
-    public DateTime getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(DateTime date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

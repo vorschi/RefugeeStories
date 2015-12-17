@@ -15,11 +15,7 @@ import android.widget.RelativeLayout;
 import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
 import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
-<<<<<<< HEAD
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
-import at.ac.tuwien.inso.refugeestories.utils.RecyclerItemClickListener;
-=======
->>>>>>> f11a3f72ca59e6fe493e3f4ee978d86ba38cda7a
 import at.ac.tuwien.inso.refugeestories.utils.adapters.StoryAdapter;
 
 /**

@@ -44,7 +44,7 @@ public class ImageControllerImpl implements IImageController {
     }
 
     @Override
-    public boolean createRecord(Image image) {
+    public int createRecord(Image image) {
         ContentValues values = new ContentValues();
 
         values.put(TableEntry.IMG, image.getImg());
@@ -52,10 +52,10 @@ public class ImageControllerImpl implements IImageController {
 
         SQLiteDatabase db = myDbHelper.getWritableDatabase();
 
-        boolean createSuccessful = db.insert(TABLE_NAME, null, values) > 0;
+        int id = MyDatabaseHelper.safeLongToInt(db.insert(TABLE_NAME, null, values));
         db.close();
 
-        return createSuccessful;
+        return id;
     }
 
     @Override

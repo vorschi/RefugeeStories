@@ -28,6 +28,7 @@ import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
 import at.ac.tuwien.inso.refugeestories.utils.RecyclerItemClickListener;
 import at.ac.tuwien.inso.refugeestories.utils.tasks.StoryLoaderTask;
+import at.ac.tuwien.inso.refugeestories.utils.SharedPreferencesHandler;
 import at.ac.tuwien.inso.refugeestories.utils.adapters.StoryAdapter;
 
 /**
@@ -57,6 +58,7 @@ public class FragmentStory extends Fragment {
     AlertDialog optionDialog;
 
     OnStorySelectedListener mStoryCallback;
+    private SharedPreferencesHandler sharedPrefs;
 
     private StoryControllerImpl storyControllerInstance;
     private ImageControllerImpl imageControllerInstance;
@@ -87,6 +89,8 @@ public class FragmentStory extends Fragment {
         ImageControllerImpl.initializeInstance(dbHelper);
         imageControllerInstance = ImageControllerImpl.getInstance();
 
+        sharedPrefs = new SharedPreferencesHandler(getActivity());
+
         //add touch listener to the recyclerView
         myStoriesView.addOnItemTouchListener(new RecyclerItemClickListener(context,
                 new RecyclerItemClickListener.OnItemClickListener() {
@@ -113,11 +117,7 @@ public class FragmentStory extends Fragment {
         } else if (Consts.TAB_MYSTORIES.equals(CURRENT_TAB)) {
 
             //TODO get personal stories from the db.
-            stories = storyControllerInstance.getStoriesByUserId(1);
-            for(Story story : stories) {
-                story.setImages(imageControllerInstance.getImagesByStoryId(story.getId()));
-            }
-            //stories = MockFactory.getStories(6);
+            stories = sharedPrefs.getUser().getStories();
             if (stories.isEmpty()) {
                 noStoriesMsg = (TextView) contentView.findViewById(R.id.no_stories_msg);
                 noStoriesMsg.setVisibility(TextView.VISIBLE);
@@ -202,8 +202,9 @@ public class FragmentStory extends Fragment {
         void onStorySelected(int position);
     }
 
-    public String getName(){
+    public String getName() {
         return Consts.TAB_MYSTORIES;
+    }
     public void addStories(List<Story> stories) {
         if(storyAdapter != null)
             storyAdapter.updateStories(stories);

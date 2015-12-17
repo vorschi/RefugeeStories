@@ -46,7 +46,7 @@ public class UserControllerImpl implements IUserController {
     }
 
     @Override
-    public boolean createRecord(Person person) {
+    public int createRecord(Person person) {
         ContentValues values = new ContentValues();
 
         values.put(TableEntry.FIRSTNAME, person.getFistname());
@@ -58,10 +58,10 @@ public class UserControllerImpl implements IUserController {
         values.put(TableEntry.IMG, person.getImg());
         SQLiteDatabase db = myDbHelper.getWritableDatabase();
 
-        boolean createSuccessful = db.insert(TABLE_NAME, null, values) > 0;
+        int id = MyDatabaseHelper.safeLongToInt(db.insert(TABLE_NAME, null, values));
         db.close();
 
-        return createSuccessful;
+        return id;
     }
 
     @Override

@@ -94,4 +94,6 @@
     <string name="title_activity_custom_gallery">Gallery</string>
     <string name="btn_ok">OK</string>
 
+    <string name="sharedPref">MySharedPref</string>
+
 </resources>

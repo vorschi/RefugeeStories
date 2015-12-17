@@ -17,17 +17,21 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.app.DatePickerDialog.OnDateSetListener;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import at.ac.tuwien.inso.refugeestories.R;
+import at.ac.tuwien.inso.refugeestories.domain.Image;
+import at.ac.tuwien.inso.refugeestories.domain.Person;
 import at.ac.tuwien.inso.refugeestories.domain.Story;
+import at.ac.tuwien.inso.refugeestories.persistence.ImageControllerImpl;
+import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
+import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
+import at.ac.tuwien.inso.refugeestories.utils.SharedPreferencesHandler;
 import at.ac.tuwien.inso.refugeestories.utils.Utils;
 
 /**
@@ -49,18 +53,30 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
 
     String[] selectedImages;
 
-    DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("dd.MM.yyyy");
+    private SharedPreferencesHandler sharedPrefs;
+
+    private StoryControllerImpl storyControllerInstance;
+    private ImageControllerImpl imageControllerInstance;
+    private MyDatabaseHelper dbHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View contentView = inflater.inflate(R.layout.fragment_create_new_story, container, false);
+
+        dbHelper = new MyDatabaseHelper(getActivity().getBaseContext());
+        StoryControllerImpl.initializeInstance(dbHelper);
+        storyControllerInstance = StoryControllerImpl.getInstance();
+        ImageControllerImpl.initializeInstance(dbHelper);
+        imageControllerInstance = ImageControllerImpl.getInstance();
+
+        sharedPrefs = new SharedPreferencesHandler(getActivity());
 
         storyTitle = (TextView) contentView.findViewById(R.id.new_story_title);
 
         storyLocation = (TextView) contentView.findViewById(R.id.new_story_location);
 
         storyDate = (TextView) contentView.findViewById(R.id.new_story_date);
-        storyDate.setText(Utils.dtf.print(DateTime.now()));
+        storyDate.setText(Utils.dateFormat.format(new Date()));
         storyDate.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,17 +106,38 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
                 }
 
                 //Story
-                // TODO get Author name and id
                 Story newStory = new Story();
                 newStory.setTitle(storyTitle.getText().toString());
                 newStory.setLocation(storyLocation.getText().toString());
-                newStory.setDate(dateFormatter.parseDateTime(storyDate.getText().toString()));
+                try {
+                    newStory.setDate(Utils.dateFormat.parse(storyDate.getText().toString()));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 newStory.setText(storyText.getText().toString());
-                //TODO save story -> should return storyId
+                Person author = sharedPrefs.getUser();
+                newStory.setAuthor(author);
+                int storyId = storyControllerInstance.createRecord(newStory);
+                if(storyId < 0) { return; }
+                newStory.setId(storyId);
 
                 //Images
-                List<String> images = getSelectedImages();
-                //TODO save images using storyId
+                List<String> imageStrings = getSelectedImages();
+                Image newImage = null;
+                int imageId;
+                for(String imageString : imageStrings) {
+                    newImage = new Image();
+                    newImage.setImg(imageString);
+                    newImage.setStory(newStory);
+                    imageId = imageControllerInstance.createRecord(newImage);
+                    if(imageId < 0) { return; }
+                    newImage.setId(imageId);
+                    newStory.getImages().add(newImage);
+                }
+
+                //Author
+                author.getStories().add(newStory);
+                sharedPrefs.putUser(author);
             }
         });
 

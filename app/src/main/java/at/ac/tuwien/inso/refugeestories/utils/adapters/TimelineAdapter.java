@@ -85,7 +85,7 @@ public class TimelineAdapter extends BaseAdapter {
         Story story = (Story) getItem(position);
         //System.out.println("Story title: " + story.getTitle());
         txtTimelineItemTitle.setText(story.getTitle());
-        txtTimelineItemDetails.setText( Utils.dtf.print(stories.get(position).getDate()) + ", " + stories.get(position).getLocation() );
+        txtTimelineItemDetails.setText( Utils.dateFormat.format(stories.get(position).getDate()) + ", " + stories.get(position).getLocation() );
         txtTimelineItemText.setText(story.getText());
 
         ImageAdapter imageAdapter = new ImageAdapter(context);

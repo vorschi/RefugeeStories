@@ -49,7 +49,7 @@ public class LanguageControllerImpl implements ILanguageController {
     }
 
     @Override
-    public boolean createRecord(Person person, Language language) {
+    public int createRecord(Person person, Language language) {
         ContentValues values = new ContentValues();
 
         values.put(TableEntryUserLanguage.AUTHORID, person.getId());
@@ -57,10 +57,10 @@ public class LanguageControllerImpl implements ILanguageController {
 
         SQLiteDatabase db = myDbHelper.getWritableDatabase();
 
-        boolean createSuccessful = db.insert(TABLE_NAME_USER_LANGUAGE, null, values) > 0;
+        int id = MyDatabaseHelper.safeLongToInt(db.insert(TABLE_NAME_USER_LANGUAGE, null, values));
         db.close();
 
-        return createSuccessful;
+        return id;
     }
 
     @Override

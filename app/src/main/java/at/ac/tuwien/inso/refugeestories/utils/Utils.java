@@ -1,12 +1,11 @@
 package at.ac.tuwien.inso.refugeestories.utils;
 
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 
 /**
  * Created by Amer Salkovic on 15.11.2015.
  */
 public class Utils {
 
-    public static DateTimeFormatter dtf = DateTimeFormat.forPattern("dd.MM.yyyy");
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 }

@@ -5,9 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +13,7 @@ import java.util.List;
 import at.ac.tuwien.inso.refugeestories.domain.Image;
 import at.ac.tuwien.inso.refugeestories.domain.Story;
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
+import at.ac.tuwien.inso.refugeestories.utils.Utils;
 
 /**
  * Created by mtraxler on 14.12.2015.
@@ -53,25 +52,22 @@ public class StoryControllerImpl implements IStoryController {
         public static final String AUTHORID = "authorid";
     }
 
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-    private DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("dd.MM.yyyy");
-
     @Override
-    public boolean createRecord(Story story) {
+    public int createRecord(Story story) {
         ContentValues values = new ContentValues();
 
         values.put(TableEntry.TITLE, story.getTitle());
         values.put(TableEntry.TEXT, story.getText());
-        values.put(TableEntry.DATE, dateFormat.format(story.getDate()));
+        values.put(TableEntry.DATE, Utils.dateFormat.format(story.getDate()));
         values.put(TableEntry.LOCATION, story.getLocation());
         values.put(TableEntry.AUTHORID, story.getAuthor().getId());
 
         SQLiteDatabase db = myDbHelper.getWritableDatabase();
 
-        boolean createSuccessful = db.insert(TABLE_NAME, null, values) > 0;
+        int id = MyDatabaseHelper.safeLongToInt(db.insert(TABLE_NAME, null, values));
         db.close();
 
-        return createSuccessful;
+        return id;
     }
 
     @Override
@@ -88,7 +84,11 @@ public class StoryControllerImpl implements IStoryController {
             story.setId(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.ID)));
             story.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TITLE)));
             story.setText(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TEXT)));
-            story.setDate(dateFormatter.parseDateTime(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.DATE))));
+            try {
+                story.setDate(Utils.dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.DATE))));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             story.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
             story.setAuthor(UserControllerImpl.getInstance().getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.AUTHORID))));
         }
@@ -113,7 +113,11 @@ public class StoryControllerImpl implements IStoryController {
             story.setId(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.ID)));
             story.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TITLE)));
             story.setText(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TEXT)));
-            story.setDate(dateFormatter.parseDateTime(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.DATE))));
+            try {
+                story.setDate(Utils.dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.DATE))));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             story.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
             story.setAuthor(UserControllerImpl.getInstance().getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.AUTHORID))));
             stories.add(story);
@@ -139,7 +143,11 @@ public class StoryControllerImpl implements IStoryController {
             story.setId(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.ID)));
             story.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TITLE)));
             story.setText(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TEXT)));
-            story.setDate(dateFormatter.parseDateTime(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.DATE))));
+            try {
+                story.setDate(Utils.dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.DATE))));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             story.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
             story.setAuthor(UserControllerImpl.getInstance().getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.AUTHORID))));
             stories.add(story);
@@ -164,7 +172,11 @@ public class StoryControllerImpl implements IStoryController {
             story.setId(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.ID)));
             story.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TITLE)));
             story.setText(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TEXT)));
-            story.setDate(dateFormatter.parseDateTime(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.DATE))));
+            try {
+                story.setDate(Utils.dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.DATE))));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             story.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
             story.setAuthor(UserControllerImpl.getInstance().getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.AUTHORID))));
             stories.add(story);
@@ -190,7 +202,11 @@ public class StoryControllerImpl implements IStoryController {
             story.setId(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.ID)));
             story.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TITLE)));
             story.setText(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TEXT)));
-            story.setDate(dateFormatter.parseDateTime(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.DATE))));
+            try {
+                story.setDate(Utils.dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.DATE))));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             story.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
             story.setAuthor(UserControllerImpl.getInstance().getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.AUTHORID))));
             stories.add(story);
@@ -207,7 +223,7 @@ public class StoryControllerImpl implements IStoryController {
 
         values.put(TableEntry.TITLE, story.getTitle());
         values.put(TableEntry.TEXT, story.getText());
-        values.put(TableEntry.DATE, dateFormat.format(story.getDate()));
+        values.put(TableEntry.DATE, Utils.dateFormat.format(story.getDate()));
         values.put(TableEntry.LOCATION, story.getLocation());
         values.put(TableEntry.AUTHORID, story.getAuthor().getId());
 

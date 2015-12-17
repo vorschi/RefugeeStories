@@ -9,7 +9,7 @@ import at.ac.tuwien.inso.refugeestories.domain.Story;
  */
 public interface IStoryController {
 
-    boolean createRecord(Story story);
+    int createRecord(Story story);
     Story getSingleStory(int id);
     List<Story> getStoriesByUserId(int userId);
     List<Story> getAllStories();

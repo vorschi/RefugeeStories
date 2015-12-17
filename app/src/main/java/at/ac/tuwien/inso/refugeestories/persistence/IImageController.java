@@ -9,7 +9,7 @@ import at.ac.tuwien.inso.refugeestories.domain.Image;
  */
 public interface IImageController {
 
-    boolean createRecord(Image image);
+    int createRecord(Image image);
     Image getSingleImage(int id);
     List<Image> getImagesByStoryId(int storyId);
     boolean updateRecord(Image image);
