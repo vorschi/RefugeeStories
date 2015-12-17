@@ -1,4 +1,4 @@
-package at.ac.tuwien.inso.refugeestories.utils;
+package at.ac.tuwien.inso.refugeestories.utils.tasks;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

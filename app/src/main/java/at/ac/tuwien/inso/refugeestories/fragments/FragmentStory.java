@@ -26,8 +26,8 @@ import at.ac.tuwien.inso.refugeestories.persistence.ImageControllerImpl;
 import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
 import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
-import at.ac.tuwien.inso.refugeestories.utils.MockFactory;
 import at.ac.tuwien.inso.refugeestories.utils.RecyclerItemClickListener;
+import at.ac.tuwien.inso.refugeestories.utils.tasks.StoryLoaderTask;
 import at.ac.tuwien.inso.refugeestories.utils.adapters.StoryAdapter;
 
 /**
@@ -36,6 +36,9 @@ import at.ac.tuwien.inso.refugeestories.utils.adapters.StoryAdapter;
 public class FragmentStory extends Fragment {
 
     private final String TAG = FragmentStory.class.getSimpleName();
+
+    private int offset;
+
     private String CURRENT_TAB;
 
     private Context context;
@@ -64,6 +67,9 @@ public class FragmentStory extends Fragment {
 
         View contentView = inflater.inflate(R.layout.fragment_stories, container, false);
 
+        //init offset
+        offset = 0;
+
         //initialize recyclerView and other components
         myStoriesView = (RecyclerView) contentView.findViewById(R.id.my_stories_view);
         mLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
@@ -74,6 +80,7 @@ public class FragmentStory extends Fragment {
         myStoriesView.setLayoutManager(mLayoutManager);
         myStoriesView.setAdapter(storyAdapter);
 
+        //db
         dbHelper = new MyDatabaseHelper(getActivity().getBaseContext());
         StoryControllerImpl.initializeInstance(dbHelper);
         storyControllerInstance = StoryControllerImpl.getInstance();
@@ -99,13 +106,9 @@ public class FragmentStory extends Fragment {
 
         //add data to the recyclerView
         if (Consts.TAB_EXPLORE.equals(CURRENT_TAB)) {
-
-            stories = storyControllerInstance.getRandomStories(10);
-            for(Story story : stories) {
-                story.setImages(imageControllerInstance.getImagesByStoryId(story.getId()));
-            }
-            //stories = MockFactory.getStories(6);
-            storyAdapter.updateStories(stories);
+            StoryLoaderTask task = new StoryLoaderTask(this, storyControllerInstance, imageControllerInstance);
+            task.execute(offset);
+            offset += Consts.OFFSET_INCREMENT;
 
         } else if (Consts.TAB_MYSTORIES.equals(CURRENT_TAB)) {
 
@@ -199,9 +202,11 @@ public class FragmentStory extends Fragment {
         void onStorySelected(int position);
     }
 
-
     public String getName(){
         return Consts.TAB_MYSTORIES;
+    public void addStories(List<Story> stories) {
+        if(storyAdapter != null)
+            storyAdapter.updateStories(stories);
     }
 
 }

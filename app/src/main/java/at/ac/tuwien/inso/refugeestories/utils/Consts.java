@@ -27,4 +27,11 @@ public class Consts {
     public static final String ACTION_PICK = "luminous.ACTION_PICK";
     public static final String ACTION_MULTIPLE_PICK = "luminous.ACTION_MULTIPLE_PICK";
 
+    //db
+    public static final int LIMIT = 5;
+    public static final int OFFSET_INCREMENT = 5;
+
+    //Title photo
+    public static final int TITLE_PHOTO = 0;
+
 }
