@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -129,6 +130,9 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Consts.SELECT_MULTIPLE_IMAGES && resultCode == Activity.RESULT_OK) {
             selectedImages = data.getStringArrayExtra("all_path");
+//            for(String imgPath : selectedImages) {
+//                Log.i(TAG, imgPath);
+//            }
         }
     }
 

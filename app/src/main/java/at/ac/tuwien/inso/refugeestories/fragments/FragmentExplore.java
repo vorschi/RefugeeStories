@@ -3,13 +3,10 @@ package at.ac.tuwien.inso.refugeestories.fragments;
 import android.app.Activity;
 import android.content.Context;
 
-import android.graphics.Point;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +15,7 @@ import android.widget.RelativeLayout;
 import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
 import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
-import at.ac.tuwien.inso.refugeestories.utils.RecyclerItemClickListener;
 import at.ac.tuwien.inso.refugeestories.utils.adapters.StoryAdapter;
-import at.ac.tuwien.inso.refugeestories.utils.MockFactory;
 
 /**
  * Created by Vorschi, Amer Salkovic on 02.12.2015.

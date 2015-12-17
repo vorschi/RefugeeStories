@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import at.ac.tuwien.inso.refugeestories.R;
-import at.ac.tuwien.inso.refugeestories.utils.BitmapWorkerTask;
+import at.ac.tuwien.inso.refugeestories.utils.tasks.BitmapWorkerTask;
 
 /**
  * Created by Amer Salkovic on 15.12.2015.

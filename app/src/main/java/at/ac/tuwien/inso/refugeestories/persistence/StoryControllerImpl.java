@@ -3,6 +3,7 @@ package at.ac.tuwien.inso.refugeestories.persistence;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import at.ac.tuwien.inso.refugeestories.domain.Image;
 import at.ac.tuwien.inso.refugeestories.domain.Story;
+import at.ac.tuwien.inso.refugeestories.utils.Consts;
 
 /**
  * Created by mtraxler on 14.12.2015.
@@ -94,6 +96,32 @@ public class StoryControllerImpl implements IStoryController {
         db.close();
 
         return story;
+    }
+
+    public List<Story> getStories(int offset) {
+        SQLiteDatabase db = myDbHelper.getReadableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_NAME + " ORDER BY id DESC LIMIT " + String.valueOf(Consts.LIMIT) + " OFFSET " + offset;
+        //Log.i(StoryControllerImpl.class.getSimpleName(), query);
+        Cursor cursor = db.rawQuery(query, null);
+
+        List<Story> stories = new ArrayList<>();
+        Story story = null;
+        UserControllerImpl.initializeInstance(myDbHelper);
+        while(cursor.moveToNext()) {
+            story = new Story();
+            story.setId(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.ID)));
+            story.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TITLE)));
+            story.setText(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TEXT)));
+            story.setDate(dateFormatter.parseDateTime(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.DATE))));
+            story.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
+            story.setAuthor(UserControllerImpl.getInstance().getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.AUTHORID))));
+            stories.add(story);
+        }
+        cursor.close();
+        db.close();
+
+        return stories;
     }
 
     @Override

@@ -12,6 +12,8 @@ import java.util.List;
 
 import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.domain.Story;
+import at.ac.tuwien.inso.refugeestories.utils.tasks.BitmapWorkerTask;
+import at.ac.tuwien.inso.refugeestories.utils.Consts;
 import at.ac.tuwien.inso.refugeestories.utils.Utils;
 
 /**
@@ -48,7 +50,11 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> 
         TextView txtStoryTitle = holder.txtStoryTitle;
         TextView txtStoryText = holder.txtStoryText;
 
-        imgStoryPhoto.setImageResource(stories.get(position).getImgResId());
+        if(stories.get(position).getImages().size() > 0) {
+            BitmapWorkerTask task = new BitmapWorkerTask(imgStoryPhoto);
+            task.execute(stories.get(position).getImages().get(Consts.TITLE_PHOTO).getImg());
+        }
+        // XXX TODO ASA in case there are no photos ??
         txtAuthor.setText(stories.get(position).getAuthor().getUsername());
         txtInfo.setText( Utils.dtf.print(stories.get(position).getDate()) + ", " + stories.get(position).getLocation() );
         txtStoryTitle.setText(stories.get(position).getTitle());
