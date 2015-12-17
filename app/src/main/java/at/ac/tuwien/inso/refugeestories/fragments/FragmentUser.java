@@ -14,7 +14,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+
+import org.mockito.exceptions.misusing.FriendlyReminderException;
 
 import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.domain.Person;
@@ -39,10 +42,12 @@ public class FragmentUser extends Fragment {
     private TextView user_languages;
     private TextView user_interests;
     private TextView user_email;
+    private TextView lbl_email;
 
     private Button requestFriendshipButton;
     private Button reportButton;
     private Button requestMeetingButton;
+    private Button showFriendsButton;
 
     AlertDialog optionDialog;
 
@@ -58,10 +63,12 @@ public class FragmentUser extends Fragment {
         user_languages = (TextView) contentView.findViewById(R.id.user_language);
         user_interests = (TextView) contentView.findViewById(R.id.user_interests);
         user_email = (TextView) contentView.findViewById(R.id.user_email);
+        lbl_email = (TextView) contentView.findViewById(R.id.lbl_email);
 
         reportButton = (Button) contentView.findViewById(R.id.btn_report);
         requestFriendshipButton = (Button) contentView.findViewById(R.id.btn_send_invite);
         requestMeetingButton = (Button) contentView.findViewById(R.id.btn_request_meeting);
+        showFriendsButton = (Button) contentView.findViewById(R.id.btn_see_friendlist);
 
         reportButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -84,7 +91,12 @@ public class FragmentUser extends Fragment {
             }
         });
 
-        //setData(null, true);
+        showFriendsButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "OPENING LIST OF FRIENDS", Toast.LENGTH_LONG);
+                toast.show();
+            }
+        });
         return contentView;
     }
 
@@ -116,11 +128,19 @@ public class FragmentUser extends Fragment {
         user_email.setText("mario.me@abc.at");
 
         if (isMyUser) {
-            reportButton.setVisibility(View.INVISIBLE);
-            requestFriendshipButton.setVisibility(View.INVISIBLE);
-            requestMeetingButton.setVisibility(View.INVISIBLE);
+            reportButton.setVisibility(View.GONE);
+            requestFriendshipButton.setVisibility(View.GONE);
+            requestMeetingButton.setVisibility(View.GONE);
+            showFriendsButton.setVisibility(View.VISIBLE);
+            user_email.setVisibility(View.VISIBLE);
+            lbl_email.setVisibility(View.VISIBLE);
         } else {
-            user_email.setVisibility(View.INVISIBLE);
+            reportButton.setVisibility(View.VISIBLE);
+            requestFriendshipButton.setVisibility(View.VISIBLE);
+            requestMeetingButton.setVisibility(View.VISIBLE);
+            showFriendsButton.setVisibility(View.GONE);
+            user_email.setVisibility(View.GONE);
+            lbl_email.setVisibility(View.GONE);
         }
 
 

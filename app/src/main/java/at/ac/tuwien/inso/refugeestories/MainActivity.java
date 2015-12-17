@@ -139,8 +139,9 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
             manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             updateAppBar(tabId);
         }
-        ft.commit();
         mCurrentTab = tabId;
+        ft.commit();
+        manager.executePendingTransactions();
     }
 
     @Override
@@ -179,9 +180,8 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
                 return true;
             case R.id.user_btn:
                 if (getCurrentTabId() != Consts.TAB_MYPROFILE) {
-                    FragmentUser user = FragmentUser.getInstance();
-                    pushFragments(user, true, Consts.TAB_MYPROFILE);
-                    // user.setData(null, true);
+                    pushFragments(FragmentUser.getInstance(), true, Consts.TAB_MYPROFILE);
+                    FragmentUser.getInstance().setData(null, true);
                 }
                 return true;
 

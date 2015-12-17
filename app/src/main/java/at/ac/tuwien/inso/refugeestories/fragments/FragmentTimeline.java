@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,8 +17,11 @@ import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
+
 import java.util.List;
 
+import at.ac.tuwien.inso.refugeestories.MainActivity;
 import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.domain.Story;
 import at.ac.tuwien.inso.refugeestories.persistence.ImageControllerImpl;
@@ -32,9 +36,8 @@ import at.ac.tuwien.inso.refugeestories.utils.adapters.TimelineAdapter;
  */
 public class FragmentTimeline extends Fragment {
 
-    public static final String TAG = FragmentTimeline.class.getSimpleName();
-
     public static FragmentTimeline instance;
+    private Button openUser;
 
     private static Context context;
 
@@ -82,6 +85,17 @@ public class FragmentTimeline extends Fragment {
                 if ( (firstVisibleItem + visibleItemCount) == totalItemCount ) {
                     //TODO load items
                 }
+            }
+        });
+
+        openUser = (Button) mFragmentLayout.findViewById(R.id.open_user_btn);
+        openUser.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                MainActivity activity = (MainActivity) getActivity();
+                activity.pushFragments(FragmentUser.getInstance(),true, Consts.TAB_USER);
+                //TODO send user object
+                FragmentUser.getInstance().setData(null,false);
             }
         });
 
