@@ -8,13 +8,15 @@ import java.util.List;
 import at.ac.tuwien.inso.refugeestories.domain.Story;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory;
 import at.ac.tuwien.inso.refugeestories.persistence.ImageControllerImpl;
-import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
 import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
 
 /**
- * Created by Amer Salkovic on 16.12.2015.
+ * Created by Amer Salkovic on 17.12.2015.
  */
-public class StoryLoaderTask extends AsyncTask<Integer, Void, List<Story>> {
+public class PersonalStoriesLoaderTask extends AsyncTask<Integer, Void, List<Story>> {
+
+    private final int AUTHOR_ID = 0;
+    private final int OFFSET = 1;
 
     private List<Story> stories;
 
@@ -23,8 +25,8 @@ public class StoryLoaderTask extends AsyncTask<Integer, Void, List<Story>> {
     private StoryControllerImpl storyControllerInstance;
     private ImageControllerImpl imageControllerInstance;
 
-    public StoryLoaderTask(Fragment fragment, StoryControllerImpl storyControllerInstance,
-                           ImageControllerImpl imageControllerInstance) {
+    public PersonalStoriesLoaderTask(Fragment fragment, StoryControllerImpl storyControllerInstance,
+                                     ImageControllerImpl imageControllerInstance) {
         this.fragment = fragment;
         this.storyControllerInstance = storyControllerInstance;
         this.imageControllerInstance = imageControllerInstance;
@@ -32,7 +34,7 @@ public class StoryLoaderTask extends AsyncTask<Integer, Void, List<Story>> {
 
     @Override
     protected List<Story> doInBackground(Integer... integers) {
-        stories = storyControllerInstance.getStories(integers[0]);
+        stories = storyControllerInstance.getStoriesByUserId(integers[AUTHOR_ID], integers[OFFSET]);
         for(Story story : stories) {
             story.setImages(imageControllerInstance.getImagesByStoryId(story.getId()));
         }
@@ -42,6 +44,6 @@ public class StoryLoaderTask extends AsyncTask<Integer, Void, List<Story>> {
     @Override
     protected void onPostExecute(List<Story> stories) {
         super.onPostExecute(stories);
-        ((FragmentStory) fragment).addStories(stories);
+        ((FragmentStory) fragment).addPersonalStories(stories);
     }
 }

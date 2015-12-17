@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import at.ac.tuwien.inso.refugeestories.MainActivity;
@@ -27,8 +27,9 @@ import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
 import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
 import at.ac.tuwien.inso.refugeestories.utils.RecyclerItemClickListener;
-import at.ac.tuwien.inso.refugeestories.utils.tasks.StoryLoaderTask;
 import at.ac.tuwien.inso.refugeestories.utils.SharedPreferencesHandler;
+import at.ac.tuwien.inso.refugeestories.utils.tasks.PersonalStoriesLoaderTask;
+import at.ac.tuwien.inso.refugeestories.utils.tasks.StoriesLoaderTask;
 import at.ac.tuwien.inso.refugeestories.utils.adapters.StoryAdapter;
 
 /**
@@ -47,7 +48,9 @@ public class FragmentStory extends Fragment {
 
     private RecyclerView myStoriesView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<Story> stories = Collections.<Story>emptyList();
+
+    private List<Story> stories;
+
     private StoryAdapter storyAdapter;
 
     private TextView noStoriesMsg;
@@ -75,6 +78,7 @@ public class FragmentStory extends Fragment {
         //initialize recyclerView and other components
         myStoriesView = (RecyclerView) contentView.findViewById(R.id.my_stories_view);
         mLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        stories = new ArrayList<>();
         storyAdapter = new StoryAdapter();
 
         //set default properties
@@ -89,6 +93,7 @@ public class FragmentStory extends Fragment {
         ImageControllerImpl.initializeInstance(dbHelper);
         imageControllerInstance = ImageControllerImpl.getInstance();
 
+        //sp
         sharedPrefs = new SharedPreferencesHandler(getActivity());
 
         //add touch listener to the recyclerView
@@ -110,20 +115,19 @@ public class FragmentStory extends Fragment {
 
         //add data to the recyclerView
         if (Consts.TAB_EXPLORE.equals(CURRENT_TAB)) {
-            StoryLoaderTask task = new StoryLoaderTask(this, storyControllerInstance, imageControllerInstance);
+
+            StoriesLoaderTask task = new StoriesLoaderTask(this, storyControllerInstance, imageControllerInstance);
             task.execute(offset);
             offset += Consts.OFFSET_INCREMENT;
 
         } else if (Consts.TAB_MYSTORIES.equals(CURRENT_TAB)) {
 
-            //TODO get personal stories from the db.
-            stories = sharedPrefs.getUser().getStories();
-            if (stories.isEmpty()) {
-                noStoriesMsg = (TextView) contentView.findViewById(R.id.no_stories_msg);
-                noStoriesMsg.setVisibility(TextView.VISIBLE);
-            } else {
-                storyAdapter.updateStories(stories);
-            }
+            //stories = sharedPrefs.getUser().getStories();
+            noStoriesMsg = (TextView) contentView.findViewById(R.id.no_stories_msg);
+
+            PersonalStoriesLoaderTask task = new PersonalStoriesLoaderTask(this, storyControllerInstance, imageControllerInstance);
+            task.execute(sharedPrefs.getUser().getId(), offset); //this task receives two integer params, 1st authorId and than offset
+            offset += Consts.OFFSET_INCREMENT;
 
             fragmentManager = getFragmentManager();
             fab = (FloatingActionButton) contentView.findViewById(R.id.fab);
@@ -132,7 +136,7 @@ public class FragmentStory extends Fragment {
                 @Override
                 public void onClick(View view) {
                     MainActivity activity = (MainActivity) getActivity();
-                    activity.pushFragments(FragmentCreateNewStory.getInstance(),true, Consts.TAB_NEWSTORY);
+                    activity.pushFragments(FragmentCreateNewStory.getInstance(), true, Consts.TAB_NEWSTORY);
                 }
             });
 
@@ -146,10 +150,10 @@ public class FragmentStory extends Fragment {
         builder.setItems(R.array.story_options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int id) {
-                if(id == Consts.EDIT) {
+                if (id == Consts.EDIT) {
                     Story targetStory = storyAdapter.getItem(position);
                     //TODO: pass the targetStory to the MainActivity, To the CreateNewStoryFragment
-                } else if(id == Consts.DELETE) {
+                } else if (id == Consts.DELETE) {
 
                     createDeleteDialog(position);
                     optionDialog.show();
@@ -170,6 +174,7 @@ public class FragmentStory extends Fragment {
                     public void onClick(DialogInterface dialog, int id) {
                         stories.remove(position);
                         storyAdapter.updateStories(stories);
+                        //TODO remove from the db also
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -203,11 +208,44 @@ public class FragmentStory extends Fragment {
     }
 
     public String getName() {
-        return Consts.TAB_MYSTORIES;
+        if(CURRENT_TAB.equals(Consts.TAB_EXPLORE)) {
+            return Consts.TAB_EXPLORE;
+        } else if (CURRENT_TAB.equals(Consts.TAB_MYSTORIES)) {
+            return Consts.TAB_MYSTORIES;
+        } else {
+            return "";
+        }
     }
-    public void addStories(List<Story> stories) {
-        if(storyAdapter != null)
-            storyAdapter.updateStories(stories);
+
+    /**
+     * Adds new stories for explore fragment
+     * @param newStories
+     */
+    public void addStories(List<Story> newStories) {
+        if (storyAdapter == null) {
+            return;
+        }
+
+        stories.addAll(newStories);
+        storyAdapter.updateStories(stories);
+    }
+
+    /**
+     * adds new stories for myStories fragment
+     * @param newStories
+     */
+    public void addPersonalStories(List<Story> newStories) {
+        if (storyAdapter == null) {
+            return;
+        }
+
+        if (stories.isEmpty() && newStories.isEmpty()) {
+            noStoriesMsg.setVisibility(TextView.VISIBLE);
+            return;
+        }
+
+        stories.addAll(newStories);
+        storyAdapter.updateStories(stories);
     }
 
 }

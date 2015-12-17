@@ -26,7 +26,7 @@ public class InitActivity extends Activity {
     private Runnable runnable;
     private SharedPreferencesHandler sharedPrefs;
 
-    private UserControllerImpl userControlleInstance;
+    private UserControllerImpl userControllerInstance;
     private StoryControllerImpl storyControllerInstance;
     private ImageControllerImpl imageControllerInstance;
     private LanguageControllerImpl languageControllerInstance;
@@ -35,13 +35,14 @@ public class InitActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_init);
 
         myHandler = new Handler();
         sharedPrefs = new SharedPreferencesHandler(this);
 
         dbHelper = new MyDatabaseHelper(this.getBaseContext());
         UserControllerImpl.initializeInstance(dbHelper);
-        userControlleInstance = UserControllerImpl.getInstance();
+        userControllerInstance = UserControllerImpl.getInstance();
         StoryControllerImpl.initializeInstance(dbHelper);
         storyControllerInstance = StoryControllerImpl.getInstance();
         ImageControllerImpl.initializeInstance(dbHelper);
@@ -57,12 +58,14 @@ public class InitActivity extends Activity {
             @Override
             public void run() {
                 if(!sharedPrefs.isUserLoggedIn()) {
-                    Person user = userControlleInstance.getSingleRecord(2);
-                    List<Story> stories = storyControllerInstance.getStoriesByUserId(user.getId());
-                    user.setStories(stories);
-                    for(Story story : stories) {
-                        story.setImages(imageControllerInstance.getImagesByStoryId(story.getId()));
-                    }
+                    Person user = userControllerInstance.getSingleRecord(1);
+
+//                    List<Story> stories = storyControllerInstance.getStoriesByUserId(user.getId(), 0);
+//                    user.setStories(stories);
+//                    for(Story story : stories) {
+//                        story.setImages(imageControllerInstance.getImagesByStoryId(story.getId()));
+//                    }
+
                     List<Language> languages = languageControllerInstance.getLanguagesByUserId(user.getId());
                     user.setLanguages(languages);
                     sharedPrefs.putUser(user);

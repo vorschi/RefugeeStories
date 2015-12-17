@@ -129,11 +129,13 @@ public class StoryControllerImpl implements IStoryController {
     }
 
     @Override
-    public List<Story> getStoriesByUserId(int userId) {
+    public List<Story> getStoriesByUserId(int userId, int offset) {
         String selection = TableEntry.AUTHORID + " = " + userId;
 
         SQLiteDatabase db = myDbHelper.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_NAME, null, selection, null, null, null, null);
+
+        Cursor cursor = db.rawQuery("SELECT * FROM STORY WHERE " + selection + " ORDER BY ID DESC LIMIT 5 OFFSET " + offset, null);
+        //Cursor cursor = db.query(TABLE_NAME, null, selection, null, null, null, null);
 
         List<Story> stories = new ArrayList<Story>();
         Story story = null;

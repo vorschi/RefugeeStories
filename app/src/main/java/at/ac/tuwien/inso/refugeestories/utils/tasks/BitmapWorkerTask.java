@@ -12,6 +12,9 @@ import java.lang.ref.WeakReference;
  */
 public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
 
+    public static final int AUTHOR_ID = 0;
+    public static final int OFFSET = 1;
+
     private final WeakReference<ImageView> imageViewReference;
 
     public BitmapWorkerTask(ImageView imageView) {

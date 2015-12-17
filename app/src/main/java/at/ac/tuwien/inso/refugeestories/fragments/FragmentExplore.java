@@ -16,6 +16,7 @@ import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
 import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
+
 import at.ac.tuwien.inso.refugeestories.utils.adapters.StoryAdapter;
 
 /**
@@ -117,7 +118,7 @@ public class FragmentExplore extends Fragment {
 
 
     private void calculatePositionAndScroll(RecyclerView recyclerView) {
-        int expectedPosition = Math.round((allPixels)/(cardWidth + cardPadding));
+        int expectedPosition = Math.round((allPixels) / (cardWidth + cardPadding));
         if (expectedPosition < 0) {
             expectedPosition = 0;
         } else if (expectedPosition > recyclerView.getAdapter().getItemCount()) {
@@ -128,14 +129,14 @@ public class FragmentExplore extends Fragment {
 
     private void scrollListToPosition(RecyclerView recyclerView, int expectedPosition) {
         float targetScrollPos;
-            targetScrollPos = expectedPosition * (cardWidth + cardPadding);
+        targetScrollPos = expectedPosition * (cardWidth + cardPadding);
         float missingPx = targetScrollPos - allPixels;
         if (missingPx != 0) {
             recyclerView.smoothScrollBy((int) missingPx, 0);
         }
     }
 
-    public String getName(){
+    public String getName() {
         return Consts.TAB_EXPLORE;
     }
 }
