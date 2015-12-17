@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
 import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
+import at.ac.tuwien.inso.refugeestories.utils.Consts;
 import at.ac.tuwien.inso.refugeestories.utils.RecyclerItemClickListener;
 import at.ac.tuwien.inso.refugeestories.utils.adapters.StoryAdapter;
 import at.ac.tuwien.inso.refugeestories.utils.MockFactory;
@@ -137,5 +138,9 @@ public class FragmentExplore extends Fragment {
         if (missingPx != 0) {
             recyclerView.smoothScrollBy((int) missingPx, 0);
         }
+    }
+
+    public String getName(){
+        return Consts.TAB_EXPLORE;
     }
 }

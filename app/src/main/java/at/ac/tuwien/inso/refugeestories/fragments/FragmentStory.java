@@ -147,7 +147,6 @@ public class FragmentStory extends Fragment {
                     Story targetStory = storyAdapter.getItem(position);
                     //TODO: pass the targetStory to the MainActivity, To the CreateNewStoryFragment
                 } else if(id == Consts.DELETE) {
-                    //TODO: security check if story really should be deleted
 
                     createDeleteDialog(position);
                     optionDialog.show();
@@ -170,7 +169,7 @@ public class FragmentStory extends Fragment {
                         storyAdapter.updateStories(stories);
                     }
                 })
-                .setNegativeButton(R.string.delete_false, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User cancelled the dialog
                     }
@@ -198,6 +197,11 @@ public class FragmentStory extends Fragment {
 
     public interface OnStorySelectedListener {
         void onStorySelected(int position);
+    }
+
+
+    public String getName(){
+        return Consts.TAB_MYSTORIES;
     }
 
 }

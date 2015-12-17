@@ -163,4 +163,8 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
 
         return true;
     }
+
+    public String getName(){
+        return Consts.TAB_NEWSTORY;
+    }
 }

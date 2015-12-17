@@ -23,6 +23,7 @@ import at.ac.tuwien.inso.refugeestories.domain.Story;
 import at.ac.tuwien.inso.refugeestories.persistence.ImageControllerImpl;
 import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
 import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
+import at.ac.tuwien.inso.refugeestories.utils.Consts;
 import at.ac.tuwien.inso.refugeestories.utils.MockFactory;
 import at.ac.tuwien.inso.refugeestories.utils.adapters.TimelineAdapter;
 
@@ -117,5 +118,10 @@ public class FragmentTimeline extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         //Log.i(TAG, "DESTROYED");
+    }
+
+
+    public String getName(){
+        return Consts.TAB_TIMELINE;
     }
 }

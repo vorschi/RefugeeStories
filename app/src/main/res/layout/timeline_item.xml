@@ -37,8 +37,6 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/timeline_carousel"
         android:layout_width="fill_parent"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
         android:layout_height="300dp"
         android:layout_below="@id/header_timeline" />
 
@@ -49,7 +47,7 @@
         android:layout_below="@id/timeline_carousel"
         android:padding="5dip"
         app:lineWidth="8dp"
-        app:selectedColor="@color/dark_blue"
+        app:selectedColor="@color/dark_gray"
         app:strokeWidth="8dp"
         app:unselectedColor="@color/white" />
 

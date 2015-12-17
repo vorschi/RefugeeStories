@@ -18,6 +18,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import at.ac.tuwien.inso.refugeestories.fragments.FragmentCreateNewStory;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentNotification;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory.OnStorySelectedListener;
@@ -124,24 +125,22 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
     };
 
     public void pushFragments(Fragment fragment, boolean shouldAdd, String tabId) {
-        mCurrentTab = tabId;
-        label = (TextView) findViewById(R.id.label);
         FragmentTransaction ft = manager.beginTransaction();
         ft.replace(R.id.realtabcontent, fragment);
         if (shouldAdd) {
             //add to stack for back navigation
-            ft.addToBackStack(null);
-            updateAppBar(getCurrentTabId());
-        }
-        else {
+            ft.addToBackStack(mCurrentTab);
+            updateAppBar(tabId);
+        } else {
             /*
             and remove named backstack:
             manager.popBackStack("name of your backstack", FragmentManager.POP_BACK_STACK_INCLUSIVE);
             remove whole:*/
             manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            updateAppBar();
+            updateAppBar(tabId);
         }
         ft.commit();
+        mCurrentTab = tabId;
     }
 
     @Override
@@ -152,12 +151,13 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount()==0)
+        if (manager.getBackStackEntryCount() == 0)
             this.finish();
 
-        else{
+        else {
+            mCurrentTab = manager.getBackStackEntryAt((manager.getBackStackEntryCount()) - 1).getName();
+            updateAppBar(mCurrentTab);
             super.onBackPressed();
-            updateAppBar();
         }
     }
 
@@ -175,11 +175,14 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                getSupportFragmentManager().popBackStack();
-                updateAppBar();
+                onBackPressed();
                 return true;
             case R.id.user_btn:
-                pushFragments(FragmentUser.getInstance(), true, Consts.TAB_MYPROFILE);
+                if (getCurrentTabId() != Consts.TAB_MYPROFILE) {
+                    FragmentUser user = FragmentUser.getInstance();
+                    pushFragments(user, true, Consts.TAB_MYPROFILE);
+                    // user.setData(null, true);
+                }
                 return true;
 
             //TODO: implement filter-options
@@ -196,7 +199,6 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
                 // right button
                 return true;
 
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -207,17 +209,16 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
         pushFragments(FragmentTimeline.getInstance(), true, Consts.TAB_TIMELINE);
     }
 
-
     public String getCurrentTabId() {
         return mCurrentTab;
     }
 
-    private void writeToast(String text){
-        Toast toast = Toast.makeText(getBaseContext(), text, Toast.LENGTH_SHORT );
+    private void writeToast(String text) {
+        Toast toast = Toast.makeText(getBaseContext(), text, Toast.LENGTH_SHORT);
         toast.show();
     }
 
-    private void updateAppBar(String tabId){
+    private void updateAppBar(String tabId) {
         if (tabId.equals(Consts.TAB_MYPROFILE))
             setTitle(R.string.myprofile);
 
@@ -227,25 +228,23 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
         else if (tabId.equals(Consts.TAB_NEWSTORY))
             setTitle(R.string.newstory);
 
-        else if(tabId.equals(Consts.TAB_TIMELINE))
+        else if (tabId.equals(Consts.TAB_TIMELINE))
             setTitle(R.string.timeline);
 
-        invalidateOptionsMenu();
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    private void updateAppBar(){
-
-        if (mTabHost.getCurrentTabTag().equals(Consts.TAB_MYSTORIES))
+        else if (tabId.equals(Consts.TAB_MYSTORIES))
             setTitle(R.string.mystories);
 
-        else if (mTabHost.getCurrentTabTag().equals(Consts.TAB_EXPLORE))
+        else if (tabId.equals(Consts.TAB_EXPLORE))
             setTitle(R.string.explore);
 
-        else if (mTabHost.getCurrentTabTag().equals(Consts.TAB_NOTIFICATIONS))
+        else if (tabId.equals(Consts.TAB_NOTIFICATIONS))
             setTitle(R.string.notifications);
 
+        if (tabId != Consts.TAB_EXPLORE && tabId != Consts.TAB_MYSTORIES && tabId != Consts.TAB_NOTIFICATIONS)
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        else
+            getActionBar().setDisplayHomeAsUpEnabled(false);
+
         invalidateOptionsMenu();
-        getActionBar().setDisplayHomeAsUpEnabled(false);
     }
 }

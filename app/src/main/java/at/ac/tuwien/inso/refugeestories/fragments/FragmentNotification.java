@@ -13,6 +13,7 @@ import java.util.List;
 
 import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.domain.Person;
+import at.ac.tuwien.inso.refugeestories.utils.Consts;
 import at.ac.tuwien.inso.refugeestories.utils.MockFactory;
 
 /**
@@ -38,5 +39,9 @@ public class FragmentNotification extends Fragment {
     public static FragmentNotification getInstance() {
         FragmentNotification f = new FragmentNotification();
         return f;
+    }
+
+    public String getName(){
+        return Consts.TAB_NOTIFICATIONS;
     }
 }

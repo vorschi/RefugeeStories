@@ -71,11 +71,17 @@
 
     <string name="delete_check">Do you really want to delete this story?</string>
     <string name="delete_true">Delete</string>
-    <string name="delete_false">Cancel</string>
+    <string name="report_check">Do you really want report this user?</string>
+    <string name="report_true">Report</string>
+    <string name="friendship_check">Do you really want to send a friendship request to this user?</string>
+    <string name="friendship_true">Invite for friendship</string>
+    <string name="meeting_check">Do you really want to request a meeting with this user?</string>
+    <string name="meeting_true">Request meeting</string>
+    <string name="cancel">Cancel</string>
 
-    <string name="btn_request_meeting">Request meeting</string>
-    <string name="btn_report">Report</string>
-    <string name="btn_send_invite">Friend request</string>
+    <string name="btn_request_meeting">Request Meeting</string>
+    <string name="btn_report">Report User</string>
+    <string name="btn_send_invite">Friendship Request</string>
 
     <string name="user_age">Age</string>
     <string name="user_location">Location</string>

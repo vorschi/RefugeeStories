@@ -10,4 +10,5 @@
     <color name="blue">#0099cc</color>
     <color name="blueborder">#001bf6</color>
     <color name="dark_blue">#1E88E5</color>
+    <color name="darker_blue">#1565C0</color>
 </resources>
