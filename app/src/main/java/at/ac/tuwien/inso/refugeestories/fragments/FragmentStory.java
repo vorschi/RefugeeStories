@@ -28,6 +28,7 @@ import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
 import at.ac.tuwien.inso.refugeestories.utils.RecyclerItemClickListener;
 import at.ac.tuwien.inso.refugeestories.utils.SharedPreferencesHandler;
+import at.ac.tuwien.inso.refugeestories.utils.tasks.LoaderTask;
 import at.ac.tuwien.inso.refugeestories.utils.tasks.PersonalStoriesLoaderTask;
 import at.ac.tuwien.inso.refugeestories.utils.tasks.StoriesLoaderTask;
 import at.ac.tuwien.inso.refugeestories.utils.adapters.StoryAdapter;
@@ -39,9 +40,9 @@ public class FragmentStory extends Fragment {
 
     private final String TAG = FragmentStory.class.getSimpleName();
 
-    private int offset;
-
     private String CURRENT_TAB;
+    private final int LIMIT = 5;
+    private int offset;
 
     private Context context;
     private FragmentManager fragmentManager;
@@ -50,8 +51,8 @@ public class FragmentStory extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
 
     private List<Story> stories;
-
     private StoryAdapter storyAdapter;
+    private LoaderTask task;
 
     private TextView noStoriesMsg;
     private FloatingActionButton fab;
@@ -116,18 +117,27 @@ public class FragmentStory extends Fragment {
         //add data to the recyclerView
         if (Consts.TAB_EXPLORE.equals(CURRENT_TAB)) {
 
-            StoriesLoaderTask task = new StoriesLoaderTask(this, storyControllerInstance, imageControllerInstance);
-            task.execute(offset);
-            offset += Consts.OFFSET_INCREMENT;
+            //init task
+            task = new StoriesLoaderTask(this);
+            task.setStoryControllerInstance(storyControllerInstance);
+            task.setImageControllerInstance(imageControllerInstance);
+
+            //execute task with limit and offset params and finally increase offset
+            task.execute(LIMIT, offset);
+            offset += Consts.EXPLORE_STORY_INC;
 
         } else if (Consts.TAB_MYSTORIES.equals(CURRENT_TAB)) {
 
-            //stories = sharedPrefs.getUser().getStories();
             noStoriesMsg = (TextView) contentView.findViewById(R.id.no_stories_msg);
 
-            PersonalStoriesLoaderTask task = new PersonalStoriesLoaderTask(this, storyControllerInstance, imageControllerInstance);
-            task.execute(sharedPrefs.getUser().getId(), offset); //this task receives two integer params, 1st authorId and than offset
-            offset += Consts.OFFSET_INCREMENT;
+            //init task
+            task = new PersonalStoriesLoaderTask(this);
+            task.setStoryControllerInstance(storyControllerInstance);
+            task.setImageControllerInstance(imageControllerInstance);
+
+            //execute task with limit, offset and userId params and finally increase offset
+            task.execute(LIMIT, offset, sharedPrefs.getUser().getId());
+            offset += Consts.EXPLORE_STORY_INC;
 
             fragmentManager = getFragmentManager();
             fab = (FloatingActionButton) contentView.findViewById(R.id.fab);
@@ -139,7 +149,6 @@ public class FragmentStory extends Fragment {
                     activity.pushFragments(FragmentCreateNewStory.getInstance(), true, Consts.TAB_NEWSTORY);
                 }
             });
-
         }
 
         return contentView;

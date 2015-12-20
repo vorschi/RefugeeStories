@@ -11,7 +11,7 @@ public interface IStoryController {
 
     int createRecord(Story story);
     Story getSingleStory(int id);
-    List<Story> getStoriesByUserId(int userId, int offset);
+    List<Story> getStoriesByUserId(int limit, int offset, int userId);
     List<Story> getAllStories();
     List<Story> getRandomStories(int count);
     boolean updateRecord(Story story);

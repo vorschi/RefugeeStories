@@ -27,11 +27,17 @@ public class Consts {
     public static final String ACTION_PICK = "luminous.ACTION_PICK";
     public static final String ACTION_MULTIPLE_PICK = "luminous.ACTION_MULTIPLE_PICK";
 
-    //db
-    public static final int LIMIT = 5;
-    public static final int OFFSET_INCREMENT = 5;
+    //PersonalStoriesLoaderTask
+    public static final int LIMIT = 0;
+    public static final int OFFSET = 1;
+    public static final int AUTHOR_ID = 2;
 
     //Title photo
     public static final int TITLE_PHOTO = 0;
+
+    //incrementers
+    public static final int EXPLORE_STORY_INC = 5;
+    public static final int TIMELINE_STORY_INC = 2;
+
 
 }

@@ -98,11 +98,11 @@ public class StoryControllerImpl implements IStoryController {
         return story;
     }
 
-    public List<Story> getStories(int offset) {
+    public List<Story> getStories(int limit, int offset) {
         SQLiteDatabase db = myDbHelper.getReadableDatabase();
 
-        String query = "SELECT * FROM " + TABLE_NAME + " ORDER BY id DESC LIMIT " + String.valueOf(Consts.LIMIT) + " OFFSET " + offset;
-        //Log.i(StoryControllerImpl.class.getSimpleName(), query);
+        String query = "SELECT * FROM " + TABLE_NAME + " ORDER BY id DESC LIMIT " + limit + " OFFSET " + offset;
+        Log.i(StoryControllerImpl.class.getSimpleName(), query);
         Cursor cursor = db.rawQuery(query, null);
 
         List<Story> stories = new ArrayList<>();
@@ -129,13 +129,12 @@ public class StoryControllerImpl implements IStoryController {
     }
 
     @Override
-    public List<Story> getStoriesByUserId(int userId, int offset) {
-        String selection = TableEntry.AUTHORID + " = " + userId;
+    public List<Story> getStoriesByUserId(int limit, int offset, int userId) {
 
         SQLiteDatabase db = myDbHelper.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery("SELECT * FROM STORY WHERE " + selection + " ORDER BY ID DESC LIMIT 5 OFFSET " + offset, null);
-        //Cursor cursor = db.query(TABLE_NAME, null, selection, null, null, null, null);
+        String query = "SELECT * FROM STORY WHERE authorid = " + userId + " ORDER BY ID DESC LIMIT " + limit + " OFFSET " + offset;
+        Log.i(StoryControllerImpl.class.getSimpleName(), query);
+        Cursor cursor = db.rawQuery(query, null);
 
         List<Story> stories = new ArrayList<Story>();
         Story story = null;

@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.refugeestories.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,6 +21,7 @@ import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import at.ac.tuwien.inso.refugeestories.MainActivity;
@@ -29,7 +32,10 @@ import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
 import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
 import at.ac.tuwien.inso.refugeestories.utils.MockFactory;
+import at.ac.tuwien.inso.refugeestories.utils.adapters.StoryAdapter;
 import at.ac.tuwien.inso.refugeestories.utils.adapters.TimelineAdapter;
+import at.ac.tuwien.inso.refugeestories.utils.tasks.LoaderTask;
+import at.ac.tuwien.inso.refugeestories.utils.tasks.PersonalStoriesLoaderTask;
 
 /**
  * Created by Amer Salkovic on 3.12.2015.
@@ -39,13 +45,18 @@ public class FragmentTimeline extends Fragment {
     public static FragmentTimeline instance;
     private Button openUser;
 
-    private static Context context;
+    private Context context;
 
     private RelativeLayout mFragmentLayout;
 
     private ListView timeline;
+    private List<Story> stories;
     private TimelineAdapter timelineAdapter;
+    private ProgressBar footer;
 
+    private final int LIMIT = 2;
+    private int offset;
+    private LoaderTask task;
     private boolean loading = false;
     private boolean allStoriesLoaded = false;
 
@@ -62,17 +73,26 @@ public class FragmentTimeline extends Fragment {
         ImageControllerImpl.initializeInstance(dbHelper);
         imageControllerInstance = ImageControllerImpl.getInstance();
 
+        //prepare layouts
         mFragmentLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_timeline, container, false);
         timeline = (ListView) mFragmentLayout.findViewById(R.id.lst_timeline);
-        timelineAdapter = new TimelineAdapter(context);
-        List<Story> stories = storyControllerInstance.getAllStories();
-        for(Story story : stories) {
-            story.setImages(imageControllerInstance.getImagesByStoryId(story.getId()));
-        }
-        timelineAdapter.updateStories(stories);
-        //timelineAdapter.updateStories(MockFactory.getStories(6));
-        timeline.setAdapter(timelineAdapter);
+        footer = (ProgressBar) inflater.inflate(R.layout.footer, null);
 
+        //init components
+        stories = new ArrayList<>();
+        timelineAdapter = new TimelineAdapter(context);
+        offset = 0;
+        task = new PersonalStoriesLoaderTask(this);
+        task.setStoryControllerInstance(storyControllerInstance);
+        task.setImageControllerInstance(imageControllerInstance);
+
+        timeline.setAdapter(timelineAdapter);
+        timeline.addFooterView(footer);
+
+        //execute task with limit, offset and userId params. Finally increase offset
+        loading = true;
+        task.execute(LIMIT, offset, 5);
+        offset += Consts.TIMELINE_STORY_INC;
 
         timeline.setOnScrollListener(new OnScrollListener() {
 
@@ -81,21 +101,25 @@ public class FragmentTimeline extends Fragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                //if the bottom of the list is reached
-                if ( (firstVisibleItem + visibleItemCount) == totalItemCount ) {
-                    //TODO load items
+                if ( ((firstVisibleItem + visibleItemCount) == totalItemCount) && !loading && !allStoriesLoaded) {
+                    timeline.addFooterView(footer);
+                    task = new PersonalStoriesLoaderTask(instance);
+                    task.setStoryControllerInstance(storyControllerInstance);
+                    task.setImageControllerInstance(imageControllerInstance);
+                    task.execute(LIMIT, offset, 5);
+                    offset += Consts.TIMELINE_STORY_INC;
                 }
             }
         });
 
         openUser = (Button) mFragmentLayout.findViewById(R.id.open_user_btn);
-        openUser.setOnClickListener(new View.OnClickListener(){
+        openUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 MainActivity activity = (MainActivity) getActivity();
-                activity.pushFragments(FragmentUser.getInstance(),true, Consts.TAB_USER);
+                activity.pushFragments(FragmentUser.getInstance(), true, Consts.TAB_USER);
                 //TODO send user object
-                FragmentUser.getInstance().setData(null,false);
+                FragmentUser.getInstance().setData(null, false);
             }
         });
 
@@ -103,7 +127,6 @@ public class FragmentTimeline extends Fragment {
     }
 
     public static FragmentTimeline getInstance() {
-        //instance = (FragmentTimeline) ((MainActivity)context).getSupportFragmentManager().findFragmentByTag(TAG);
         if (instance == null) {
             instance = new FragmentTimeline();
         }
@@ -114,6 +137,7 @@ public class FragmentTimeline extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         context = activity;
+        instance = this;
     }
 
     @Override
@@ -135,7 +159,18 @@ public class FragmentTimeline extends Fragment {
     }
 
 
-    public String getName(){
+    public String getName() {
         return Consts.TAB_TIMELINE;
     }
+
+    public void addTimelineStories(List<Story> newStories) {
+        if(newStories.isEmpty()) {
+            allStoriesLoaded = true;
+        }
+        stories.addAll(newStories);
+        timelineAdapter.updateStories(stories);
+        timeline.removeFooterView(footer);
+        loading = false;
+    }
+
 }

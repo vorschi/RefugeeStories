@@ -1,41 +1,27 @@
 package at.ac.tuwien.inso.refugeestories.utils.tasks;
 
-import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 
 import java.util.List;
 
 import at.ac.tuwien.inso.refugeestories.domain.Story;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory;
-import at.ac.tuwien.inso.refugeestories.persistence.ImageControllerImpl;
-import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
+import at.ac.tuwien.inso.refugeestories.fragments.FragmentTimeline;
+import at.ac.tuwien.inso.refugeestories.utils.Consts;
 
 /**
  * Created by Amer Salkovic on 17.12.2015.
  */
-public class PersonalStoriesLoaderTask extends AsyncTask<Integer, Void, List<Story>> {
+public class PersonalStoriesLoaderTask extends LoaderTask {
 
-    private final int AUTHOR_ID = 0;
-    private final int OFFSET = 1;
-
-    private List<Story> stories;
-
-    private Fragment fragment;
-
-    private StoryControllerImpl storyControllerInstance;
-    private ImageControllerImpl imageControllerInstance;
-
-    public PersonalStoriesLoaderTask(Fragment fragment, StoryControllerImpl storyControllerInstance,
-                                     ImageControllerImpl imageControllerInstance) {
-        this.fragment = fragment;
-        this.storyControllerInstance = storyControllerInstance;
-        this.imageControllerInstance = imageControllerInstance;
+    public PersonalStoriesLoaderTask(Fragment fragment) {
+        super(fragment);
     }
 
     @Override
     protected List<Story> doInBackground(Integer... integers) {
-        stories = storyControllerInstance.getStoriesByUserId(integers[AUTHOR_ID], integers[OFFSET]);
-        for(Story story : stories) {
+        stories = storyControllerInstance.getStoriesByUserId(integers[Consts.LIMIT], integers[Consts.OFFSET], integers[Consts.AUTHOR_ID]);
+        for (Story story : stories) {
             story.setImages(imageControllerInstance.getImagesByStoryId(story.getId()));
         }
         return stories;
@@ -43,7 +29,11 @@ public class PersonalStoriesLoaderTask extends AsyncTask<Integer, Void, List<Sto
 
     @Override
     protected void onPostExecute(List<Story> stories) {
-        super.onPostExecute(stories);
-        ((FragmentStory) fragment).addPersonalStories(stories);
+        if (fragment instanceof FragmentStory) {
+            ((FragmentStory) fragment).addPersonalStories(stories);
+        } else if (fragment instanceof FragmentTimeline) {
+            ((FragmentTimeline) fragment).addTimelineStories(stories);
+        }
     }
+
 }
