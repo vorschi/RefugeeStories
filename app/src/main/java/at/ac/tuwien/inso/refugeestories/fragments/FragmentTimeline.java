@@ -57,8 +57,8 @@ public class FragmentTimeline extends Fragment {
     private final int LIMIT = 2;
     private int offset;
     private LoaderTask task;
-    private boolean loading = false;
-    private boolean allStoriesLoaded = false;
+    private boolean loading;
+    private boolean allStoriesLoaded;
 
     private StoryControllerImpl storyControllerInstance;
     private ImageControllerImpl imageControllerInstance;
@@ -79,9 +79,10 @@ public class FragmentTimeline extends Fragment {
         footer = (ProgressBar) inflater.inflate(R.layout.footer, null);
 
         //init components
+        offset = 0;
+        allStoriesLoaded = false;
         stories = new ArrayList<>();
         timelineAdapter = new TimelineAdapter(context, getFragmentManager());
-        offset = 0;
         task = new PersonalStoriesLoaderTask(this);
         task.setStoryControllerInstance(storyControllerInstance);
         task.setImageControllerInstance(imageControllerInstance);

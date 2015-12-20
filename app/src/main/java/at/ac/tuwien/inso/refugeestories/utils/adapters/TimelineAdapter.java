@@ -62,7 +62,7 @@ public class TimelineAdapter extends BaseAdapter {
         TextView txtTimelineItemTitle;
         TextView txtTimelineItemDetails;
         TextView txtTimelineItemText;
-        ViewPager timelineCarousel;
+        ViewPager viewPager;
         LinePageIndicator indicator;
 
         if (convertView == null) {
@@ -71,17 +71,15 @@ public class TimelineAdapter extends BaseAdapter {
             txtTimelineItemTitle = (TextView) convertView.findViewById(R.id.timeline_item_title);
             txtTimelineItemDetails = (TextView) convertView.findViewById(R.id.timeline_item_details);
             txtTimelineItemText = (TextView) convertView.findViewById(R.id.timeline_item_text);
-            timelineCarousel = (ViewPager) convertView.findViewById(R.id.timeline_carousel);
+            viewPager = (ViewPager) convertView.findViewById(R.id.timeline_view_pager);
             indicator = (LinePageIndicator) convertView.findViewById(R.id.indicator);
-            convertView.setTag(new ViewHolder(context, txtTimelineItemTitle, txtTimelineItemDetails, txtTimelineItemText, timelineCarousel, indicator));
+            convertView.setTag(new ViewHolder(context, txtTimelineItemTitle, txtTimelineItemDetails, txtTimelineItemText, viewPager, indicator));
         } else {
             ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-
-            // TODO Amer Salkovic: reset all values maybe ...
             txtTimelineItemTitle = viewHolder.txtTimelineItemTitle;
             txtTimelineItemDetails = viewHolder.txtTimelineItemDetails;
             txtTimelineItemText = viewHolder.txtTimelineItemText;
-            timelineCarousel = viewHolder.timelineCarousel;
+            viewPager = viewHolder.viewPager;
             indicator = viewHolder.indicator;
         }
 
@@ -90,11 +88,20 @@ public class TimelineAdapter extends BaseAdapter {
         txtTimelineItemDetails.setText(Utils.dateFormat.format(stories.get(position).getDate()) + ", " + stories.get(position).getLocation());
         txtTimelineItemText.setText(story.getText());
 
-        //Log.e(this.getClass().getSimpleName(), "StoryId: " + story.getId() + ", Images: " + story.getImages().toString());
-        ImageAdapter imageAdapter = new ImageAdapter(context);
-        imageAdapter.updateImages(story.getImages());
-        timelineCarousel.setAdapter(imageAdapter);
-        indicator.setViewPager(timelineCarousel);
+        Log.e(this.getClass().getSimpleName(), "StoryId: " + story.getId() + ", Images: " + story.getImages().toString());
+        if (story.getImages().isEmpty()) {
+            viewPager.setVisibility(View.GONE);
+            indicator.setVisibility(View.GONE);
+        } else {
+            viewPager.setVisibility(View.VISIBLE);
+            indicator.setVisibility(View.VISIBLE);
+
+            ImageAdapter imageAdapter = new ImageAdapter(context);
+            imageAdapter.updateImages(story.getImages());
+            viewPager.setAdapter(imageAdapter);
+            indicator.setViewPager(viewPager, 0);
+            indicator.invalidate();
+        }
 
         return convertView;
     }
@@ -105,15 +112,16 @@ public class TimelineAdapter extends BaseAdapter {
         public final TextView txtTimelineItemTitle;
         public final TextView txtTimelineItemDetails;
         public final TextView txtTimelineItemText;
-        public final ViewPager timelineCarousel;
+        public final ViewPager viewPager;
         public final LinePageIndicator indicator;
 
-        public ViewHolder(Context context, TextView txtTimelineItemTitle, TextView txtTimelineItemDetails, TextView txtTimelineItemText, ViewPager timelineCarousel, LinePageIndicator indicator) {
+        public ViewHolder(Context context, TextView txtTimelineItemTitle, TextView txtTimelineItemDetails,
+                          TextView txtTimelineItemText, ViewPager viewPager, LinePageIndicator indicator) {
             this.context = context;
             this.txtTimelineItemTitle = txtTimelineItemTitle;
             this.txtTimelineItemDetails = txtTimelineItemDetails;
             this.txtTimelineItemText = txtTimelineItemText;
-            this.timelineCarousel = timelineCarousel;
+            this.viewPager = viewPager;
             this.indicator = indicator;
         }
 
@@ -121,8 +129,8 @@ public class TimelineAdapter extends BaseAdapter {
             txtTimelineItemTitle.setText("");
             txtTimelineItemDetails.setText("");
             txtTimelineItemText.setText("");
-            timelineCarousel.setAdapter(new ImageAdapter(context));
-            indicator.setViewPager(timelineCarousel);
+            viewPager.setAdapter(new ImageAdapter(context));
+            indicator.setViewPager(viewPager);
         }
 
     }
