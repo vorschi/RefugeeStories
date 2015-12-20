@@ -80,7 +80,7 @@ public class FragmentTimeline extends Fragment {
 
         //init components
         stories = new ArrayList<>();
-        timelineAdapter = new TimelineAdapter(context);
+        timelineAdapter = new TimelineAdapter(context, getFragmentManager());
         offset = 0;
         task = new PersonalStoriesLoaderTask(this);
         task.setStoryControllerInstance(storyControllerInstance);
@@ -91,7 +91,7 @@ public class FragmentTimeline extends Fragment {
 
         //execute task with limit, offset and userId params. Finally increase offset
         loading = true;
-        task.execute(LIMIT, offset, 5);
+        task.execute(LIMIT, offset, 1);
         offset += Consts.TIMELINE_STORY_INC;
 
         timeline.setOnScrollListener(new OnScrollListener() {
@@ -106,7 +106,7 @@ public class FragmentTimeline extends Fragment {
                     task = new PersonalStoriesLoaderTask(instance);
                     task.setStoryControllerInstance(storyControllerInstance);
                     task.setImageControllerInstance(imageControllerInstance);
-                    task.execute(LIMIT, offset, 5);
+                    task.execute(LIMIT, offset, 1);
                     offset += Consts.TIMELINE_STORY_INC;
                 }
             }

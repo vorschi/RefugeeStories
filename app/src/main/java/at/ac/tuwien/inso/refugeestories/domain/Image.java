@@ -29,4 +29,9 @@ public class Image {
     public Story getStory() { return story; }
 
     public void setStory(Story story) { this.story = story; }
+
+    @Override
+    public String toString() {
+        return "Image { id= " + id + ", img= '" + img + '\'' + '}';
+    }
 }

@@ -7,8 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+
+import at.ac.tuwien.inso.refugeestories.domain.Image;
+import at.ac.tuwien.inso.refugeestories.utils.tasks.BitmapWorkerTask;
 
 /**
  * Created by Amer Salkovic on 5.12.2015.
@@ -16,13 +19,14 @@ import java.util.List;
 public class ImageAdapter extends PagerAdapter {
 
     private final Context context;
-    List<Integer> images = Collections.<Integer>emptyList();
+    List<Image> images;
 
     public ImageAdapter(Context context) {
         this.context = context;
+        images = new ArrayList<>();
     }
 
-    public void updateImages(List<Integer> images) {
+    public void updateImages(List<Image> images) {
         this.images = images;
         notifyDataSetChanged();
     }
@@ -41,14 +45,13 @@ public class ImageAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
 
         ImageView imageView = new ImageView(context);
-
-//        int padding = context.getResources().getDimensionPixelSize(
-//                R.dimen.padding_medium);
-//        imageView.setPadding(padding, padding, padding, padding);
-
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageView.setImageResource(images.get(position));
+
+        BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+        task.execute(images.get(position).getImg());
+
         ((ViewPager) container).addView(imageView, 0);
+
         return imageView;
     }
 
