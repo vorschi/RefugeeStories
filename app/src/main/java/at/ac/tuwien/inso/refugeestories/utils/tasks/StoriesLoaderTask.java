@@ -19,7 +19,7 @@ public class StoriesLoaderTask extends LoaderTask {
 
     @Override
     protected List<Story> doInBackground(Integer... integers) {
-        stories = storyControllerInstance.getStories(integers[Consts.LIMIT], integers[Consts.OFFSET]);
+        stories = storyControllerInstance.getStories(integers[Consts.LIMIT], integers[Consts.OFFSET], integers[Consts.AUTHOR_ID]);
         for (Story story : stories) {
             story.setImages(imageControllerInstance.getImagesByStoryId(story.getId()));
         }

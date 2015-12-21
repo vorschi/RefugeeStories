@@ -98,10 +98,17 @@ public class StoryControllerImpl implements IStoryController {
         return story;
     }
 
-    public List<Story> getStories(int limit, int offset) {
+    /**
+     * This method return stories for the FragmentExplore
+     * @param limit - number of stories that should be loaded
+     * @param offset - starting point
+     * @param userId - id of a current user, in order to avoid fetching of his own stories
+     * @return list of stories for explore view
+     */
+    public List<Story> getStories(int limit, int offset, int userId) {
         SQLiteDatabase db = myDbHelper.getReadableDatabase();
 
-        String query = "SELECT * FROM " + TABLE_NAME + " ORDER BY id DESC LIMIT " + limit + " OFFSET " + offset;
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + TableEntry.AUTHORID + " <> " + userId + " ORDER BY " + TableEntry.ID + " DESC LIMIT " + limit + " OFFSET " + offset;
         Log.i(StoryControllerImpl.class.getSimpleName(), query);
         Cursor cursor = db.rawQuery(query, null);
 

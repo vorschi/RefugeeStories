@@ -123,7 +123,7 @@ public class FragmentStory extends Fragment {
             task.setImageControllerInstance(imageControllerInstance);
 
             //execute task with limit and offset params and finally increase offset
-            task.execute(LIMIT, offset);
+            task.execute(LIMIT, offset, sharedPrefs.getUser().getId());
             offset += Consts.EXPLORE_STORY_INC;
 
         } else if (Consts.TAB_MYSTORIES.equals(CURRENT_TAB)) {
@@ -155,7 +155,7 @@ public class FragmentStory extends Fragment {
     }
 
     private void createOptionsDialog(final int position) {
-        builder = new AlertDialog.Builder(getActivity());
+        builder = new AlertDialog.Builder(context);
         builder.setItems(R.array.story_options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int id) {
@@ -163,21 +163,16 @@ public class FragmentStory extends Fragment {
                     Story targetStory = storyAdapter.getItem(position);
                     //TODO: pass the targetStory to the MainActivity, To the CreateNewStoryFragment
                 } else if (id == Consts.DELETE) {
-
                     createDeleteDialog(position);
                     optionDialog.show();
-
-                } else {
-                    //ignore
-                }
+                } else { /*ignore*/ }
             }
         });
         optionDialog = builder.create();
     }
 
     private void createDeleteDialog(final int position) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder = new AlertDialog.Builder(context);
         builder.setMessage(R.string.delete_check)
                 .setPositiveButton(R.string.delete_true, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -188,7 +183,7 @@ public class FragmentStory extends Fragment {
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
+                        optionDialog.cancel();
                     }
                 });
         optionDialog = builder.create();
