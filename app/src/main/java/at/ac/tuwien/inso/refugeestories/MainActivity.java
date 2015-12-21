@@ -18,6 +18,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import at.ac.tuwien.inso.refugeestories.domain.Story;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentCreateNewStory;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentNotification;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory;
@@ -116,7 +117,7 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
         public void onTabChanged(String tabId) {
             //Use FragmentStory for both stories and explore
             if (tabId.equals(Consts.TAB_MYSTORIES))
-                pushFragments(FragmentStory.getInstance(), false, tabId);
+                pushFragments(FragmentTimeline.getInstance(), false, tabId);
             else if (tabId.equals(Consts.TAB_EXPLORE))
                 pushFragments(FragmentStory.getInstance(), false, tabId);
             else
@@ -205,8 +206,10 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
     }
 
     @Override
-    public void onStorySelected(int position) {
-        pushFragments(FragmentTimeline.getInstance(), true, Consts.TAB_TIMELINE);
+    public void onStorySelected(Story story) {
+        FragmentTimeline timeline = FragmentTimeline.getInstance();
+        timeline.onStorySelected(story);
+        pushFragments(timeline, true, Consts.TAB_TIMELINE);
     }
 
     public String getCurrentTabId() {

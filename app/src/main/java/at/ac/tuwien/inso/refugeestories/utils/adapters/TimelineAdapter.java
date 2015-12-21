@@ -1,8 +1,6 @@
 package at.ac.tuwien.inso.refugeestories.utils.adapters;
 
 import android.content.Context;
-import android.net.Uri;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,12 +11,10 @@ import android.widget.TextView;
 
 import com.viewpagerindicator.LinePageIndicator;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import at.ac.tuwien.inso.refugeestories.R;
-import at.ac.tuwien.inso.refugeestories.domain.Image;
 import at.ac.tuwien.inso.refugeestories.domain.Story;
 import at.ac.tuwien.inso.refugeestories.utils.Utils;
 
@@ -28,12 +24,10 @@ import at.ac.tuwien.inso.refugeestories.utils.Utils;
 public class TimelineAdapter extends BaseAdapter {
 
     private final Context context;
-    private final FragmentManager fm;
     private List<Story> stories = Collections.<Story>emptyList();
 
-    public TimelineAdapter(Context context, FragmentManager fm) {
+    public TimelineAdapter(Context context) {
         this.context = context;
-        this.fm = fm;
     }
 
     public void updateStories(List<Story> stories) {
@@ -47,7 +41,7 @@ public class TimelineAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Story getItem(int position) {
         return stories.get(position);
     }
 
@@ -73,7 +67,7 @@ public class TimelineAdapter extends BaseAdapter {
             txtTimelineItemText = (TextView) convertView.findViewById(R.id.timeline_item_text);
             viewPager = (ViewPager) convertView.findViewById(R.id.timeline_view_pager);
             indicator = (LinePageIndicator) convertView.findViewById(R.id.indicator);
-            convertView.setTag(new ViewHolder(context, txtTimelineItemTitle, txtTimelineItemDetails, txtTimelineItemText, viewPager, indicator));
+            convertView.setTag(new ViewHolder(txtTimelineItemTitle, txtTimelineItemDetails, txtTimelineItemText, viewPager, indicator));
         } else {
             ViewHolder viewHolder = (ViewHolder) convertView.getTag();
             txtTimelineItemTitle = viewHolder.txtTimelineItemTitle;
@@ -108,31 +102,20 @@ public class TimelineAdapter extends BaseAdapter {
 
     private static class ViewHolder {
 
-        private final Context context;
         public final TextView txtTimelineItemTitle;
         public final TextView txtTimelineItemDetails;
         public final TextView txtTimelineItemText;
         public final ViewPager viewPager;
         public final LinePageIndicator indicator;
 
-        public ViewHolder(Context context, TextView txtTimelineItemTitle, TextView txtTimelineItemDetails,
+        public ViewHolder(TextView txtTimelineItemTitle, TextView txtTimelineItemDetails,
                           TextView txtTimelineItemText, ViewPager viewPager, LinePageIndicator indicator) {
-            this.context = context;
             this.txtTimelineItemTitle = txtTimelineItemTitle;
             this.txtTimelineItemDetails = txtTimelineItemDetails;
             this.txtTimelineItemText = txtTimelineItemText;
             this.viewPager = viewPager;
             this.indicator = indicator;
         }
-
-        public void resetValues() {
-            txtTimelineItemTitle.setText("");
-            txtTimelineItemDetails.setText("");
-            txtTimelineItemText.setText("");
-            viewPager.setAdapter(new ImageAdapter(context));
-            indicator.setViewPager(viewPager);
-        }
-
     }
 
 }

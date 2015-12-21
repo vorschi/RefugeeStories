@@ -1,25 +1,18 @@
 package at.ac.tuwien.inso.refugeestories.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.github.clans.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import at.ac.tuwien.inso.refugeestories.MainActivity;
 import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.domain.Story;
 import at.ac.tuwien.inso.refugeestories.persistence.ImageControllerImpl;
@@ -29,23 +22,21 @@ import at.ac.tuwien.inso.refugeestories.utils.Consts;
 import at.ac.tuwien.inso.refugeestories.utils.RecyclerItemClickListener;
 import at.ac.tuwien.inso.refugeestories.utils.SharedPreferencesHandler;
 import at.ac.tuwien.inso.refugeestories.utils.tasks.LoaderTask;
-import at.ac.tuwien.inso.refugeestories.utils.tasks.PersonalStoriesLoaderTask;
 import at.ac.tuwien.inso.refugeestories.utils.tasks.StoriesLoaderTask;
 import at.ac.tuwien.inso.refugeestories.utils.adapters.StoryAdapter;
 
 /**
+ * This Fragment represents explore view
  * Created by Amer Salkovic, Mario Vorstandlechner on 14.11.2015.
  */
 public class FragmentStory extends Fragment {
 
     private final String TAG = FragmentStory.class.getSimpleName();
 
-    private String CURRENT_TAB;
     private final int LIMIT = 5;
     private int offset;
 
     private Context context;
-    private FragmentManager fragmentManager;
 
     private RecyclerView myStoriesView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -53,13 +44,6 @@ public class FragmentStory extends Fragment {
     private List<Story> stories;
     private StoryAdapter storyAdapter;
     private LoaderTask task;
-
-    private TextView noStoriesMsg;
-    private FloatingActionButton fab;
-
-    //options dialog
-    AlertDialog.Builder builder;
-    AlertDialog optionDialog;
 
     OnStorySelectedListener mStoryCallback;
     private SharedPreferencesHandler sharedPrefs;
@@ -88,137 +72,42 @@ public class FragmentStory extends Fragment {
         myStoriesView.setAdapter(storyAdapter);
 
         //db
-        dbHelper = new MyDatabaseHelper(getActivity().getBaseContext());
+        dbHelper = new MyDatabaseHelper(context);
         StoryControllerImpl.initializeInstance(dbHelper);
         storyControllerInstance = StoryControllerImpl.getInstance();
         ImageControllerImpl.initializeInstance(dbHelper);
         imageControllerInstance = ImageControllerImpl.getInstance();
 
         //sp
-        sharedPrefs = new SharedPreferencesHandler(getActivity());
+        sharedPrefs = new SharedPreferencesHandler(context);
 
         //add touch listener to the recyclerView
         myStoriesView.addOnItemTouchListener(new RecyclerItemClickListener(context,
                 new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View childView, int position) {
-                        mStoryCallback.onStorySelected(position);
+                        mStoryCallback.onStorySelected(storyAdapter.getItem(position));
                     }
 
                     @Override
-                    public void onItemLongPress(View childView, int position) {
-                        if (Consts.TAB_MYSTORIES.equals(CURRENT_TAB)) {
-                            createOptionsDialog(position);
-                            optionDialog.show();
-                        }
-                    }
+                    public void onItemLongPress(View childView, int position) { /*ignore*/ }
                 }));
 
-        //add data to the recyclerView
-        if (Consts.TAB_EXPLORE.equals(CURRENT_TAB)) {
 
-            //init task
-            task = new StoriesLoaderTask(this);
-            task.setStoryControllerInstance(storyControllerInstance);
-            task.setImageControllerInstance(imageControllerInstance);
+        //init task
+        task = new StoriesLoaderTask(this);
+        task.setStoryControllerInstance(storyControllerInstance);
+        task.setImageControllerInstance(imageControllerInstance);
 
-            //execute task with limit and offset params and finally increase offset
-            task.execute(LIMIT, offset, sharedPrefs.getUser().getId());
-            offset += Consts.EXPLORE_STORY_INC;
-
-        } else if (Consts.TAB_MYSTORIES.equals(CURRENT_TAB)) {
-
-            noStoriesMsg = (TextView) contentView.findViewById(R.id.no_stories_msg);
-
-            //init task
-            task = new PersonalStoriesLoaderTask(this);
-            task.setStoryControllerInstance(storyControllerInstance);
-            task.setImageControllerInstance(imageControllerInstance);
-
-            //execute task with limit, offset and userId params and finally increase offset
-            task.execute(LIMIT, offset, sharedPrefs.getUser().getId());
-            offset += Consts.EXPLORE_STORY_INC;
-
-            fragmentManager = getFragmentManager();
-            fab = (FloatingActionButton) contentView.findViewById(R.id.fab);
-            fab.setVisibility(FloatingActionButton.VISIBLE);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    MainActivity activity = (MainActivity) getActivity();
-                    activity.pushFragments(FragmentCreateNewStory.getInstance(), true, Consts.TAB_NEWSTORY);
-                }
-            });
-        }
+        /*
+        execute task with limit and offset params
+        personal stories are excluded
+        increase offset
+        */
+        task.execute(LIMIT, offset, sharedPrefs.getUser().getId());
+        offset += Consts.EXPLORE_STORY_INC;
 
         return contentView;
-    }
-
-    private void createOptionsDialog(final int position) {
-        builder = new AlertDialog.Builder(context);
-        builder.setItems(R.array.story_options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int id) {
-                if (id == Consts.EDIT) {
-                    Story targetStory = storyAdapter.getItem(position);
-                    //TODO: pass the targetStory to the MainActivity, To the CreateNewStoryFragment
-                } else if (id == Consts.DELETE) {
-                    createDeleteDialog(position);
-                    optionDialog.show();
-                } else { /*ignore*/ }
-            }
-        });
-        optionDialog = builder.create();
-    }
-
-    private void createDeleteDialog(final int position) {
-        builder = new AlertDialog.Builder(context);
-        builder.setMessage(R.string.delete_check)
-                .setPositiveButton(R.string.delete_true, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        stories.remove(position);
-                        storyAdapter.updateStories(stories);
-                        //TODO remove from the db also
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        optionDialog.cancel();
-                    }
-                });
-        optionDialog = builder.create();
-    }
-
-    public static FragmentStory getInstance() {
-        FragmentStory instance = new FragmentStory();
-        return instance;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.context = activity;
-        CURRENT_TAB = ((MainActivity) activity).getCurrentTabId();
-
-        try {
-            mStoryCallback = (OnStorySelectedListener) activity;
-        } catch (ClassCastException ex) {
-            throw new ClassCastException(activity.toString() + " must implement OnStorySelectedListener");
-        }
-    }
-
-    public interface OnStorySelectedListener {
-        void onStorySelected(int position);
-    }
-
-    public String getName() {
-        if(CURRENT_TAB.equals(Consts.TAB_EXPLORE)) {
-            return Consts.TAB_EXPLORE;
-        } else if (CURRENT_TAB.equals(Consts.TAB_MYSTORIES)) {
-            return Consts.TAB_MYSTORIES;
-        } else {
-            return "";
-        }
     }
 
     /**
@@ -234,22 +123,29 @@ public class FragmentStory extends Fragment {
         storyAdapter.updateStories(stories);
     }
 
-    /**
-     * adds new stories for myStories fragment
-     * @param newStories
-     */
-    public void addPersonalStories(List<Story> newStories) {
-        if (storyAdapter == null) {
-            return;
-        }
+    public static FragmentStory getInstance() {
+        FragmentStory instance = new FragmentStory();
+        return instance;
+    }
 
-        if (stories.isEmpty() && newStories.isEmpty()) {
-            noStoriesMsg.setVisibility(TextView.VISIBLE);
-            return;
-        }
+    public String getName() {
+        return Consts.TAB_EXPLORE;
+    }
 
-        stories.addAll(newStories);
-        storyAdapter.updateStories(stories);
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.context = activity;
+
+        try {
+            mStoryCallback = (OnStorySelectedListener) activity;
+        } catch (ClassCastException ex) {
+            throw new ClassCastException(activity.toString() + " must implement OnStorySelectedListener");
+        }
+    }
+
+    public interface OnStorySelectedListener {
+        void onStorySelected(Story story);
     }
 
 }

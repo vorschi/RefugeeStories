@@ -29,11 +29,7 @@ public class PersonalStoriesLoaderTask extends LoaderTask {
 
     @Override
     protected void onPostExecute(List<Story> stories) {
-        if (fragment instanceof FragmentStory) {
-            ((FragmentStory) fragment).addPersonalStories(stories);
-        } else if (fragment instanceof FragmentTimeline) {
-            ((FragmentTimeline) fragment).addTimelineStories(stories);
-        }
+        ((FragmentTimeline) fragment).addTimelineStories(stories);
     }
 
 }

@@ -14,14 +14,6 @@
         android:layout_height="match_parent"
         android:scrollbars="none" />
 
-    <TextView
-        android:id="@+id/no_stories_msg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/msg_no_stories"
-        android:visibility="gone" />
-
     <com.github.clans.fab.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"

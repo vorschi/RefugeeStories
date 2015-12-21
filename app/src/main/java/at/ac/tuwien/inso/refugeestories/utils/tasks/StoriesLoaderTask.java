@@ -28,7 +28,6 @@ public class StoriesLoaderTask extends LoaderTask {
 
     @Override
     protected void onPostExecute(List<Story> stories) {
-        super.onPostExecute(stories);
         ((FragmentStory) fragment).addStories(stories);
     }
 
