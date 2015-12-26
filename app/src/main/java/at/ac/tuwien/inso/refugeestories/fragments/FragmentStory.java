@@ -45,7 +45,7 @@ public class FragmentStory extends Fragment {
 
     private RecyclerView myStoriesView;
     private RecyclerView.LayoutManager mLayoutManager;
-
+    private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
     private List<Story> stories;
     private StoryAdapter storyAdapter;
     private LoaderTask task;
@@ -71,8 +71,16 @@ public class FragmentStory extends Fragment {
         //initialize recyclerView and other components
         myStoriesView = (RecyclerView) contentView.findViewById(R.id.my_stories_view);
         mLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener((LinearLayoutManager) mLayoutManager) {
+            @Override
+            public void onLoadMore(int current_page) {
+                executeLoaderTask();
+            }
+        };
+
         stories = new ArrayList<>();
         storyAdapter = new StoryAdapter();
+
 
         //set default properties
         myStoriesView.setHasFixedSize(true);
@@ -102,12 +110,7 @@ public class FragmentStory extends Fragment {
                 }));
 
 
-        myStoriesView.setOnScrollListener(new EndlessRecyclerOnScrollListener((LinearLayoutManager) mLayoutManager) {
-            @Override
-            public void onLoadMore(int current_page) {
-                executeLoaderTask();
-            }
-        });
+        myStoriesView.setOnScrollListener(endlessRecyclerOnScrollListener);
 
         executeLoaderTask();
 
@@ -178,6 +181,7 @@ public class FragmentStory extends Fragment {
         offset = 0;
         this.column = column;
         this.order = order;
+        endlessRecyclerOnScrollListener.setPreviousTotal(0);
         executeLoaderTask();
     }
 
