@@ -94,7 +94,6 @@ public class TimelineAdapter extends BaseAdapter {
             imageAdapter.updateImages(story.getImages());
             viewPager.setAdapter(imageAdapter);
             indicator.setViewPager(viewPager, 0);
-            indicator.invalidate();
         }
 
         return convertView;

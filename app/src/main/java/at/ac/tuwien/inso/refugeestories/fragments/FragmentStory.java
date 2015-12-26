@@ -19,6 +19,7 @@ import at.ac.tuwien.inso.refugeestories.persistence.ImageControllerImpl;
 import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
 import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
+import at.ac.tuwien.inso.refugeestories.utils.EndlessRecyclerOnScrollListener;
 import at.ac.tuwien.inso.refugeestories.utils.RecyclerItemClickListener;
 import at.ac.tuwien.inso.refugeestories.utils.SharedPreferencesHandler;
 import at.ac.tuwien.inso.refugeestories.utils.tasks.LoaderTask;
@@ -32,6 +33,7 @@ import at.ac.tuwien.inso.refugeestories.utils.adapters.StoryAdapter;
 public class FragmentStory extends Fragment {
 
     private final String TAG = FragmentStory.class.getSimpleName();
+    private FragmentStory instance;
 
     private final int LIMIT = 5;
     private int offset;
@@ -94,6 +96,17 @@ public class FragmentStory extends Fragment {
                 }));
 
 
+        myStoriesView.setOnScrollListener(new EndlessRecyclerOnScrollListener((LinearLayoutManager) mLayoutManager) {
+            @Override
+            public void onLoadMore(int current_page) {
+                task = new StoriesLoaderTask(instance);
+                task.setStoryControllerInstance(storyControllerInstance);
+                task.setImageControllerInstance(imageControllerInstance);
+                task.execute(LIMIT, offset, sharedPrefs.getUser().getId());
+                offset += Consts.EXPLORE_STORY_INC;
+            }
+        });
+
         //init task
         task = new StoriesLoaderTask(this);
         task.setStoryControllerInstance(storyControllerInstance);
@@ -136,6 +149,7 @@ public class FragmentStory extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.context = activity;
+        instance = this;
 
         try {
             mStoryCallback = (OnStorySelectedListener) activity;

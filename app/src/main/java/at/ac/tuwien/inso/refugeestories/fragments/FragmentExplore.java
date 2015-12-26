@@ -59,9 +59,9 @@ public class FragmentExplore extends Fragment {
 
         mLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        StoryAdapter storyAdapter = new StoryAdapter();
-        mRecyclerView.setAdapter(storyAdapter);
-        storyAdapter.updateStories(storyControllerInstance.getAllStories());
+        //StoryAdapter storyAdapter = new StoryAdapter();
+        //mRecyclerView.setAdapter(storyAdapter);
+        //storyAdapter.updateStories(storyControllerInstance.getAllStories());
         //storyAdapter.updateStories(MockFactory.getStories(6));
 
         /*

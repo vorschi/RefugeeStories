@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -116,6 +118,17 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
 
         /* LISTENERS */
         // TODO implement onLongClickListener either here or in the adapter ...
+//        timeline.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                if(currentPerson.getId() == sharedPrefs.getUser().getId()) {
+//                    Log.v(this.getClass().getSimpleName(), "long click");
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//            }
+//        });
 
         timeline.setOnScrollListener(new OnScrollListener() {
 

@@ -50,9 +50,12 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> 
         TextView txtStoryTitle = holder.txtStoryTitle;
         TextView txtStoryText = holder.txtStoryText;
 
-        if(stories.get(position).getImages().size() > 0) {
+        if( stories.get(position).getImages().size() > 0 &&
+                !"img_path".equals(stories.get(position).getImages().get(0).getImg()) ) {
             BitmapWorkerTask task = new BitmapWorkerTask(imgStoryPhoto);
             task.execute(stories.get(position).getImages().get(Consts.TITLE_PHOTO).getImg());
+        } else {
+            imgStoryPhoto.setImageDrawable(null);
         }
         // XXX TODO ASA in case there are no photos ??
         txtAuthor.setText(stories.get(position).getAuthor().getUsername());

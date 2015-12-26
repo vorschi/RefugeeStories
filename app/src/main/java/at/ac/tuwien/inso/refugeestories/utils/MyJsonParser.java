@@ -1,5 +1,7 @@
 package at.ac.tuwien.inso.refugeestories.utils;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -37,9 +39,7 @@ public class MyJsonParser {
         } finally {
             try {
                 writer.close();
-            } catch (IOException e) {
-                //ignore..
-            }
+            } catch (IOException e) { Log.e("JSON", e.getMessage()); }
         }
     }
 }
