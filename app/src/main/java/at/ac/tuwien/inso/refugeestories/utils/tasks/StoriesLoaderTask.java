@@ -1,7 +1,9 @@
 package at.ac.tuwien.inso.refugeestories.utils.tasks;
 
 import android.support.v4.app.Fragment;
+import android.util.SparseArray;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 
 import at.ac.tuwien.inso.refugeestories.domain.Story;
@@ -18,8 +20,18 @@ public class StoriesLoaderTask extends LoaderTask {
     }
 
     @Override
-    protected List<Story> doInBackground(Integer... integers) {
-        stories = storyControllerInstance.getStories(integers[Consts.LIMIT], integers[Consts.OFFSET], integers[Consts.AUTHOR_ID]);
+    protected List<Story> doInBackground(SparseArray... sparseArrays) {
+        if (sparseArrays.length <= 0 || sparseArrays[0].size() != 5) {
+            throw new InvalidParameterException("Invalid or missing parameters");
+        }
+        SparseArray params = sparseArrays[0];
+        stories = storyControllerInstance.getOrderedStories(
+                (int) params.get(Consts.LIMIT),
+                (int) params.get(Consts.OFFSET),
+                (int) params.get(Consts.AUTHOR_ID),
+                (String) params.get(Consts.COLUMN),
+                (String) params.get(Consts.ORDER)
+        );
         for (Story story : stories) {
             story.setImages(imageControllerInstance.getImagesByStoryId(story.getId()));
         }

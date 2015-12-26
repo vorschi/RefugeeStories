@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,7 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
     private final int LIMIT = 2;
     private int offset;
     private LoaderTask task;
+    private SparseArray params;
     private boolean loading;
     private boolean allStoriesLoaded;
 
@@ -72,7 +74,7 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         //db
-        dbHelper = new MyDatabaseHelper(getActivity().getBaseContext());
+        dbHelper = new MyDatabaseHelper(context);
         StoryControllerImpl.initializeInstance(dbHelper);
         storyControllerInstance = StoryControllerImpl.getInstance();
         ImageControllerImpl.initializeInstance(dbHelper);
@@ -91,9 +93,6 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
         allStoriesLoaded = false;
         stories = new ArrayList<>();
         timelineAdapter = new TimelineAdapter(context);
-        task = new PersonalStoriesLoaderTask(this);
-        task.setStoryControllerInstance(storyControllerInstance);
-        task.setImageControllerInstance(imageControllerInstance);
 
         timeline.setAdapter(timelineAdapter);
         timeline.addFooterView(footer);
@@ -108,10 +107,7 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
         currentPerson should be passed from the MainActivity, using onStorySelected()
         */
         if (currentPerson != null) {
-            //execute task with limit, offset and userId params. Finally increase offset
-            loading = true;
-            task.execute(LIMIT, offset, currentPerson.getId());
-            offset += Consts.TIMELINE_STORY_INC;
+            executeLoaderTask();
         } else {
             throw new IllegalStateException("person is not defined");
         }
@@ -139,11 +135,7 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (((firstVisibleItem + visibleItemCount) == totalItemCount) && !loading && !allStoriesLoaded) {
                     timeline.addFooterView(footer);
-                    task = new PersonalStoriesLoaderTask(instance);
-                    task.setStoryControllerInstance(storyControllerInstance);
-                    task.setImageControllerInstance(imageControllerInstance);
-                    task.execute(LIMIT, offset, currentPerson.getId());
-                    offset += Consts.TIMELINE_STORY_INC;
+                    executeLoaderTask();
                 }
             }
         });
@@ -170,6 +162,28 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
         timelineAdapter.updateStories(stories);
         timeline.removeFooterView(footer);
         loading = false;
+    }
+
+    private void executeLoaderTask() {
+        loading = true;
+
+        //init task
+        task = new PersonalStoriesLoaderTask(this);
+        task.setStoryControllerInstance(storyControllerInstance);
+        task.setImageControllerInstance(imageControllerInstance);
+
+        //init params
+        params = new SparseArray();
+        params.append(Consts.LIMIT, LIMIT);
+        params.append(Consts.OFFSET, offset);
+        params.append(Consts.AUTHOR_ID, currentPerson.getId());
+
+        /*
+        execute task with limit, offset and userId params.
+        Finally increase offset
+        */
+        task.execute(params);
+        offset += Consts.TIMELINE_STORY_INC;
     }
 
     private void createDeleteDialog(final int position) {

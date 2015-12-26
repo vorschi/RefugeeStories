@@ -25,6 +25,7 @@ import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory.OnStorySelectedListener;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentTimeline;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentUser;
+import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
 
 public class MainActivity extends FragmentActivity implements OnStorySelectedListener {
@@ -175,6 +176,9 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        Fragment currentFragment;
+
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
@@ -188,11 +192,23 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
 
             //TODO: implement filter-options
             case R.id.menuSortNewest:
-                writeToast("sort by newest");
-                return true;
+                currentFragment = getSupportFragmentManager().findFragmentById(R.id.realtabcontent);
+                if(currentFragment instanceof FragmentStory) {
+                    ((FragmentStory) currentFragment).onSortOptionSelected(StoryControllerImpl.TableEntry.DATE, Consts.DESC);
+                    writeToast("sort by newest");
+                    return true;
+                } else {
+                    return false;
+                }
             case R.id.menuSortOldest:
-                // right button
-                return true;
+                currentFragment = getSupportFragmentManager().findFragmentById(R.id.realtabcontent);
+                if(currentFragment instanceof FragmentStory) {
+                    ((FragmentStory) currentFragment).onSortOptionSelected(StoryControllerImpl.TableEntry.DATE, Consts.ASC);
+                    writeToast("sort by oldest");
+                    return true;
+                } else {
+                    return false;
+                }
             case R.id.menuSortNearest:
                 // right button
                 return true;

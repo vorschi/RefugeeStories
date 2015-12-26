@@ -16,7 +16,7 @@ import at.ac.tuwien.inso.refugeestories.utils.Consts;
 import at.ac.tuwien.inso.refugeestories.utils.Utils;
 
 /**
- * Created by mtraxler on 14.12.2015.
+ * Created by mtraxler, Amer Salkovic on 14.12.2015.
  */
 public class StoryControllerImpl implements IStoryController {
 
@@ -105,10 +105,17 @@ public class StoryControllerImpl implements IStoryController {
      * @param userId - id of a current user, in order to avoid fetching of his own stories
      * @return list of stories for explore view
      */
-    public List<Story> getStories(int limit, int offset, int userId) {
+    public List<Story> getOrderedStories(int limit, int offset, int userId, String column, String order) {
         SQLiteDatabase db = myDbHelper.getReadableDatabase();
 
-        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + TableEntry.AUTHORID + " <> " + userId + " ORDER BY " + TableEntry.ID + " DESC LIMIT " + limit + " OFFSET " + offset;
+        String query = "SELECT " + TableEntry.ID + ", " + TableEntry.TITLE + ", " + TableEntry.TEXT + ", " +
+                       "substr(date, 7, 4)||\"-\"||substr(date, 4, 2)||\"-\"||substr(date,0,3) as date, " +
+                       TableEntry.LOCATION + ", " + TableEntry.AUTHORID +
+                       " FROM " + TABLE_NAME +
+                       " WHERE " + TableEntry.AUTHORID + " <> " + userId +
+                       " ORDER BY " + column + " " + order +
+                       " LIMIT " + limit + " OFFSET " + offset;
+
         Log.i(StoryControllerImpl.class.getSimpleName(), query);
         Cursor cursor = db.rawQuery(query, null);
 
@@ -121,7 +128,7 @@ public class StoryControllerImpl implements IStoryController {
             story.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TITLE)));
             story.setText(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TEXT)));
             try {
-                story.setDate(Utils.dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.DATE))));
+                story.setDate(Utils.customDateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.DATE))));
             } catch (ParseException e) {
                 e.printStackTrace();
             }

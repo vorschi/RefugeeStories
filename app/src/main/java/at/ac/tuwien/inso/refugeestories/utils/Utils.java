@@ -8,4 +8,6 @@ import java.text.SimpleDateFormat;
 public class Utils {
 
     public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
+    public static SimpleDateFormat customDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 }

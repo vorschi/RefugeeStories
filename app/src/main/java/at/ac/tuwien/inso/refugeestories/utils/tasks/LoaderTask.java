@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.refugeestories.utils.tasks;
 
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
+import android.util.SparseArray;
 
 import java.security.InvalidParameterException;
 import java.util.List;
@@ -13,7 +14,7 @@ import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
 /**
  * Created by Amer Salkovic on 20.12.2015.
  */
-public abstract class LoaderTask extends AsyncTask<Integer, Void, List<Story>> {
+public abstract class LoaderTask extends AsyncTask<SparseArray, Void, List<Story>> {
 
     protected List<Story> stories;
 

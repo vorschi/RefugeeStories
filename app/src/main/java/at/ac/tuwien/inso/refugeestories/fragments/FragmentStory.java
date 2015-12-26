@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,8 @@ public class FragmentStory extends Fragment {
 
     private final int LIMIT = 5;
     private int offset;
+    private String column;
+    private String order;
 
     private Context context;
 
@@ -46,6 +49,7 @@ public class FragmentStory extends Fragment {
     private List<Story> stories;
     private StoryAdapter storyAdapter;
     private LoaderTask task;
+    private SparseArray params;
 
     OnStorySelectedListener mStoryCallback;
     private SharedPreferencesHandler sharedPrefs;
@@ -61,6 +65,8 @@ public class FragmentStory extends Fragment {
 
         //init offset
         offset = 0;
+        column = StoryControllerImpl.TableEntry.DATE;
+        order = Consts.DESC;
 
         //initialize recyclerView and other components
         myStoriesView = (RecyclerView) contentView.findViewById(R.id.my_stories_view);
@@ -99,26 +105,11 @@ public class FragmentStory extends Fragment {
         myStoriesView.setOnScrollListener(new EndlessRecyclerOnScrollListener((LinearLayoutManager) mLayoutManager) {
             @Override
             public void onLoadMore(int current_page) {
-                task = new StoriesLoaderTask(instance);
-                task.setStoryControllerInstance(storyControllerInstance);
-                task.setImageControllerInstance(imageControllerInstance);
-                task.execute(LIMIT, offset, sharedPrefs.getUser().getId());
-                offset += Consts.EXPLORE_STORY_INC;
+                executeLoaderTask();
             }
         });
 
-        //init task
-        task = new StoriesLoaderTask(this);
-        task.setStoryControllerInstance(storyControllerInstance);
-        task.setImageControllerInstance(imageControllerInstance);
-
-        /*
-        execute task with limit and offset params
-        personal stories are excluded
-        increase offset
-        */
-        task.execute(LIMIT, offset, sharedPrefs.getUser().getId());
-        offset += Consts.EXPLORE_STORY_INC;
+        executeLoaderTask();
 
         return contentView;
     }
@@ -134,6 +125,29 @@ public class FragmentStory extends Fragment {
 
         stories.addAll(newStories);
         storyAdapter.updateStories(stories);
+    }
+
+    private void executeLoaderTask() {
+        //init task
+        task = new StoriesLoaderTask(this);
+        task.setStoryControllerInstance(storyControllerInstance);
+        task.setImageControllerInstance(imageControllerInstance);
+
+        //init params
+        params = new SparseArray();
+        params.append(Consts.LIMIT, LIMIT);
+        params.append(Consts.OFFSET, offset);
+        params.append(Consts.AUTHOR_ID, sharedPrefs.getUser().getId());
+        params.append(Consts.COLUMN, column);
+        params.append(Consts.ORDER, order);
+
+        /*
+        execute task with limit and offset, userId, (sort) column and order params
+        personal stories are excluded
+        increase offset
+        */
+        task.execute(params);
+        offset += Consts.EXPLORE_STORY_INC;
     }
 
     public static FragmentStory getInstance() {
@@ -156,6 +170,15 @@ public class FragmentStory extends Fragment {
         } catch (ClassCastException ex) {
             throw new ClassCastException(activity.toString() + " must implement OnStorySelectedListener");
         }
+    }
+
+    public void onSortOptionSelected(String column, String order) {
+        stories.clear();
+        storyAdapter.updateStories(stories);
+        offset = 0;
+        this.column = column;
+        this.order = order;
+        executeLoaderTask();
     }
 
     public interface OnStorySelectedListener {
