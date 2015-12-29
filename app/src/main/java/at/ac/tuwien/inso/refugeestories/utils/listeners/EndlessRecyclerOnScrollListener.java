@@ -1,4 +1,4 @@
-package at.ac.tuwien.inso.refugeestories.utils;
+package at.ac.tuwien.inso.refugeestories.utils.listeners;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;

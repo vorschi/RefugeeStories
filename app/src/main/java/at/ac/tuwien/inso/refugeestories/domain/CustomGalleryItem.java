@@ -6,6 +6,11 @@ package at.ac.tuwien.inso.refugeestories.domain;
 public class CustomGalleryItem {
 
     public String sdcardPath;
-    public boolean isSeleted = false;
-    
+    public boolean isSelected = false;
+
+    public CustomGalleryItem() { }
+
+    public CustomGalleryItem(String sdcardPath) {
+        this.sdcardPath = sdcardPath;
+    }
 }

@@ -1,4 +1,4 @@
-package at.ac.tuwien.inso.refugeestories.utils;
+package at.ac.tuwien.inso.refugeestories.utils.components;
 
 import android.content.Context;
 import android.graphics.Bitmap;

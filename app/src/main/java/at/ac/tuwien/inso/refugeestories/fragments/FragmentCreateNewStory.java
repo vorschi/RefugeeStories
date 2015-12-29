@@ -3,6 +3,7 @@ package at.ac.tuwien.inso.refugeestories.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -19,7 +20,14 @@ import android.widget.TextView;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -27,14 +35,17 @@ import java.util.List;
 
 import at.ac.tuwien.inso.refugeestories.MainActivity;
 import at.ac.tuwien.inso.refugeestories.R;
+import at.ac.tuwien.inso.refugeestories.domain.CustomGalleryItem;
 import at.ac.tuwien.inso.refugeestories.domain.Image;
 import at.ac.tuwien.inso.refugeestories.domain.Story;
 import at.ac.tuwien.inso.refugeestories.persistence.ImageControllerImpl;
 import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
 import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
+import at.ac.tuwien.inso.refugeestories.utils.components.ExpandableGridView;
 import at.ac.tuwien.inso.refugeestories.utils.SharedPreferencesHandler;
 import at.ac.tuwien.inso.refugeestories.utils.Utils;
+import at.ac.tuwien.inso.refugeestories.utils.adapters.GalleryAdapter;
 
 /**
  * Created by Amer Salkovic on 14.11.2015.
@@ -53,7 +64,15 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
     private Button btnAddStory;
     private Button btnAddPictures;
 
-    String[] selectedImages;
+    private String[] selectedImages;
+
+    private ExpandableGridView gridGallery;
+    private GalleryAdapter adapter;
+
+    private ImageLoader imageLoader;
+
+    //TODO prepare everything for for story editing...
+    private Story story;
 
     private SharedPreferencesHandler sharedPrefs;
 
@@ -65,6 +84,7 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View contentView = inflater.inflate(R.layout.fragment_create_new_story, container, false);
 
+        //init db, shared preferences and imageLoader
         dbHelper = new MyDatabaseHelper(getActivity().getBaseContext());
         StoryControllerImpl.initializeInstance(dbHelper);
         storyControllerInstance = StoryControllerImpl.getInstance();
@@ -72,7 +92,9 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
         imageControllerInstance = ImageControllerImpl.getInstance();
 
         sharedPrefs = new SharedPreferencesHandler(getActivity());
+        initImageLoader();
 
+        //init other components
         storyTitle = (TextView) contentView.findViewById(R.id.new_story_title);
 
         storyLocation = (TextView) contentView.findViewById(R.id.new_story_location);
@@ -90,6 +112,13 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
 
         storyText = (TextView) contentView.findViewById(R.id.new_story_text);
 
+        //init gallery
+        gridGallery = (ExpandableGridView) contentView.findViewById(R.id.gridGallery);
+        gridGallery.setExpanded(true);
+        adapter = new GalleryAdapter(context, imageLoader);
+        gridGallery.setAdapter(adapter);
+
+        //controls
         btnAddPictures = (Button) contentView.findViewById(R.id.btn_add_pictures);
         btnAddPictures.setOnClickListener(new OnClickListener() {
             @Override
@@ -121,7 +150,7 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
 
     private void clearBackStack() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+        for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
             fm.popBackStack();
         }
     }
@@ -161,8 +190,7 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
     }
 
     public static FragmentCreateNewStory getInstance() {
-        FragmentCreateNewStory instance = new FragmentCreateNewStory();
-        return instance;
+        return new FragmentCreateNewStory();
     }
 
     private List<String> getSelectedImages() {
@@ -172,15 +200,31 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
         return Collections.<String>emptyList();
     }
 
+    private void initImageLoader() {
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                .cacheOnDisc(true).imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+                .bitmapConfig(Bitmap.Config.RGB_565).build();
+        ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(context)
+                .defaultDisplayImageOptions(defaultOptions)
+                .memoryCache(new WeakMemoryCache());
+
+        ImageLoaderConfiguration config = builder.build();
+        imageLoader = ImageLoader.getInstance();
+        imageLoader.init(config);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Consts.SELECT_MULTIPLE_IMAGES && resultCode == Activity.RESULT_OK) {
+            adapter.clear();
             selectedImages = data.getStringArrayExtra("all_path");
-            Log.d(TAG, "images selected: " + selectedImages.length);
-//            for(String imgPath : selectedImages) {
-//                Log.i(TAG, imgPath);
-//            }
+
+            List<CustomGalleryItem> dataT = new ArrayList<>();
+            for (String path : selectedImages) {
+                dataT.add(new CustomGalleryItem(path));
+            }
+            adapter.addAll(dataT);
         }
     }
 
