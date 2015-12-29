@@ -173,6 +173,71 @@ public class StoryControllerImpl implements IStoryController {
         return stories;
     }
 
+    public List<Story> getStoriesByUserIdFromStoryId(int authorId, int lastLoadedStoryId, int limit) {
+        SQLiteDatabase db = myDbHelper.getReadableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + TableEntry.AUTHORID + " = " + authorId + " AND " + TableEntry.ID + " > " + lastLoadedStoryId + " LIMIT " + limit;
+
+        Log.i(StoryControllerImpl.class.getSimpleName(), query);
+        Cursor cursor = db.rawQuery(query, null);
+
+        List<Story> stories = new ArrayList<Story>();
+        Story story = null;
+        UserControllerImpl.initializeInstance(myDbHelper);
+        while(cursor.moveToNext()) {
+            story = new Story();
+            story.setId(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.ID)));
+            story.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TITLE)));
+            story.setText(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TEXT)));
+            try {
+                story.setDate(Utils.dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.DATE))));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            story.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
+            story.setAuthor(UserControllerImpl.getInstance().getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.AUTHORID))));
+            stories.add(story);
+        }
+        cursor.close();
+        db.close();
+
+        return stories;
+    }
+
+    public List<Story> getStoryPredecessorsAndTwoSuccessors(int authorId, int storyId, int limit) {
+        SQLiteDatabase db = myDbHelper.getReadableDatabase();
+
+        String query = "SELECT * FROM " +
+                       "(SELECT * FROM " + TABLE_NAME + " WHERE " + TableEntry.AUTHORID + " = " + authorId + " AND " + TableEntry.ID + " > " + storyId + " LIMIT " + limit + ") " +
+                       "UNION " +
+                       "SELECT * FROM " + TABLE_NAME + " WHERE " + TableEntry.AUTHORID + " = " + authorId + " AND " + TableEntry.ID + " <= " + storyId;
+
+        Log.i(StoryControllerImpl.class.getSimpleName(), query);
+        Cursor cursor = db.rawQuery(query, null);
+
+        List<Story> stories = new ArrayList<Story>();
+        Story story = null;
+        UserControllerImpl.initializeInstance(myDbHelper);
+        while(cursor.moveToNext()) {
+            story = new Story();
+            story.setId(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.ID)));
+            story.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TITLE)));
+            story.setText(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TEXT)));
+            try {
+                story.setDate(Utils.dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.DATE))));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            story.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
+            story.setAuthor(UserControllerImpl.getInstance().getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.AUTHORID))));
+            stories.add(story);
+        }
+        cursor.close();
+        db.close();
+
+        return stories;
+    }
+
     @Override
     public List<Story> getAllStories() {
 

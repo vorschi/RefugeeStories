@@ -81,7 +81,6 @@ public class FragmentStory extends Fragment {
         stories = new ArrayList<>();
         storyAdapter = new StoryAdapter();
 
-
         //set default properties
         myStoriesView.setHasFixedSize(true);
         myStoriesView.setLayoutManager(mLayoutManager);

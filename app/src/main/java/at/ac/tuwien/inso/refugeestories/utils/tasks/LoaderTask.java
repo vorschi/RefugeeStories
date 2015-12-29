@@ -16,6 +16,9 @@ import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
  */
 public abstract class LoaderTask extends AsyncTask<SparseArray, Void, List<Story>> {
 
+    public static final int AUTHOR_ID = 0;
+    public static final int LIMIT = 2;
+
     protected List<Story> stories;
 
     protected Fragment fragment;

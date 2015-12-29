@@ -6,18 +6,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import android.widget.AbsListView.OnScrollListener;
+
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +32,8 @@ import at.ac.tuwien.inso.refugeestories.utils.Consts;
 import at.ac.tuwien.inso.refugeestories.utils.SharedPreferencesHandler;
 import at.ac.tuwien.inso.refugeestories.utils.adapters.TimelineAdapter;
 import at.ac.tuwien.inso.refugeestories.utils.tasks.LoaderTask;
-import at.ac.tuwien.inso.refugeestories.utils.tasks.PersonalStoriesLoaderTask;
+import at.ac.tuwien.inso.refugeestories.utils.tasks.TimelineLoaderTask;
+import at.ac.tuwien.inso.refugeestories.utils.tasks.TimelineInitTask;
 
 /**
  * Created by Amer Salkovic on 3.12.2015.
@@ -56,6 +57,10 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
     private int offset;
     private LoaderTask task;
     private SparseArray params;
+
+    private int selectedStoryId;
+    private int lastLoadedStoryId;
+
     private boolean loading;
     private boolean allStoriesLoaded;
 
@@ -107,35 +112,33 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
         currentPerson should be passed from the MainActivity, using onStorySelected()
         */
         if (currentPerson != null) {
-            executeLoaderTask();
+            init(currentPerson.getId(), selectedStoryId);
         } else {
-            throw new IllegalStateException("person is not defined");
+            throw new InvalidParameterException(FragmentTimeline.class.getSimpleName() + ": invalid params");
         }
 
         /* LISTENERS */
         // TODO implement onLongClickListener either here or in the adapter ...
-//        timeline.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//            @Override
-//            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                if(currentPerson.getId() == sharedPrefs.getUser().getId()) {
-//                    Log.v(this.getClass().getSimpleName(), "long click");
-//                    return true;
-//                } else {
-//                    return false;
-//                }
-//            }
-//        });
 
         timeline.setOnScrollListener(new OnScrollListener() {
 
+            private boolean userScrolled;
+
             @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) { /* ignore */ }
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if(scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                    userScrolled = true;
+                } else {
+                    userScrolled = false;
+                }
+            }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (((firstVisibleItem + visibleItemCount) == totalItemCount) && !loading && !allStoriesLoaded) {
+                if ( userScrolled &&
+                        ((firstVisibleItem + visibleItemCount) == totalItemCount) && !loading && !allStoriesLoaded) {
                     timeline.addFooterView(footer);
-                    executeLoaderTask();
+                    load(currentPerson.getId(), lastLoadedStoryId);
                 }
             }
         });
@@ -154,36 +157,23 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
         return mFragmentLayout;
     }
 
+    /**
+     * This method is used for adding the new stories provided by the LoaderTask
+     *
+     * @param newStories new stories retrieved from the db
+     */
     public void addTimelineStories(List<Story> newStories) {
         if (newStories.isEmpty()) {
             allStoriesLoaded = true;
+        } else {
+            lastLoadedStoryId = newStories.get(newStories.size() - 1).getId();
         }
+
         stories.addAll(newStories);
         timelineAdapter.updateStories(stories);
+
         timeline.removeFooterView(footer);
         loading = false;
-    }
-
-    private void executeLoaderTask() {
-        loading = true;
-
-        //init task
-        task = new PersonalStoriesLoaderTask(this);
-        task.setStoryControllerInstance(storyControllerInstance);
-        task.setImageControllerInstance(imageControllerInstance);
-
-        //init params
-        params = new SparseArray();
-        params.append(Consts.LIMIT, LIMIT);
-        params.append(Consts.OFFSET, offset);
-        params.append(Consts.AUTHOR_ID, currentPerson.getId());
-
-        /*
-        execute task with limit, offset and userId params.
-        Finally increase offset
-        */
-        task.execute(params);
-        offset += Consts.TIMELINE_STORY_INC;
     }
 
     private void createDeleteDialog(final int position) {
@@ -221,8 +211,6 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
         optionDialog = builder.create();
     }
 
-
-
     public static FragmentTimeline getInstance() {
         FragmentTimeline fragment = new FragmentTimeline();
         return fragment;
@@ -231,6 +219,60 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
     public String getName() {
         return (currentPerson.getId() == sharedPrefs.getUser().getId()) ?
                 Consts.TAB_MYSTORIES : (currentPerson.getFistname() + currentPerson.getLastname());
+    }
+
+    /**
+     * This method executes the task used for the initialization of the timeline.
+     *
+     * @param authorId id of the timeline author
+     * @param storyId  id of the targeted story
+     * @return last loaded story id
+     */
+    private void init(int authorId, int storyId) {
+        loading = true;
+
+        //init task
+        task = new TimelineInitTask(instance);
+        task.setStoryControllerInstance(storyControllerInstance);
+        task.setImageControllerInstance(imageControllerInstance);
+
+        //init params
+        params = new SparseArray();
+        params.append(TimelineInitTask.AUTHOR_ID, authorId);
+        params.append(TimelineInitTask.STORY_ID, storyId);
+        params.append(TimelineInitTask.LIMIT, LIMIT);
+
+        //execute task with authorId, storyId and limit
+        task.execute(params);
+    }
+
+    /**
+     * This method executes the task used for loading of the new stories after the user scrolls down to the bottom of the timeline.
+     *
+     * @param authorId          id of the timeline author
+     * @param lastLoadedStoryId id of the last story in the timeline
+     * @return last loaded story id
+     */
+    private void load(int authorId, int lastLoadedStoryId) {
+        loading = true;
+
+        //init task
+        task = new TimelineLoaderTask(instance);
+        task.setStoryControllerInstance(storyControllerInstance);
+        task.setImageControllerInstance(imageControllerInstance);
+
+        //init params
+        params = new SparseArray();
+        params.append(TimelineLoaderTask.AUTHOR_ID, authorId);
+        params.append(TimelineLoaderTask.LAST_LOADED_STORY_ID, lastLoadedStoryId);
+        params.append(TimelineLoaderTask.LIMIT, LIMIT);
+
+        //execute task with authorId, lastLoadedStoryId and limit
+        task.execute(params);
+    }
+
+    public void moveToPosition(int position) {
+        timeline.smoothScrollToPosition(position);
     }
 
     @Override
@@ -250,6 +292,11 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
     @Override
     public void onStorySelected(Story story) {
         currentPerson = story.getAuthor();
+        selectedStoryId = story.getId();
+    }
+
+    private boolean showMyStories() {
+        return currentPerson.getId() == sharedPrefs.getUser().getId();
     }
 
 }
