@@ -60,7 +60,7 @@
 
     <string name="btn_add_picture">Add pictures</string>
 
-    <string name="btn_add_story">Add story</string>
+    <string name="btn_publish_story">Publish</string>
 
     <string name="msg_no_stories">You haven\'t added any stories yet</string>
     

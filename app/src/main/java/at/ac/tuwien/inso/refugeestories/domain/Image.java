@@ -9,7 +9,11 @@ public class Image {
     private String img;
     private Story story;
 
-    public Image() {
+    public Image() { }
+
+    public Image(String img, Story story) {
+        this.img = img;
+        this.story = story;
     }
 
     public Image(int id, String img, Story story) {

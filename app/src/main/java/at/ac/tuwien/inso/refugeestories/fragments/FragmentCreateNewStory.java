@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.app.DatePickerDialog.OnDateSetListener;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.util.Arrays;
@@ -23,9 +25,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import at.ac.tuwien.inso.refugeestories.MainActivity;
 import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.domain.Image;
-import at.ac.tuwien.inso.refugeestories.domain.Person;
 import at.ac.tuwien.inso.refugeestories.domain.Story;
 import at.ac.tuwien.inso.refugeestories.persistence.ImageControllerImpl;
 import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
@@ -105,49 +107,57 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
                     return;
                 }
 
-                //Story
-                Story newStory = new Story();
-                newStory.setTitle(storyTitle.getText().toString());
-                newStory.setLocation(storyLocation.getText().toString());
-                try {
-                    newStory.setDate(Utils.dateFormat.parse(storyDate.getText().toString()));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                newStory.setText(storyText.getText().toString());
-                Person author = sharedPrefs.getUser();
-                newStory.setAuthor(author);
-                int storyId = storyControllerInstance.createRecord(newStory);
-                if(storyId < 0) { return; }
-                newStory.setId(storyId);
-
-                //Images
-                List<String> imageStrings = getSelectedImages();
-                Image newImage = null;
-                int imageId;
-                for(String imageString : imageStrings) {
-                    newImage = new Image();
-                    newImage.setImg(imageString);
-                    newImage.setStory(newStory);
-                    imageId = imageControllerInstance.createRecord(newImage);
-                    if(imageId < 0) { return; }
-                    newImage.setId(imageId);
-                    newStory.getImages().add(newImage);
+                if (!createNewStory()) {
+                    Toast.makeText(context, "Story could not be published!", Toast.LENGTH_SHORT).show();
                 }
 
-                //Author
-                author.getStories().add(newStory);
-                sharedPrefs.putUser(author);
+                ((MainActivity) getActivity()).pushFragments(FragmentTimeline.getInstance(), true, Consts.TAB_MYSTORIES);
+                clearBackStack();
             }
         });
 
         return contentView;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.context = activity;
+    private void clearBackStack() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+            fm.popBackStack();
+        }
+    }
+
+    private boolean createNewStory() {
+        //Story
+        Story newStory = new Story();
+
+        newStory.setAuthor(sharedPrefs.getUser());
+        newStory.setTitle(storyTitle.getText().toString());
+        newStory.setLocation(storyLocation.getText().toString());
+
+        try {
+            newStory.setDate(Utils.dateFormat.parse(storyDate.getText().toString()));
+        } catch (ParseException e) {
+            Log.e(TAG, e.getMessage());
+        }
+
+        newStory.setText(storyText.getText().toString());
+        int storyId = storyControllerInstance.createRecord(newStory);
+
+        if (storyId <= 0) {
+            return false;
+        }
+        newStory.setId(storyId);
+
+        //Images
+        List<String> paths = getSelectedImages();
+        if (paths.isEmpty()) {
+            return true; //Images are not required
+        }
+
+        for (String imgPath : paths) {
+            imageControllerInstance.createRecord(new Image(imgPath, newStory));
+        }
+        return true;
     }
 
     public static FragmentCreateNewStory getInstance() {
@@ -155,7 +165,7 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
         return instance;
     }
 
-    public List<String> getSelectedImages() {
+    private List<String> getSelectedImages() {
         if (selectedImages != null && selectedImages.length > 0) {
             return Arrays.<String>asList(selectedImages);
         }
@@ -167,10 +177,17 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Consts.SELECT_MULTIPLE_IMAGES && resultCode == Activity.RESULT_OK) {
             selectedImages = data.getStringArrayExtra("all_path");
+            Log.d(TAG, "images selected: " + selectedImages.length);
 //            for(String imgPath : selectedImages) {
 //                Log.i(TAG, imgPath);
 //            }
         }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.context = activity;
     }
 
     @Override
@@ -181,7 +198,7 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
     }
 
     // TODO improve this with the loop
-    public boolean validate() {
+    private boolean validate() {
 
         String title = storyTitle.getText().toString();
         String location = storyLocation.getText().toString();
@@ -205,7 +222,7 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
         return true;
     }
 
-    public String getName(){
+    public String getName() {
         return Consts.TAB_NEWSTORY;
     }
 }
