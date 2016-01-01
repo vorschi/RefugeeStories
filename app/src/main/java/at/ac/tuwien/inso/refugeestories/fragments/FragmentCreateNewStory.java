@@ -1,10 +1,15 @@
 package at.ac.tuwien.inso.refugeestories.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,10 +31,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -61,10 +67,12 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
     private TextView storyDate;
     private TextView storyText;
 
-    private Button btnAddStory;
-    private Button btnAddPictures;
+    private Button btnPublishStory;
+    private Button btnAddPhotos;
+    private Button btnClearAllPhotos;
 
-    private String[] selectedImages;
+    //private String[] selectedImages;
+    private List<String> selectedImages;
 
     private ExpandableGridView gridGallery;
     private GalleryAdapter adapter;
@@ -80,6 +88,11 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
     private ImageControllerImpl imageControllerInstance;
     private MyDatabaseHelper dbHelper;
 
+    //dialog
+    AlertDialog.Builder builder;
+    AlertDialog selectPhotosDialog;
+    private String currentPhotoPath;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View contentView = inflater.inflate(R.layout.fragment_create_new_story, container, false);
@@ -92,6 +105,8 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
         imageControllerInstance = ImageControllerImpl.getInstance();
 
         sharedPrefs = new SharedPreferencesHandler(getActivity());
+
+        selectedImages = new ArrayList<>();
         initImageLoader();
 
         //init other components
@@ -119,17 +134,27 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
         gridGallery.setAdapter(adapter);
 
         //controls
-        btnAddPictures = (Button) contentView.findViewById(R.id.btn_add_pictures);
-        btnAddPictures.setOnClickListener(new OnClickListener() {
+        btnAddPhotos = (Button) contentView.findViewById(R.id.btn_add_photos);
+        btnAddPhotos.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Consts.ACTION_MULTIPLE_PICK);
-                startActivityForResult(intent, Consts.SELECT_MULTIPLE_IMAGES);
+                createSelectPhotosDialog();
+                selectPhotosDialog.show();
             }
         });
 
-        btnAddStory = (Button) contentView.findViewById(R.id.btn_add_story);
-        btnAddStory.setOnClickListener(new OnClickListener() {
+        btnClearAllPhotos = (Button) contentView.findViewById(R.id.btn_clear_all_photos);
+        btnClearAllPhotos.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedImages.clear();
+                adapter.clear();
+                btnClearAllPhotos.setVisibility(Button.GONE);
+            }
+        });
+
+        btnPublishStory = (Button) contentView.findViewById(R.id.btn_publish_story);
+        btnPublishStory.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!validate()) {
@@ -155,6 +180,17 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
         }
     }
 
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
     private boolean createNewStory() {
         //Story
         Story newStory = new Story();
@@ -178,26 +214,47 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
         newStory.setId(storyId);
 
         //Images
-        List<String> paths = getSelectedImages();
-        if (paths.isEmpty()) {
-            return true; //Images are not required
+        if (selectedImages.isEmpty()) {
+            return true; //Ok, images are not required
         }
 
-        for (String imgPath : paths) {
+        for (String imgPath : selectedImages) {
             imageControllerInstance.createRecord(new Image(imgPath, newStory));
         }
         return true;
     }
 
-    public static FragmentCreateNewStory getInstance() {
-        return new FragmentCreateNewStory();
+    private void createSelectPhotosDialog() {
+        builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.title_select_photos)
+                .setItems(R.array.select_photos_options_array, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int id) {
+                        if (id == Consts.FROM_CAMERA) {
+                            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
+                                File photoFile = null;
+                                try {
+                                    photoFile = createImageFile();
+                                } catch (IOException ex) {
+                                    Log.e(TAG, ex.getMessage());
+                                }
+                                if (photoFile != null) {
+                                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                                    startActivityForResult(takePictureIntent, Consts.REQUEST_TAKE_PHOTO);
+                                }
+                            }
+                        } else if (id == Consts.FROM_GALLERY) {
+                            Intent intent = new Intent(Consts.ACTION_MULTIPLE_PICK);
+                            startActivityForResult(intent, Consts.SELECT_MULTIPLE_IMAGES);
+                        } else { /*ignore*/ }
+                    }
+                });
+        selectPhotosDialog = builder.create();
     }
 
-    private List<String> getSelectedImages() {
-        if (selectedImages != null && selectedImages.length > 0) {
-            return Arrays.<String>asList(selectedImages);
-        }
-        return Collections.<String>emptyList();
+    public static FragmentCreateNewStory getInstance() {
+        return new FragmentCreateNewStory();
     }
 
     private void initImageLoader() {
@@ -215,16 +272,33 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Consts.SELECT_MULTIPLE_IMAGES && resultCode == Activity.RESULT_OK) {
-            adapter.clear();
-            selectedImages = data.getStringArrayExtra("all_path");
 
+        if (requestCode == Consts.SELECT_MULTIPLE_IMAGES && resultCode == Activity.RESULT_OK) {
+            for(String imgPath : data.getStringArrayExtra("all_path")) {
+                if(!selectedImages.contains(imgPath)) {
+                    selectedImages.add(imgPath);
+                }
+            }
+        } else if (requestCode == Consts.REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            File photo = new File(currentPhotoPath);
+            if (photo.exists()) {
+                Uri contentUri = Uri.fromFile(photo);
+                mediaScanIntent.setData(contentUri);
+                context.sendBroadcast(mediaScanIntent);
+            }
+            selectedImages.add(currentPhotoPath);
+            currentPhotoPath = null;
+        }
+
+        if (selectedImages.size() > 0) {
+            adapter.clear();
             List<CustomGalleryItem> dataT = new ArrayList<>();
             for (String path : selectedImages) {
                 dataT.add(new CustomGalleryItem(path));
             }
             adapter.addAll(dataT);
+            btnClearAllPhotos.setVisibility(Button.VISIBLE);
         }
     }
 
