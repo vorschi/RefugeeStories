@@ -69,5 +69,5 @@
         android:layout_width="5dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
-        android:background="@color/dark_gray"/>
+        android:background="@color/divider"/>
 </LinearLayout>

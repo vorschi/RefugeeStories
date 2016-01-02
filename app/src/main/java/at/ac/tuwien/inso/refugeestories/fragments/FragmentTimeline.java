@@ -318,4 +318,8 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
         selectedStoryId = story.getId();
     }
 
+    public Person getPerson(){
+        return currentPerson;
+    }
+
 }

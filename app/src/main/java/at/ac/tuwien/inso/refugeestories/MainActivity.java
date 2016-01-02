@@ -22,6 +22,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import at.ac.tuwien.inso.refugeestories.domain.Person;
 import at.ac.tuwien.inso.refugeestories.domain.Story;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentCreateNewStory;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentNotification;
@@ -201,11 +202,13 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
             case R.id.user_btn:
                 if (getCurrentTabId().equals(Consts.TAB_MYSTORIES)) {
                     pushFragments(FragmentUser.getInstance(), true, Consts.TAB_MYPROFILE);
-                    FragmentUser.getInstance().setData(null, true);
+                    FragmentTimeline timeline = FragmentTimeline.getInstance();
+                    FragmentUser.getInstance().setData(timeline.getPerson(), true);
                 }
                 else{
                     pushFragments(FragmentUser.getInstance(), true, Consts.TAB_USER);
-                    FragmentUser.getInstance().setData(null, false);
+                    FragmentTimeline timeline = FragmentTimeline.getInstance();
+                    FragmentUser.getInstance().setData(timeline.getPerson(), false);
                 }
                 return true;
             case R.id.btn_add_story:
@@ -284,4 +287,5 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
         FragmentTimeline timeline = FragmentTimeline.getInstance();
         return timeline.getName();
     }
+
 }

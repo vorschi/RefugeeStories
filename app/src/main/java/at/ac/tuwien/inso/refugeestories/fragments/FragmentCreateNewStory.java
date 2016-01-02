@@ -291,10 +291,6 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
         return new FragmentCreateNewStory();
     }
 
-    public String getName() {
-        return Consts.TAB_NEWSTORY;
-    }
-
     private void initImageLoader() {
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
                 .cacheOnDisc(true).imageScaleType(ImageScaleType.EXACTLY_STRETCHED)

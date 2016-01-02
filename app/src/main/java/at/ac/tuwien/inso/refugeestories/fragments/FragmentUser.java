@@ -37,8 +37,8 @@ public class FragmentUser extends Fragment {
     private TextView user_interests;
     private TextView user_email;
     private TextView lbl_email;
+    private String temp="";
 
-    private Button requestFriendshipButton;
     private Button reportButton;
     private Button requestMeetingButton;
     private Button showFriendsButton;
@@ -77,12 +77,12 @@ public class FragmentUser extends Fragment {
             }
         });
 
-            showFriendsButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "OPENING LIST OF FRIENDS", Toast.LENGTH_LONG);
-                    toast.show();
-                }
-            });
+        showFriendsButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "OPENING LIST OF FRIENDS", Toast.LENGTH_LONG);
+                toast.show();
+            }
+        });
 
         return contentView;
     }
@@ -104,15 +104,25 @@ public class FragmentUser extends Fragment {
         this.isMyUser = isMyUser;
         //TODO:write data in textfields of current profile
         //dummie-entries
-        user_forename.setText("Mario");
-        user_surname.setText("Holzhauser");
-        user_age.setText("27");
-        user_gender.setText("Male");
-        user_location.setText("Vienna");
-        user_country.setText("Austria");
-        user_languages.setText("German, English");
-        user_interests.setText("Football, Running, Whisky, Music");
-        user_email.setText("mario.me@abc.at");
+        user_forename.setText(user.getFistname());
+        user_surname.setText(user.getLastname());
+        user_country.setText(user.getNationality());
+        user_email.setText(user.getEmail());
+        temp="";
+        for (int i = 0; i < user.getLanguages().size(); i++){
+            if (i==user.getLanguages().size()-1)
+                temp+=""+user.getLanguages().get(i).getLanguage();
+            else
+                temp+=""+user.getLanguages().get(i).getLanguage()+", ";
+        }
+        user_languages.setText(temp);
+
+        //TODO change Person-Model to following features
+        user_age.setText("TODO");
+        user_gender.setText("TODO");
+        user_location.setText("TODO");
+
+        user_interests.setText("TODO, TODO, TODO, TODO");
 
         if (isMyUser) {
             reportButton.setVisibility(View.GONE);
@@ -129,12 +139,6 @@ public class FragmentUser extends Fragment {
         }
 
 
-    }
-
-    public String getName() {
-        if (isMyUser)
-            return Consts.TAB_MYPROFILE;
-        return Consts.TAB_USER;
     }
 
     private void createOptionsDialog(final int message, final int check) {
