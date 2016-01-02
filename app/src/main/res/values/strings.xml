@@ -58,7 +58,8 @@
     <string name="story_hint">Your story here (max. 200 words)</string>
     <string name="lbl_story_picture">Pictures</string>
 
-    <string name="btn_add_picture">Add pictures</string>
+    <string name="btn_add_photos">Add photos</string>
+    <string name="btn_clear_all_photos">Clear all</string>
 
     <string name="btn_publish_story">Publish</string>
 
@@ -95,5 +96,12 @@
     <string name="btn_ok">OK</string>
 
     <string name="sharedPref">MySharedPref</string>
+
+    <array name="select_photos_options_array">
+        <item>Take from camera</item>
+        <item>Select from gallery</item>
+    </array>
+
+    <string name="title_select_photos">Add photos</string>
 
 </resources>

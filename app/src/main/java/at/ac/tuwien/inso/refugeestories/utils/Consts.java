@@ -15,10 +15,15 @@ public class Consts {
     public static final String TAB_USER = "USER";
     public static final String TAB_MYPROFILE = "My profile";
     public static final String TAB_NEWSTORY = "Create new story";
+    public static final String TAB_EDIT_STORY = "Edit story";
 
     //STORY DIALOG OPTIONS
     public static final int EDIT = 0;
     public static final int DELETE = 1;
+
+    //SELECT PHOTOS DIALOG
+    public static final int FROM_CAMERA = 0;
+    public static final int FROM_GALLERY = 1;
 
     //Gallery
     public static final int SELECT_MULTIPLE_IMAGES = 200;
@@ -26,6 +31,7 @@ public class Consts {
     //Actions
     public static final String ACTION_PICK = "luminous.ACTION_PICK";
     public static final String ACTION_MULTIPLE_PICK = "luminous.ACTION_MULTIPLE_PICK";
+    public static final int REQUEST_TAKE_PHOTO = 1;
 
     //LoaderTask
     public static final int LIMIT = 0;

@@ -124,15 +124,34 @@
             android:verticalSpacing="-15dp"
             tools:listitem="@layout/gallery_item" />
 
-        <Button
-            android:id="@+id/btn_add_pictures"
+        <LinearLayout
+            android:id="@+id/photo_ctrl_btns"
+            style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/btn_add_picture" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_add_photos"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_add_photos"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/btn_clear_all_photos"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_clear_all_photos"
+                android:visibility="gone" />
+        </LinearLayout>
+
 
         <Button
-            android:id="@+id/btn_add_story"
+            android:id="@+id/btn_publish_story"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"

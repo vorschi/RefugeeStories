@@ -322,8 +322,10 @@ public class StoryControllerImpl implements IStoryController {
     public boolean deleteRecord(Story story) {
         //delete all related images
         ImageControllerImpl.initializeInstance(myDbHelper);
-        for(Image image : story.getImages()) {
-            ImageControllerImpl.getInstance().deleteRecord(image);
+        if(!story.getImages().isEmpty()) {
+            for (Image image : story.getImages()) {
+                ImageControllerImpl.getInstance().deleteSingleRecord(image);
+            }
         }
 
         String where = TableEntry.ID + " = ?";

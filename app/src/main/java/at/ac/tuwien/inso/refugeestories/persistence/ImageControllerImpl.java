@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import at.ac.tuwien.inso.refugeestories.domain.Image;
+import at.ac.tuwien.inso.refugeestories.domain.Story;
 
 /**
  * Created by mtraxler on 14.12.2015.
@@ -121,7 +122,17 @@ public class ImageControllerImpl implements IImageController {
     }
 
     @Override
-    public boolean deleteRecord(Image image) {
+    public boolean deleteAllRecords(Story story) {
+        String where = TableEntry.STORYID + " = ?";
+        String[] whereArgs = { Integer.toString(story.getId()) };
+        SQLiteDatabase db = myDbHelper.getWritableDatabase();
+        boolean success = db.delete(TABLE_NAME, where, whereArgs) > 0;
+        db.close();
+        return success;
+    }
+
+    @Override
+    public boolean deleteSingleRecord(Image image) {
         String where = TableEntry.ID + " = ?";
         String[] whereArgs = { Integer.toString(image.getId()) };
 

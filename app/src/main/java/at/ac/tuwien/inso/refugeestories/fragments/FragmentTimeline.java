@@ -11,11 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.Toast;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -54,7 +56,6 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
     private ProgressBar footer;
 
     private final int LIMIT = 2;
-    private int offset;
     private LoaderTask task;
     private SparseArray params;
 
@@ -75,6 +76,8 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
     AlertDialog deleteDialog;
     AlertDialog optionDialog;
 
+    private Button addNew;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -94,7 +97,6 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
         footer = (ProgressBar) inflater.inflate(R.layout.footer, null);
 
         //init components
-        offset = 0;
         allStoriesLoaded = false;
         stories = new ArrayList<>();
         timelineAdapter = new TimelineAdapter(context);
@@ -105,6 +107,17 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
         //if MY_STORIES tab is currently active, then load host from the shared prefs.
         if (Consts.TAB_MYSTORIES.equals(mainActivity.getCurrentTabId())) {
             currentPerson = sharedPrefs.getUser();
+
+            /* this was used for test purpose */
+//            addNew = (Button) mFragmentLayout.findViewById(R.id.btn_add_new);
+//            addNew.setVisibility(View.VISIBLE);
+//            addNew.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    mainActivity.pushFragments(FragmentCreateNewStory.getInstance(), true, Consts.TAB_NEWSTORY);
+//                }
+//            });
+            /* end */
         }
 
         /*
@@ -126,7 +139,7 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if(scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                if (scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                     userScrolled = true;
                 } else {
                     userScrolled = false;
@@ -135,7 +148,7 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if ( userScrolled &&
+                if (userScrolled &&
                         ((firstVisibleItem + visibleItemCount) == totalItemCount) && !loading && !allStoriesLoaded) {
                     timeline.addFooterView(footer);
                     load(currentPerson.getId(), lastLoadedStoryId);
@@ -159,7 +172,6 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
 
     /**
      * This method is used for adding the new stories provided by the LoaderTask
-     *
      * @param newStories new stories retrieved from the db
      */
     public void addTimelineStories(List<Story> newStories) {
@@ -181,9 +193,13 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
         builder.setMessage(R.string.delete_check)
                 .setPositiveButton(R.string.delete_true, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        stories.remove(position);
-                        timelineAdapter.updateStories(stories);
-                        //TODO remove from the db also
+                        if (onDeleteStory(stories.get(position))) { //try to delete it in the db first
+                            //finally remove it also locally
+                            stories.remove(position);
+                            timelineAdapter.updateStories(stories);
+                        } else {
+                            Toast.makeText(context, "Story could not be deleted...", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -201,7 +217,9 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
             public void onClick(DialogInterface dialogInterface, int id) {
                 if (id == Consts.EDIT) {
                     Story targetStory = timelineAdapter.getItem(position);
-                    //TODO: pass the targetStory to the MainActivity, To the CreateNewStoryFragment
+                    FragmentCreateNewStory fragment = FragmentCreateNewStory.getInstance();
+                    fragment.setStory(targetStory);
+                    mainActivity.pushFragments(fragment, true, Consts.TAB_EDIT_STORY);
                 } else if (id == Consts.DELETE) {
                     createDeleteDialog(position);
                     optionDialog.show();
@@ -284,6 +302,10 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
         instance = this;
     }
 
+    private boolean onDeleteStory(Story story) {
+        return storyControllerInstance.deleteRecord(story);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -294,10 +316,6 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
     public void onStorySelected(Story story) {
         currentPerson = story.getAuthor();
         selectedStoryId = story.getId();
-    }
-
-    private boolean showMyStories() {
-        return currentPerson.getId() == sharedPrefs.getUser().getId();
     }
 
 }
