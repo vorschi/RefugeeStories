@@ -41,7 +41,7 @@ import at.ac.tuwien.inso.refugeestories.utils.tasks.TimelineInitTask;
 public class FragmentTimeline extends Fragment implements FragmentStory.OnStorySelectedListener {
 
     private MainActivity mainActivity;
-    private FragmentTimeline instance;
+    private static FragmentTimeline instance;
     private Context context;
 
     private Person currentPerson;
@@ -212,13 +212,14 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
     }
 
     public static FragmentTimeline getInstance() {
-        FragmentTimeline fragment = new FragmentTimeline();
-        return fragment;
+            if (instance == null)
+                instance = new FragmentTimeline();
+            return instance;
     }
 
     public String getName() {
         return (currentPerson.getId() == sharedPrefs.getUser().getId()) ?
-                Consts.TAB_MYSTORIES : (currentPerson.getFistname() + currentPerson.getLastname());
+                Consts.TAB_MYSTORIES : (currentPerson.getFistname() + " " + currentPerson.getLastname());
     }
 
     /**

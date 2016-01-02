@@ -1,18 +1,22 @@
 package at.ac.tuwien.inso.refugeestories;
 
 import android.app.ActionBar;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -27,6 +31,7 @@ import at.ac.tuwien.inso.refugeestories.fragments.FragmentTimeline;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentUser;
 import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
+import at.ac.tuwien.inso.refugeestories.utils.components.RoundedImageView;
 
 public class MainActivity extends FragmentActivity implements OnStorySelectedListener {
 
@@ -37,6 +42,7 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
     private String mCurrentTab;
 
     private TextView label;
+    private MenuItem  user_pic;
 
     private FragmentManager manager;
 
@@ -132,18 +138,17 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
         if (shouldAdd) {
             //add to stack for back navigation
             ft.addToBackStack(mCurrentTab);
-            updateAppBar(tabId);
         } else {
             /*
             and remove named backstack:
             manager.popBackStack("name of your backstack", FragmentManager.POP_BACK_STACK_INCLUSIVE);
             remove whole:*/
             manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            updateAppBar(tabId);
         }
         mCurrentTab = tabId;
         ft.commit();
         manager.executePendingTransactions();
+        updateAppBar(tabId);
     }
 
     @Override
@@ -169,8 +174,18 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
         MenuInflater inflater = getMenuInflater();
         if (getCurrentTabId().equals(Consts.TAB_EXPLORE))
             inflater.inflate(R.menu.explore_menu, menu);
-        else
-            inflater.inflate(R.menu.others_menu, menu);
+        else if (getCurrentTabId().equals(Consts.TAB_NOTIFICATIONS)) {
+        }
+        else if (getCurrentTabId().equals(Consts.TAB_MYSTORIES))
+            inflater.inflate(R.menu.mystories_menu, menu);
+        else if (getCurrentTabId().equals(Consts.TAB_TIMELINE))
+            inflater.inflate(R.menu.timeline_menu, menu);
+
+        user_pic = menu.findItem(R.id.user_btn);
+        if (user_pic!=null&&1>2){
+            //TODO check if user is subscribed
+            user_pic.setIcon(R.drawable.ic_star_white_24dp);
+        }
         return true;
     }
 
@@ -184,10 +199,22 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
                 onBackPressed();
                 return true;
             case R.id.user_btn:
-                if (getCurrentTabId() != Consts.TAB_MYPROFILE) {
+                if (getCurrentTabId().equals(Consts.TAB_MYSTORIES)) {
                     pushFragments(FragmentUser.getInstance(), true, Consts.TAB_MYPROFILE);
                     FragmentUser.getInstance().setData(null, true);
                 }
+                else{
+                    pushFragments(FragmentUser.getInstance(), true, Consts.TAB_USER);
+                    FragmentUser.getInstance().setData(null, false);
+                }
+                return true;
+            case R.id.btn_add_story:
+                pushFragments(FragmentCreateNewStory.getInstance(), true, Consts.TAB_NEWSTORY);
+                return true;
+            case R.id.follow_btn:
+                //TODO set follow flag in database
+                //TODO check if flag is set and show either full or border star
+                item.setIcon(R.drawable.ic_star_white_24dp);
                 return true;
 
             //TODO: implement filter-options
@@ -222,6 +249,7 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
     }
 
     @Override
+
     public void onStorySelected(Story story) {
         FragmentTimeline timeline = FragmentTimeline.getInstance();
         timeline.onStorySelected(story);
@@ -238,26 +266,11 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
     }
 
     private void updateAppBar(String tabId) {
-        if (tabId.equals(Consts.TAB_MYPROFILE))
-            setTitle(R.string.myprofile);
 
-        else if (tabId.equals(Consts.TAB_USER))
-            setTitle(R.string.user);
+        if (tabId.equals(Consts.TAB_TIMELINE)||tabId.equals(Consts.TAB_USER))
+            tabId=getName();
 
-        else if (tabId.equals(Consts.TAB_NEWSTORY))
-            setTitle(R.string.newstory);
-
-        else if (tabId.equals(Consts.TAB_TIMELINE))
-            setTitle(R.string.timeline);
-
-        else if (tabId.equals(Consts.TAB_MYSTORIES))
-            setTitle(R.string.mystories);
-
-        else if (tabId.equals(Consts.TAB_EXPLORE))
-            setTitle(R.string.explore);
-
-        else if (tabId.equals(Consts.TAB_NOTIFICATIONS))
-            setTitle(R.string.notifications);
+        setTitle(tabId);
 
         if (tabId != Consts.TAB_EXPLORE && tabId != Consts.TAB_MYSTORIES && tabId != Consts.TAB_NOTIFICATIONS)
             getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -265,5 +278,10 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
             getActionBar().setDisplayHomeAsUpEnabled(false);
 
         invalidateOptionsMenu();
+    }
+
+    private String getName() {
+        FragmentTimeline timeline = FragmentTimeline.getInstance();
+        return timeline.getName();
     }
 }

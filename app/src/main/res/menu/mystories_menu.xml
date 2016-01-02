@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/btn_add_story"
+        android:icon="@drawable/ic_add_white_24dp"
+        android:title="add story"
+        android:showAsAction="always"/>
+    <item android:id="@+id/user_btn"
+        android:icon="@drawable/ic_account_circle_white_24dp"
+        android:title="user"
+        android:showAsAction="always"
+        tools:ignore="AppCompatResource" />
+</menu>

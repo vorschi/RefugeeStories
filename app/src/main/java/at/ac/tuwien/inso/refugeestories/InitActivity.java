@@ -75,7 +75,7 @@ public class InitActivity extends Activity {
                 finish();
             }
         };
-        myHandler.postDelayed(runnable, 2500);
+        myHandler.postDelayed(runnable, 10);
     }
 
     @Override

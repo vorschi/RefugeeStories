@@ -1,62 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/timeline_story_shape">
+    android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/header_timeline"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/timeline_header_shape">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/timeline_story_shape">
+
+        <RelativeLayout
+            android:id="@+id/header_timeline"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/timeline_header_shape">
+
+            <TextView
+                android:id="@+id/timeline_item_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/placeholder"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/timeline_item_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/timeline_item_title"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/placeholder"
+                android:textColor="@color/white" />
+        </RelativeLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/timeline_view_pager"
+            android:layout_width="fill_parent"
+            android:layout_height="300dp"
+            android:layout_below="@id/header_timeline" />
+
+        <com.viewpagerindicator.LinePageIndicator xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/indicator"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/timeline_view_pager"
+            android:padding="5dip"
+            app:lineWidth="8dp"
+            app:selectedColor="@color/dark_gray"
+            app:strokeWidth="8dp"
+            app:unselectedColor="@color/white" />
 
         <TextView
-            android:id="@+id/timeline_item_title"
-            android:layout_width="wrap_content"
+            android:id="@+id/timeline_item_text"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/placeholder"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/timeline_item_details"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/timeline_item_title"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_below="@id/indicator"
+            android:layout_margin="8dp"
             android:text="@string/placeholder"
             android:textColor="@color/white" />
     </RelativeLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/timeline_view_pager"
-        android:layout_width="fill_parent"
-        android:layout_height="300dp"
-        android:layout_below="@id/header_timeline" />
-
-    <com.viewpagerindicator.LinePageIndicator xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/indicator"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/timeline_view_pager"
-        android:padding="5dip"
-        app:lineWidth="8dp"
-        app:selectedColor="@color/dark_gray"
-        app:strokeWidth="8dp"
-        app:unselectedColor="@color/white" />
-
-    <TextView
-        android:id="@+id/timeline_item_text"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/indicator"
-        android:layout_margin="8dp"
-        android:text="@string/placeholder"
-        android:textColor="@color/white" />
-
-</RelativeLayout>
+    <ImageView
+        android:layout_width="5dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/dark_gray"/>
+</LinearLayout>

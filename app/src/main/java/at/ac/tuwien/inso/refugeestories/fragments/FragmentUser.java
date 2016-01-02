@@ -66,7 +66,6 @@ public class FragmentUser extends Fragment {
         lbl_email = (TextView) contentView.findViewById(R.id.lbl_email);
 
         reportButton = (Button) contentView.findViewById(R.id.btn_report);
-        requestFriendshipButton = (Button) contentView.findViewById(R.id.btn_send_invite);
         requestMeetingButton = (Button) contentView.findViewById(R.id.btn_request_meeting);
         showFriendsButton = (Button) contentView.findViewById(R.id.btn_see_friendlist);
 
@@ -84,19 +83,13 @@ public class FragmentUser extends Fragment {
             }
         });
 
-        requestFriendshipButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                createOptionsDialog(R.string.friendship_check, R.string.friendship_true);
-                optionDialog.show();
-            }
-        });
+            showFriendsButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "OPENING LIST OF FRIENDS", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            });
 
-        showFriendsButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "OPENING LIST OF FRIENDS", Toast.LENGTH_LONG);
-                toast.show();
-            }
-        });
         return contentView;
     }
 
@@ -129,14 +122,12 @@ public class FragmentUser extends Fragment {
 
         if (isMyUser) {
             reportButton.setVisibility(View.GONE);
-            requestFriendshipButton.setVisibility(View.GONE);
             requestMeetingButton.setVisibility(View.GONE);
             showFriendsButton.setVisibility(View.VISIBLE);
             user_email.setVisibility(View.VISIBLE);
             lbl_email.setVisibility(View.VISIBLE);
         } else {
             reportButton.setVisibility(View.VISIBLE);
-            requestFriendshipButton.setVisibility(View.VISIBLE);
             requestMeetingButton.setVisibility(View.VISIBLE);
             showFriendsButton.setVisibility(View.GONE);
             user_email.setVisibility(View.GONE);
