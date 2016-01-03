@@ -44,6 +44,7 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
 
     private TextView label;
     private MenuItem  user_pic;
+    private Menu menu;
 
     private FragmentManager manager;
 
@@ -181,6 +182,10 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
             inflater.inflate(R.menu.mystories_menu, menu);
         else if (getCurrentTabId().equals(Consts.TAB_TIMELINE))
             inflater.inflate(R.menu.timeline_menu, menu);
+        else if (getCurrentTabId().equals(Consts.TAB_USER))
+            inflater.inflate(R.menu.user_menu, menu);
+        else if (getCurrentTabId().equals(Consts.TAB_MYPROFILE))
+            inflater.inflate(R.menu.profile_menu, menu);
 
         user_pic = menu.findItem(R.id.user_btn);
         if (user_pic!=null&&1>2){

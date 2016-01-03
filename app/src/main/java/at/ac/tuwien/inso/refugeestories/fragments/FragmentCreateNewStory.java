@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -68,8 +69,8 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
     private TextView storyText;
 
     private Button btnPublishStory;
-    private Button btnAddPhotos;
-    private Button btnClearAllPhotos;
+    private ImageButton btnAddPhotos;
+    private ImageButton btnClearAllPhotos;
 
     private List<String> selectedImages;
 
@@ -133,7 +134,7 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
         gridGallery.setAdapter(adapter);
 
         //controls
-        btnAddPhotos = (Button) contentView.findViewById(R.id.btn_add_photos);
+        btnAddPhotos = (ImageButton) contentView.findViewById(R.id.btn_add_photos);
         btnAddPhotos.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -142,7 +143,7 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
             }
         });
 
-        btnClearAllPhotos = (Button) contentView.findViewById(R.id.btn_clear_all_photos);
+        btnClearAllPhotos = (ImageButton) contentView.findViewById(R.id.btn_clear_all_photos);
         btnClearAllPhotos.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {

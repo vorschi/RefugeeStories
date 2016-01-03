@@ -31,8 +31,8 @@
             android:hint="@string/title_hint"
             android:padding="2dp"
             android:singleLine="true"
-            android:textColor="@color/gray"
-            android:textColorHint="@color/light_gray"
+            android:textColor="@color/dark_gray"
+            android:textColorHint="@color/gray"
             android:textSize="20dp" />
 
         <TextView
@@ -54,8 +54,8 @@
             android:hint="@string/location_hint"
             android:padding="2dp"
             android:singleLine="true"
-            android:textColor="@color/gray"
-            android:textColorHint="@color/light_gray"
+            android:textColor="@color/dark_gray"
+            android:textColorHint="@color/gray"
             android:textSize="20dp" />
 
         <TextView
@@ -95,19 +95,34 @@
             android:hint="@string/story_hint"
             android:inputType="textMultiLine"
             android:padding="2dp"
-            android:textColor="@color/gray"
-            android:textColorHint="@color/light_gray"
+            android:textColor="@color/dark_gray"
+            android:textColorHint="@color/gray"
             android:textSize="20dp" />
 
-        <TextView
-            android:id="@+id/lbl_new_story_picture"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/lbl_story_picture"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/white"
-            android:textSize="16dp" />
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/lbl_new_story_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_story_picture"
+                android:layout_marginTop="10dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/white"
+                android:textSize="16dp" />
+            <ImageButton
+                android:id="@+id/btn_clear_all_photos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="80dp"
+                android:visibility="gone"
+                android:background="@drawable/ic_clear_white_24dp"
+                android:text="@string/btn_clear_all_photos"/>
+        </RelativeLayout>
+
 
         <at.ac.tuwien.inso.refugeestories.utils.components.ExpandableGridView
             android:id="@+id/gridGallery"
@@ -132,21 +147,15 @@
             android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_add_photos"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:background="@drawable/ic_add_a_photo_white_24dp"
                 android:text="@string/btn_add_photos"
                 android:visibility="visible" />
 
-            <Button
-                android:id="@+id/btn_clear_all_photos"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btn_clear_all_photos"
-                android:visibility="gone" />
         </LinearLayout>
 
 
@@ -154,6 +163,9 @@
             android:id="@+id/btn_publish_story"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:background="@drawable/btn_shape"
             android:layout_marginTop="16dp"
             android:text="@string/btn_publish_story" />
 

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,8 +40,8 @@ public class FragmentUser extends Fragment {
     private TextView lbl_email;
     private String temp="";
 
-    private Button reportButton;
-    private Button requestMeetingButton;
+    private ImageButton reportButton;
+    private ImageButton requestMeetingButton;
     private Button showFriendsButton;
 
     AlertDialog optionDialog;
@@ -59,8 +60,8 @@ public class FragmentUser extends Fragment {
         user_email = (TextView) contentView.findViewById(R.id.user_email);
         lbl_email = (TextView) contentView.findViewById(R.id.lbl_email);
 
-        reportButton = (Button) contentView.findViewById(R.id.btn_report);
-        requestMeetingButton = (Button) contentView.findViewById(R.id.btn_request_meeting);
+        reportButton = (ImageButton) contentView.findViewById(R.id.btn_report);
+        requestMeetingButton = (ImageButton) contentView.findViewById(R.id.btn_request_meeting);
         showFriendsButton = (Button) contentView.findViewById(R.id.btn_see_friendlist);
 
         reportButton.setOnClickListener(new View.OnClickListener() {
