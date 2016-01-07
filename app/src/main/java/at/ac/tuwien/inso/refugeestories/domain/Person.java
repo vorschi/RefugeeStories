@@ -9,17 +9,17 @@ import java.util.List;
 public class Person {
 
     private int id;
-    private String fistname;
+    private String firstname;
     private String lastname;
     private String username;
     private String password;
     private String email;
     private String nationality;
     private String img;
-    /*private Date dob;
+    private Date dob;
     private String gender;
     private String location;
-    private List<Interest> interests;*/
+    private String interests;
     private List<Language> languages;
     private List<Story> stories;
     private List<Person> followers;
@@ -31,9 +31,9 @@ public class Person {
 
     public void setId(int id) { this.id = id; }
 
-    public String getFistname() { return fistname; }
+    public String getFirstname() { return firstname; }
 
-    public void setFistname(String fistname) { this.fistname = fistname; }
+    public void setFirstname(String firstname) { this.firstname = firstname; }
 
     public String getLastname() { return lastname; }
 
@@ -58,6 +58,22 @@ public class Person {
     public String getImg() { return img; }
 
     public void setImg(String img) { this.img = img; }
+
+    public Date getDob() { return dob; }
+
+    public void setDob(Date dob) { this.dob = dob; }
+
+    public String getGender() { return gender; }
+
+    public void setGender(String gender) { this.gender = gender; }
+
+    public String getLocation() { return location; }
+
+    public void setLocation(String location) { this.location = location; }
+
+    public String getInterests() { return interests; }
+
+    public void setInterests(String interests) { this.interests = interests; }
 
     public List<Language> getLanguages() { return languages; }
 

@@ -237,7 +237,7 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
 
     public String getName() {
         return (currentPerson.getId() == sharedPrefs.getUser().getId()) ?
-                Consts.TAB_MYSTORIES : (currentPerson.getFistname() + " " + currentPerson.getLastname());
+                Consts.TAB_MYSTORIES : (currentPerson.getFirstname() + " " + currentPerson.getLastname());
     }
 
     /**

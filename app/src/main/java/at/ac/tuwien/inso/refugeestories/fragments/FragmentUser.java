@@ -15,9 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Date;
+
 import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.domain.Person;
-import at.ac.tuwien.inso.refugeestories.utils.Consts;
+import at.ac.tuwien.inso.refugeestories.utils.Utils;
 
 /**
  * Created by Amer Salkovic on 14.11.2015.
@@ -105,7 +107,7 @@ public class FragmentUser extends Fragment {
         this.isMyUser = isMyUser;
         //TODO:write data in textfields of current profile
         //dummie-entries
-        user_forename.setText(user.getFistname());
+        user_forename.setText(user.getFirstname());
         user_surname.setText(user.getLastname());
         user_country.setText(user.getNationality());
         user_email.setText(user.getEmail());
@@ -117,13 +119,11 @@ public class FragmentUser extends Fragment {
                 temp+=""+user.getLanguages().get(i).getLanguage()+", ";
         }
         user_languages.setText(temp);
-
-        //TODO change Person-Model to following features
-        user_age.setText("TODO");
-        user_gender.setText("TODO");
-        user_location.setText("TODO");
-
-        user_interests.setText("TODO, TODO, TODO, TODO");
+        int age = Utils.getDiffYears(user.getDob(), new Date());
+        user_age.setText(Integer.toString(age));
+        user_gender.setText(user.getGender());
+        user_location.setText(user.getLocation());
+        user_interests.setText(user.getInterests());
 
         if (isMyUser) {
             reportButton.setVisibility(View.GONE);
@@ -138,8 +138,6 @@ public class FragmentUser extends Fragment {
             user_email.setVisibility(View.GONE);
             lbl_email.setVisibility(View.GONE);
         }
-
-
     }
 
     private void createOptionsDialog(final int message, final int check) {

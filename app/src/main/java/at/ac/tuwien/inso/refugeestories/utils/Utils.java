@@ -5,7 +5,9 @@ import android.os.Environment;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Amer Salkovic on 15.11.2015.
@@ -25,5 +27,22 @@ public class Utils {
 
         //currentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    public static int getDiffYears(Date first, Date last) {
+        Calendar date1 = getCalendar(first);
+        Calendar date2 = getCalendar(last);
+        int diff = date2.get(Calendar.YEAR) - date1.get(Calendar.YEAR);
+        if (date1.get(Calendar.MONTH) > date2.get(Calendar.MONTH) ||
+                (date1.get(Calendar.MONTH) == date2.get(Calendar.MONTH) && date1.get(Calendar.DAY_OF_MONTH) > date2.get(Calendar.DAY_OF_MONTH))) {
+            diff--;
+        }
+        return diff;
+    }
+
+    private static Calendar getCalendar(Date date) {
+        Calendar cal = Calendar.getInstance(Locale.US);
+        cal.setTime(date);
+        return cal;
     }
 }

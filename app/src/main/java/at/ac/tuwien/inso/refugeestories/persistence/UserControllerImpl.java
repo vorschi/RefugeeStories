@@ -1,14 +1,17 @@
 package at.ac.tuwien.inso.refugeestories.persistence;
 
+import android.app.ActionBar;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import at.ac.tuwien.inso.refugeestories.domain.Person;
 import at.ac.tuwien.inso.refugeestories.domain.Story;
+import at.ac.tuwien.inso.refugeestories.utils.Utils;
 
 /**
  * Created by mtraxler on 14.12.2015.
@@ -47,6 +50,10 @@ public class UserControllerImpl implements IUserController {
         public static final String MAIL = "mail";
         public static final String NATIONALITY = "nationality";
         public static final String IMG = "img";
+        public static final String DOB = "dob";
+        public static final String GENDER = "gender";
+        public static final String LOCATION = "location";
+        public static final String INTERESTS = "interests";
     }
 
     public static abstract class TableEntryFollower {
@@ -58,13 +65,17 @@ public class UserControllerImpl implements IUserController {
     public int createRecord(Person person) {
         ContentValues values = new ContentValues();
 
-        values.put(TableEntry.FIRSTNAME, person.getFistname());
+        values.put(TableEntry.FIRSTNAME, person.getFirstname());
         values.put(TableEntry.LASTNAME, person.getLastname());
         values.put(TableEntry.USERNAME, person.getUsername());
         values.put(TableEntry.PASSWORD, person.getPassword());
         values.put(TableEntry.MAIL, person.getEmail());
         values.put(TableEntry.NATIONALITY, person.getNationality());
         values.put(TableEntry.IMG, person.getImg());
+        values.put(TableEntry.DOB, Utils.dateFormat.format(person.getDob()));
+        values.put(TableEntry.GENDER, person.getGender());
+        values.put(TableEntry.LOCATION, person.getLocation());
+        values.put(TableEntry.INTERESTS, person.getInterests());
         SQLiteDatabase db = myDbHelper.getWritableDatabase();
 
         int id = MyDatabaseHelper.safeLongToInt(db.insert(TABLE_NAME, null, values));
@@ -86,13 +97,21 @@ public class UserControllerImpl implements IUserController {
         if(cursor.moveToNext()) {
             person = new Person();
             person.setId(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.ID)));
-            person.setFistname(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.FIRSTNAME)));
+            person.setFirstname(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.FIRSTNAME)));
             person.setLastname(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LASTNAME)));
             person.setUsername(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.USERNAME)));
             person.setPassword(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.PASSWORD)));
             person.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.MAIL)));
             person.setNationality(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.NATIONALITY)));
             person.setImg(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.IMG)));
+            try {
+                person.setDob(Utils.dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.DOB))));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            person.setGender(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.GENDER)));
+            person.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
+            person.setInterests(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.INTERESTS)));
             person.setLanguages(LanguageControllerImpl.getInstance().getLanguagesByUserId(person.getId()));
         }
         cursor.close();
@@ -105,13 +124,17 @@ public class UserControllerImpl implements IUserController {
     public boolean updateRecord(Person person) {
         ContentValues values = new ContentValues();
 
-        values.put(TableEntry.FIRSTNAME, person.getFistname());
+        values.put(TableEntry.FIRSTNAME, person.getFirstname());
         values.put(TableEntry.LASTNAME, person.getLastname());
         values.put(TableEntry.USERNAME, person.getUsername());
         values.put(TableEntry.PASSWORD, person.getPassword());
         values.put(TableEntry.MAIL, person.getEmail());
         values.put(TableEntry.NATIONALITY, person.getNationality());
         values.put(TableEntry.IMG, person.getImg());
+        values.put(TableEntry.DOB, Utils.dateFormat.format(person.getDob()));
+        values.put(TableEntry.GENDER, person.getGender());
+        values.put(TableEntry.LOCATION, person.getLocation());
+        values.put(TableEntry.INTERESTS, person.getInterests());
         String where = TableEntry.ID + " = ?";
         String[] whereArgs = { Integer.toString(person.getId()) };
 
