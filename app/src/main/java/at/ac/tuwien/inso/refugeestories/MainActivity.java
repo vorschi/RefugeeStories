@@ -1,22 +1,17 @@
 package at.ac.tuwien.inso.refugeestories;
 
-import android.app.ActionBar;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -30,9 +25,11 @@ import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory.OnStorySelectedListener;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentTimeline;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentUser;
+import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
 import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
+import at.ac.tuwien.inso.refugeestories.persistence.UserControllerImpl;
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
-import at.ac.tuwien.inso.refugeestories.utils.components.RoundedImageView;
+import at.ac.tuwien.inso.refugeestories.utils.SharedPreferencesHandler;
 
 public class MainActivity extends FragmentActivity implements OnStorySelectedListener {
 
@@ -43,12 +40,17 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
     private String mCurrentTab;
 
     private TextView label;
-    private MenuItem  user_pic;
+    private MenuItem follow_pic;
     private Menu menu;
 
     private FragmentManager manager;
 
     private LayoutInflater inflater;
+
+    private SharedPreferencesHandler sharedPrefs;
+
+    private UserControllerImpl userControllerInstance;
+    private MyDatabaseHelper dbHelper;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +76,12 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
             initializeTabs();
             mTabHost.setCurrentTabByTag(Consts.TAB_EXPLORE);
         }
+
+        sharedPrefs = new SharedPreferencesHandler(this.getBaseContext());
+
+        dbHelper = new MyDatabaseHelper(this.getBaseContext());
+        UserControllerImpl.initializeInstance(dbHelper);
+        userControllerInstance = UserControllerImpl.getInstance();
     }
 
     private View createTabView(final int id, final String text) {
@@ -187,10 +195,14 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
         else if (getCurrentTabId().equals(Consts.TAB_MYPROFILE))
             inflater.inflate(R.menu.profile_menu, menu);
 
-        user_pic = menu.findItem(R.id.user_btn);
-        if (user_pic!=null&&1>2){
-            //TODO check if user is subscribed
-            user_pic.setIcon(R.drawable.ic_star_white_24dp);
+        follow_pic = menu.findItem(R.id.follow_btn);
+        if (follow_pic != null){
+            FragmentTimeline timeline = FragmentTimeline.getInstance();
+            if(sharedPrefs.getUser().isSubscribed(timeline.getPerson())) {
+                follow_pic.setIcon(R.drawable.ic_star_white_24dp);
+            } else {
+                follow_pic.setIcon(R.drawable.ic_star_border_white_24dp);
+            }
         }
         return true;
     }
@@ -220,9 +232,18 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
                 pushFragments(FragmentCreateNewStory.getInstance(), true, Consts.TAB_NEWSTORY);
                 return true;
             case R.id.follow_btn:
-                //TODO set follow flag in database
-                //TODO check if flag is set and show either full or border star
-                item.setIcon(R.drawable.ic_star_white_24dp);
+                FragmentTimeline timeline = FragmentTimeline.getInstance();
+                Person user = sharedPrefs.getUser();
+                if(user.isSubscribed(timeline.getPerson())) {
+                    userControllerInstance.deleteFollowerRecord(timeline.getPerson(), user);
+                    user.removeFollowingUser(timeline.getPerson());
+                    item.setIcon(R.drawable.ic_star_border_white_24dp);
+                } else {
+                    userControllerInstance.createFollowerRecord(timeline.getPerson(), user);
+                    user.getFollowingUsers().add(timeline.getPerson());
+                    item.setIcon(R.drawable.ic_star_white_24dp);
+                }
+                sharedPrefs.putUser(user);
                 return true;
 
             //TODO: implement filter-options

@@ -4,6 +4,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import at.ac.tuwien.inso.refugeestories.domain.Person;
 import at.ac.tuwien.inso.refugeestories.domain.Story;
 
@@ -15,6 +18,7 @@ public class UserControllerImpl implements IUserController {
     private static UserControllerImpl instance;
 
     public static final String TABLE_NAME = "user";
+    public static final String TABLE_NAME_FOLLOWER = "user_follower";
 
     public UserControllerImpl() {
     }
@@ -43,6 +47,11 @@ public class UserControllerImpl implements IUserController {
         public static final String MAIL = "mail";
         public static final String NATIONALITY = "nationality";
         public static final String IMG = "img";
+    }
+
+    public static abstract class TableEntryFollower {
+        public static final String AUTHORID1 = "authorid1";
+        public static final String AUTHORID2 = "authorid2";
     }
 
     @Override
@@ -127,11 +136,103 @@ public class UserControllerImpl implements IUserController {
         LanguageControllerImpl.initializeInstance(myDbHelper);
         LanguageControllerImpl.getInstance().deleteRecordsByUser(person);
 
+        //delete all related follow assignments
+        deleteFollowerRecordsByUser(person);
+        deleteFollowerRecordsByFollower(person);
+
         String where = TableEntry.ID + " = ?";
         String[] whereArgs = { Integer.toString(person.getId()) };
 
         SQLiteDatabase db = myDbHelper.getWritableDatabase();
         boolean deleteSuccessful = db.delete(TABLE_NAME, where, whereArgs) > 0;
+        db.close();
+
+        return deleteSuccessful;
+    }
+
+    @Override
+    public int createFollowerRecord(Person toFollow, Person follower) {
+        ContentValues values = new ContentValues();
+
+        values.put(TableEntryFollower.AUTHORID1, toFollow.getId());
+        values.put(TableEntryFollower.AUTHORID2, follower.getId());
+
+        SQLiteDatabase db = myDbHelper.getWritableDatabase();
+
+        int id = MyDatabaseHelper.safeLongToInt(db.insert(TABLE_NAME_FOLLOWER, null, values));
+        db.close();
+
+        return id;
+    }
+
+    @Override
+    public List<Person> getFollowerByUserId(int userId) {
+        String selection = TableEntryFollower.AUTHORID1 + " = " + userId;
+        SQLiteDatabase db = myDbHelper.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME_FOLLOWER, null, selection, null, null, null, null);
+
+        List<Person> followers = new ArrayList<Person>();
+        Person follower = null;
+        while(cursor.moveToNext()) {
+            follower = getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntryFollower.AUTHORID2)));
+            followers.add(follower);
+        }
+        cursor.close();
+        db.close();
+
+        return followers;
+    }
+
+    @Override
+    public List<Person> getFollowingByUserId(int userId) {
+        String selection = TableEntryFollower.AUTHORID2 + " = " + userId;
+        SQLiteDatabase db = myDbHelper.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME_FOLLOWER, null, selection, null, null, null, null);
+
+        List<Person> followingUsers = new ArrayList<Person>();
+        Person following = null;
+        while(cursor.moveToNext()) {
+            following = getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntryFollower.AUTHORID1)));
+            followingUsers.add(following);
+        }
+        cursor.close();
+        db.close();
+
+        return followingUsers;
+    }
+
+    @Override
+    public boolean deleteFollowerRecord(Person toFollow, Person follower) {
+        String where = TableEntryFollower.AUTHORID1 + " = ? AND " +
+                TableEntryFollower.AUTHORID2 + " = ?";
+        String[] whereArgs = { Integer.toString(toFollow.getId()), Integer.toString(follower.getId()) };
+
+        SQLiteDatabase db = myDbHelper.getWritableDatabase();
+        boolean deleteSuccessful = db.delete(TABLE_NAME_FOLLOWER, where, whereArgs) > 0;
+        db.close();
+
+        return deleteSuccessful;
+    }
+
+    @Override
+    public boolean deleteFollowerRecordsByUser(Person toFollow) {
+        String where = TableEntryFollower.AUTHORID1 + " = ?";
+        String[] whereArgs = { Integer.toString(toFollow.getId()) };
+
+        SQLiteDatabase db = myDbHelper.getWritableDatabase();
+        boolean deleteSuccessful = db.delete(TABLE_NAME_FOLLOWER, where, whereArgs) > 0;
+        db.close();
+
+        return deleteSuccessful;
+    }
+
+    @Override
+    public boolean deleteFollowerRecordsByFollower(Person follower) {
+        String where = TableEntryFollower.AUTHORID2 + " = ?";
+        String[] whereArgs = { Integer.toString(follower.getId()) };
+
+        SQLiteDatabase db = myDbHelper.getWritableDatabase();
+        boolean deleteSuccessful = db.delete(TABLE_NAME_FOLLOWER, where, whereArgs) > 0;
         db.close();
 
         return deleteSuccessful;

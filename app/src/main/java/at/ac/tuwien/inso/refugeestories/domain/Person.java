@@ -1,5 +1,6 @@
 package at.ac.tuwien.inso.refugeestories.domain;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,8 +16,14 @@ public class Person {
     private String email;
     private String nationality;
     private String img;
+    /*private Date dob;
+    private String gender;
+    private String location;
+    private List<Interest> interests;*/
     private List<Language> languages;
     private List<Story> stories;
+    private List<Person> followers;
+    private List<Person> followingUsers;
 
     public Person() { }
 
@@ -59,4 +66,29 @@ public class Person {
     public List<Story> getStories() { return stories; }
 
     public void setStories(List<Story> stories) { this.stories = stories; }
+
+    public List<Person> getFollowers() { return followers; }
+
+    public void setFollowers(List<Person> followers) { this.followers = followers; }
+
+    public List<Person> getFollowingUsers() { return followingUsers; }
+
+    public void setFollowingUsers(List<Person> followingUsers) { this.followingUsers = followingUsers; }
+
+    public boolean isSubscribed (Person person) {
+        for(Person subscriber : getFollowingUsers()) {
+            if(subscriber.getId() == person.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void removeFollowingUser(Person person) {
+        for(Person subscriber : getFollowingUsers()) {
+            if(subscriber.getId() == person.getId()) {
+                getFollowingUsers().remove(subscriber);
+            }
+        }
+    }
 }

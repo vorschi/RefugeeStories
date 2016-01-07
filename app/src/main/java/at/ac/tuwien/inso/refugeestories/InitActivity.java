@@ -66,9 +66,17 @@ public class InitActivity extends Activity {
 //                        story.setImages(imageControllerInstance.getImagesByStoryId(story.getId()));
 //                    }
 
+                    List<Person> followers = userControllerInstance.getFollowerByUserId(user.getId());
+                    user.setFollowers(followers);
+
+                    List<Person> followingUsers = userControllerInstance.getFollowingByUserId(user.getId());
+                    user.setFollowingUsers(followingUsers);
+
                     List<Language> languages = languageControllerInstance.getLanguagesByUserId(user.getId());
                     user.setLanguages(languages);
                     sharedPrefs.putUser(user);
+
+
                 }
                 Intent intent = new Intent(InitActivity.this, MainActivity.class);
                 startActivity(intent);
