@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import java.util.Date;
 import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.domain.Person;
 import at.ac.tuwien.inso.refugeestories.utils.Utils;
+import at.ac.tuwien.inso.refugeestories.utils.tasks.BitmapWorkerTask;
 
 /**
  * Created by Amer Salkovic on 14.11.2015.
@@ -41,6 +44,7 @@ public class FragmentUser extends Fragment {
     private TextView user_email;
     private TextView lbl_email;
     private String temp="";
+    private BitmapWorkerTask bitmapWorker;
 
     private ImageButton likeButton;
     private Button showFriendsButton;
@@ -63,6 +67,7 @@ public class FragmentUser extends Fragment {
 
         likeButton = (ImageButton) contentView.findViewById(R.id.btn_like);
         showFriendsButton = (Button) contentView.findViewById(R.id.btn_see_friendlist);
+        userImage = (ImageView) contentView.findViewById(R.id.user_picture);
 
         likeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -122,6 +127,11 @@ public class FragmentUser extends Fragment {
         user_gender.setText(user.getGender());
         user_location.setText(user.getLocation());
         user_interests.setText(user.getInterests());
+
+
+        bitmapWorker = new BitmapWorkerTask(userImage);
+        //TODO find string out of db for current user
+        //bitmapWorker.execute("");
 
         if (isMyUser) {
             likeButton.setVisibility(View.GONE);
