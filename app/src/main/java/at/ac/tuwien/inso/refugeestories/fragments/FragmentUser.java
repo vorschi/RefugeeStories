@@ -166,7 +166,6 @@ public class FragmentUser extends Fragment {
         currentUser = user;
 
         bitmapWorker = new BitmapWorkerTask(userImage);
-        //TODO find string out of db for current user
         bitmapWorker.execute(currentUser.getImg());
 
         if (sharedPrefs.getUser().isLiked(currentUser)) {

@@ -131,4 +131,8 @@ public class Person {
             }
         }
     }
+
+    public int countLikers() {
+        return getLikers().size();
+    }
 }
