@@ -338,7 +338,21 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
     @Override
     public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
         if (storyDate != null) {
-            storyDate.setText(dayOfMonth + "." + monthOfYear + "." + year);
+            String dayOfMonthString;
+            String monthOfYearString;
+            monthOfYear++;
+
+            if(dayOfMonth < 10) {
+                dayOfMonthString = "0" + dayOfMonth;
+            } else {
+                dayOfMonthString = Integer.toString(dayOfMonth);
+            }
+            if(monthOfYear < 10) {
+                monthOfYearString = "0" + monthOfYear;
+            } else {
+                monthOfYearString = Integer.toString(monthOfYear);
+            }
+            storyDate.setText(dayOfMonthString + "." + monthOfYearString + "." + year);
         }
     }
 
