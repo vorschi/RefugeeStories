@@ -17,6 +17,7 @@ import at.ac.tuwien.inso.refugeestories.fragments.FragmentTimeline;
 public class TimelineInitTask extends LoaderTask {
 
     public static final int STORY_ID = 1;
+    public static final int ORDER = 2;
 
     private int selectedStoryPosition;
     private boolean found;
@@ -33,10 +34,9 @@ public class TimelineInitTask extends LoaderTask {
         }
 
         SparseArray params = sparseArrays[0];
-        stories = storyControllerInstance.getStoryPredecessorsAndTwoSuccessors(
+        stories = storyControllerInstance.getAllStoriesByUserId(
                 (int) params.get(AUTHOR_ID),
-                (int) params.get(STORY_ID),
-                (int) params.get(LIMIT)
+                (String) params.get(ORDER)
         );
 
         for(int i = 0; i < stories.size(); i++) {

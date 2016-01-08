@@ -173,6 +173,41 @@ public class StoryControllerImpl implements IStoryController {
         return stories;
     }
 
+    public List<Story> getAllStoriesByUserId(int userId, String order) {
+        SQLiteDatabase db = myDbHelper.getReadableDatabase();
+
+        String query = "SELECT " + TableEntry.ID + ", " + TableEntry.TITLE + ", " + TableEntry.TEXT + ", " +
+                "substr(date, 7, 4)||\"-\"||substr(date, 4, 2)||\"-\"||substr(date,0,3) as date, " +
+                TableEntry.LOCATION + ", " + TableEntry.AUTHORID +
+                " FROM " + TABLE_NAME +
+                " WHERE " + TableEntry.AUTHORID + " = " + userId +
+                " ORDER BY " + TableEntry.DATE + " " + order;
+        Log.i(StoryControllerImpl.class.getSimpleName(), query);
+        Cursor cursor = db.rawQuery(query, null);
+
+        List<Story> stories = new ArrayList<Story>();
+        Story story = null;
+        UserControllerImpl.initializeInstance(myDbHelper);
+        while(cursor.moveToNext()) {
+            story = new Story();
+            story.setId(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.ID)));
+            story.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TITLE)));
+            story.setText(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.TEXT)));
+            try {
+                story.setDate(Utils.customDateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.DATE))));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            story.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
+            story.setAuthor(UserControllerImpl.getInstance().getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.AUTHORID))));
+            stories.add(story);
+        }
+        cursor.close();
+        db.close();
+
+        return stories;
+    }
+
     public List<Story> getStoriesByUserIdFromStoryId(int authorId, int lastLoadedStoryId, int limit) {
         SQLiteDatabase db = myDbHelper.getReadableDatabase();
 

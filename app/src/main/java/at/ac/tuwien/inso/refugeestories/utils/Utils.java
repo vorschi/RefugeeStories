@@ -24,8 +24,6 @@ public class Utils {
         File storageDir = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-
-        //currentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
