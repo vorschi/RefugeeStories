@@ -215,8 +215,8 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
         }
 
         story.setAuthor(sharedPrefs.getUser());
-        story.setTitle(storyTitle.getText().toString());
-        story.setLocation(storyLocation.getText().toString());
+        story.setTitle(Utils.capitalize(storyTitle.getText().toString()));
+        story.setLocation(Utils.capitalize(storyLocation.getText().toString()));
 
         try { // TODO leave original date if updating or not?
             story.setDate(Utils.dateFormat.parse(storyDate.getText().toString()));

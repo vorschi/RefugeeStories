@@ -58,7 +58,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder> 
             imgStoryPhoto.setImageDrawable(null);
         }
         // XXX TODO ASA in case there are no photos ??
-        txtAuthor.setText(stories.get(position).getAuthor().getUsername());
+        txtAuthor.setText(stories.get(position).getAuthor().getFirstname() + " " + stories.get(position).getAuthor().getLastname());
         txtInfo.setText( Utils.dateFormat.format(stories.get(position).getDate()) + ", " + stories.get(position).getLocation() );
         txtStoryTitle.setText(stories.get(position).getTitle());
         txtStoryText.setText(stories.get(position).getText());

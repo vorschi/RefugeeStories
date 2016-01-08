@@ -46,7 +46,6 @@ public class UserControllerImpl implements IUserController {
         public static final String ID = "id";
         public static final String FIRSTNAME = "firstname";
         public static final String LASTNAME = "lastname";
-        public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
         public static final String MAIL = "mail";
         public static final String NATIONALITY = "nationality";
@@ -73,7 +72,6 @@ public class UserControllerImpl implements IUserController {
 
         values.put(TableEntry.FIRSTNAME, person.getFirstname());
         values.put(TableEntry.LASTNAME, person.getLastname());
-        values.put(TableEntry.USERNAME, person.getUsername());
         values.put(TableEntry.PASSWORD, person.getPassword());
         values.put(TableEntry.MAIL, person.getEmail());
         values.put(TableEntry.NATIONALITY, person.getNationality());
@@ -105,7 +103,6 @@ public class UserControllerImpl implements IUserController {
             person.setId(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.ID)));
             person.setFirstname(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.FIRSTNAME)));
             person.setLastname(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LASTNAME)));
-            person.setUsername(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.USERNAME)));
             person.setPassword(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.PASSWORD)));
             person.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.MAIL)));
             person.setNationality(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.NATIONALITY)));
@@ -132,7 +129,6 @@ public class UserControllerImpl implements IUserController {
 
         values.put(TableEntry.FIRSTNAME, person.getFirstname());
         values.put(TableEntry.LASTNAME, person.getLastname());
-        values.put(TableEntry.USERNAME, person.getUsername());
         values.put(TableEntry.PASSWORD, person.getPassword());
         values.put(TableEntry.MAIL, person.getEmail());
         values.put(TableEntry.NATIONALITY, person.getNationality());
