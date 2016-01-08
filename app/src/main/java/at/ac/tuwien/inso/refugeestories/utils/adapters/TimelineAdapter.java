@@ -167,6 +167,8 @@ public class TimelineAdapter extends BaseAdapter {
                     public void onClick(DialogInterface dialog, int id) {
                         stories.remove(position);
                         notifyDataSetChanged();
+                        Toast toast = Toast.makeText(fragmentTimeline.getContext(), "The story was successfully deleted!", Toast.LENGTH_SHORT);
+                        toast.show();
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

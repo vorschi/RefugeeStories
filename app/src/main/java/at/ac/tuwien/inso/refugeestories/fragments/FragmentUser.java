@@ -150,9 +150,6 @@ public class FragmentUser extends Fragment {
         user_interests.setText(user.getInterests());
 
 
-        bitmapWorker = new BitmapWorkerTask(userImage);
-        //TODO find string out of db for current user
-        //bitmapWorker.execute("");
 
         if (isMyUser) {
             likeButton.setVisibility(View.GONE);
@@ -167,6 +164,11 @@ public class FragmentUser extends Fragment {
         }
 
         currentUser = user;
+
+        bitmapWorker = new BitmapWorkerTask(userImage);
+        //TODO find string out of db for current user
+        bitmapWorker.execute(currentUser.getImg());
+
         if (sharedPrefs.getUser().isLiked(currentUser)) {
             likeButton.setImageResource(R.drawable.heart_full_64dp);
         } else {

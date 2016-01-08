@@ -167,6 +167,7 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
                 }
 
                 ((MainActivity) getActivity()).pushFragments(FragmentTimeline.getInstance(), false, Consts.TAB_MYSTORIES);
+                Toast.makeText(context, "Story has been published!", Toast.LENGTH_SHORT).show();
                 story = null;
             }
         });

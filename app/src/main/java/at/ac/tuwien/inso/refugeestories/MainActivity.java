@@ -136,10 +136,14 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
     TabHost.OnTabChangeListener listener = new TabHost.OnTabChangeListener() {
         public void onTabChanged(String tabId) {
             //Use FragmentStory for both stories and explore
-            if (tabId.equals(Consts.TAB_MYSTORIES))
+            if (tabId.equals(Consts.TAB_MYSTORIES)) {
                 pushFragments(FragmentTimeline.getInstance(), false, tabId);
-            else if (tabId.equals(Consts.TAB_EXPLORE))
+                System.out.println("mystories");
+            }
+            else if (tabId.equals(Consts.TAB_EXPLORE)) {
                 pushFragments(FragmentStory.getInstance(), false, tabId);
+                System.out.println("explore");
+            }
             else
                 pushFragments(FragmentNotification.getInstance(), false, tabId);
         }
