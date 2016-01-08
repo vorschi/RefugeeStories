@@ -1,5 +1,7 @@
 package at.ac.tuwien.inso.refugeestories;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
@@ -42,6 +44,7 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
     private TextView label;
     private MenuItem follow_pic;
     private Menu menu;
+    private AlertDialog optionDialog;
 
     private FragmentManager manager;
 
@@ -228,9 +231,11 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
                     FragmentUser.getInstance().setData(timeline.getPerson(), false);
                 }
                 return true;
+
             case R.id.btn_add_story:
                 pushFragments(FragmentCreateNewStory.getInstance(), true, Consts.TAB_NEWSTORY);
                 return true;
+
             case R.id.follow_btn:
                 FragmentTimeline timeline = FragmentTimeline.getInstance();
                 Person user = sharedPrefs.getUser();
@@ -238,12 +243,24 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
                     userControllerInstance.deleteFollowerRecord(timeline.getPerson(), user);
                     user.removeFollowingUser(timeline.getPerson());
                     item.setIcon(R.drawable.ic_star_border_white_24dp);
+                    writeToast(getString(R.string.unfollow));
                 } else {
                     userControllerInstance.createFollowerRecord(timeline.getPerson(), user);
                     user.getFollowingUsers().add(timeline.getPerson());
                     item.setIcon(R.drawable.ic_star_white_24dp);
+                    writeToast(getString(R.string.follow));
                 }
                 sharedPrefs.putUser(user);
+                return true;
+
+            case R.id.meeting_btn:
+                createOptionsDialog(R.string.meeting_check, R.string.meeting_true);
+                optionDialog.show();
+                return true;
+
+            case R.id.report_btn:
+                createOptionsDialog(R.string.report_check, R.string.report_true);
+                optionDialog.show();
                 return true;
 
             //TODO: implement filter-options
@@ -312,6 +329,22 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
     private String getName() {
         FragmentTimeline timeline = FragmentTimeline.getInstance();
         return timeline.getName();
+    }
+
+    private void createOptionsDialog(final int message, final int check) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(message)
+                .setPositiveButton(check, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+        optionDialog = builder.create();
     }
 
 }

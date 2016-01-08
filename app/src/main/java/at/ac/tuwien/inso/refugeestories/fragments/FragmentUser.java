@@ -42,8 +42,7 @@ public class FragmentUser extends Fragment {
     private TextView lbl_email;
     private String temp="";
 
-    private ImageButton reportButton;
-    private ImageButton requestMeetingButton;
+    private ImageButton likeButton;
     private Button showFriendsButton;
 
     AlertDialog optionDialog;
@@ -62,23 +61,22 @@ public class FragmentUser extends Fragment {
         user_email = (TextView) contentView.findViewById(R.id.user_email);
         lbl_email = (TextView) contentView.findViewById(R.id.lbl_email);
 
-        reportButton = (ImageButton) contentView.findViewById(R.id.btn_report);
-        requestMeetingButton = (ImageButton) contentView.findViewById(R.id.btn_request_meeting);
+        likeButton = (ImageButton) contentView.findViewById(R.id.btn_like);
         showFriendsButton = (Button) contentView.findViewById(R.id.btn_see_friendlist);
 
-        reportButton.setOnClickListener(new View.OnClickListener() {
+        likeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                createOptionsDialog(R.string.report_check, R.string.report_true);
-                optionDialog.show();
+                //TODO set table in database for like/unlike
+                if (1 < 2) {
+                    likeButton.setImageResource(R.drawable.heart_full_64dp);
+                    writeToast(getString(R.string.like));
+                } else {
+                    likeButton.setImageResource(R.drawable.heart_border_64dp);
+                    writeToast(getString(R.string.unlike));
+                }
             }
         });
 
-        requestMeetingButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                createOptionsDialog(R.string.meeting_check, R.string.meeting_true);
-                optionDialog.show();
-            }
-        });
 
         showFriendsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -126,14 +124,12 @@ public class FragmentUser extends Fragment {
         user_interests.setText(user.getInterests());
 
         if (isMyUser) {
-            reportButton.setVisibility(View.GONE);
-            requestMeetingButton.setVisibility(View.GONE);
+            likeButton.setVisibility(View.GONE);
             showFriendsButton.setVisibility(View.VISIBLE);
             user_email.setVisibility(View.VISIBLE);
             lbl_email.setVisibility(View.VISIBLE);
         } else {
-            reportButton.setVisibility(View.VISIBLE);
-            requestMeetingButton.setVisibility(View.VISIBLE);
+            likeButton.setVisibility(View.VISIBLE);
             showFriendsButton.setVisibility(View.GONE);
             user_email.setVisibility(View.GONE);
             lbl_email.setVisibility(View.GONE);
@@ -153,5 +149,10 @@ public class FragmentUser extends Fragment {
                     }
                 });
         optionDialog = builder.create();
+    }
+
+    private void writeToast(String text) {
+        Toast toast = Toast.makeText(this.getActivity().getApplicationContext(), text, Toast.LENGTH_SHORT);
+        toast.show();
     }
 }

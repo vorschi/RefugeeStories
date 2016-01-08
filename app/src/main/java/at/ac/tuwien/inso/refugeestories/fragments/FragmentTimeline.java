@@ -292,6 +292,7 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
 
     public void moveToPosition(int position) {
         timeline.smoothScrollToPosition(position);
+        //timeline.scrollBy(0,50);
     }
 
     @Override

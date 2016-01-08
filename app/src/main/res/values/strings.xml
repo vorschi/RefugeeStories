@@ -103,5 +103,9 @@
     </array>
 
     <string name="title_select_photos">Add photos</string>
+    <string name="follow">You are now following this user</string>
+    <string name="unfollow">You are not following this user anymore!</string>
+    <string name="like">You have shown your appreciation for this user</string>
+    <string name="unlike">You do not show your appreciation for this user anymore! </string>
 
 </resources>

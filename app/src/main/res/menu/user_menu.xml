@@ -6,4 +6,16 @@
         android:title="user"
         android:showAsAction="always"
         tools:ignore="AppCompatResource" />
+    <item android:id="@+id/meeting_btn"
+        android:icon="@drawable/ic_people_white_24dp"
+        android:title="user"
+        android:showAsAction="always"
+        tools:ignore="AppCompatResource" />
+    <item android:id="@+id/report_btn"
+    android:icon="@drawable/ic_report_white_24dp"
+    android:title="user"
+    android:showAsAction="always"
+    tools:ignore="AppCompatResource" />
+
+
 </menu>
