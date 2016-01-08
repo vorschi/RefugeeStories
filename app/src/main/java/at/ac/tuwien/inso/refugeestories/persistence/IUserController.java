@@ -20,4 +20,11 @@ public interface IUserController {
     boolean deleteFollowerRecord(Person toFollow, Person follower);
     boolean deleteFollowerRecordsByUser(Person toFollow);
     boolean deleteFollowerRecordsByFollower(Person follower);
+
+    int createLikeRecord(Person toLike, Person liker);
+    List<Person> getLikerByUserId(int userId);
+    List<Person> getLikedUsersByUserId(int userId);
+    boolean deleteLikerRecord(Person toLike, Person liker);
+    boolean deleteLikerRecordsByUser(Person toLike);
+    boolean deleteLikerRecordsByLiker(Person liker);
 }

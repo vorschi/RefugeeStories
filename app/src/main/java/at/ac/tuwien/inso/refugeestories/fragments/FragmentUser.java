@@ -19,6 +19,9 @@ import java.util.Date;
 
 import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.domain.Person;
+import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
+import at.ac.tuwien.inso.refugeestories.persistence.UserControllerImpl;
+import at.ac.tuwien.inso.refugeestories.utils.SharedPreferencesHandler;
 import at.ac.tuwien.inso.refugeestories.utils.Utils;
 
 /**
@@ -47,6 +50,12 @@ public class FragmentUser extends Fragment {
 
     AlertDialog optionDialog;
 
+    private Person currentUser;
+    private SharedPreferencesHandler sharedPrefs;
+
+    private UserControllerImpl userControllerInstance;
+    private MyDatabaseHelper dbHelper;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View contentView = inflater.inflate(R.layout.fragment_user, container, false);
@@ -64,15 +73,27 @@ public class FragmentUser extends Fragment {
         likeButton = (ImageButton) contentView.findViewById(R.id.btn_like);
         showFriendsButton = (Button) contentView.findViewById(R.id.btn_see_friendlist);
 
+        sharedPrefs = new SharedPreferencesHandler(context);
+        dbHelper = new MyDatabaseHelper(context);
+        UserControllerImpl.initializeInstance(dbHelper);
+        userControllerInstance = UserControllerImpl.getInstance();
+
         likeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //TODO set table in database for like/unlike
-                if (1 < 2) {
-                    likeButton.setImageResource(R.drawable.heart_full_64dp);
-                    writeToast(getString(R.string.like));
-                } else {
-                    likeButton.setImageResource(R.drawable.heart_border_64dp);
-                    writeToast(getString(R.string.unlike));
+                if(currentUser != null) {
+                    Person user = sharedPrefs.getUser();
+                    if (user.isLiked(currentUser)) {
+                        userControllerInstance.deleteLikerRecord(currentUser, user);
+                        user.removeLikedUser(currentUser);
+                        likeButton.setImageResource(R.drawable.heart_border_64dp);
+                        writeToast(getString(R.string.unlike));
+                    } else {
+                        userControllerInstance.createLikeRecord(currentUser, user);
+                        user.getLikedUsers().add(currentUser);
+                        likeButton.setImageResource(R.drawable.heart_full_64dp);
+                        writeToast(getString(R.string.like));
+                    }
+                    sharedPrefs.putUser(user);
                 }
             }
         });
@@ -133,6 +154,13 @@ public class FragmentUser extends Fragment {
             showFriendsButton.setVisibility(View.GONE);
             user_email.setVisibility(View.GONE);
             lbl_email.setVisibility(View.GONE);
+        }
+
+        currentUser = user;
+        if (sharedPrefs.getUser().isLiked(currentUser)) {
+            likeButton.setImageResource(R.drawable.heart_full_64dp);
+        } else {
+            likeButton.setImageResource(R.drawable.heart_border_64dp);
         }
     }
 

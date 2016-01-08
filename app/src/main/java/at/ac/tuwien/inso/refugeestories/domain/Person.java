@@ -24,6 +24,8 @@ public class Person {
     private List<Story> stories;
     private List<Person> followers;
     private List<Person> followingUsers;
+    private List<Person> likers;
+    private List<Person> likedUsers;
 
     public Person() { }
 
@@ -104,6 +106,33 @@ public class Person {
         for(Person subscriber : getFollowingUsers()) {
             if(subscriber.getId() == person.getId()) {
                 getFollowingUsers().remove(subscriber);
+                return;
+            }
+        }
+    }
+
+    public List<Person> getLikers() { return likers; }
+
+    public void setLikers(List<Person> likers) { this.likers = likers; }
+
+    public List<Person> getLikedUsers() { return likedUsers; }
+
+    public void setLikedUsers(List<Person> likedUsers) { this.likedUsers = likedUsers; }
+
+    public boolean isLiked (Person person) {
+        for(Person likedUser : getLikedUsers()) {
+            if(likedUser.getId() == person.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void removeLikedUser(Person person) {
+        for(Person likedUser : getLikedUsers()) {
+            if(likedUser.getId() == person.getId()) {
+                getLikedUsers().remove(likedUser);
+                return;
             }
         }
     }
