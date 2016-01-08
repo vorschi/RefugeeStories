@@ -5,12 +5,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -55,28 +57,16 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
     private TimelineAdapter timelineAdapter;
     private ProgressBar footer;
 
-    private final int LIMIT = 2;
     private LoaderTask task;
     private SparseArray params;
 
     private int selectedStoryId;
-    private int lastLoadedStoryId;
-
-    private boolean loading;
-    private boolean allStoriesLoaded;
 
     private StoryControllerImpl storyControllerInstance;
     private ImageControllerImpl imageControllerInstance;
     private MyDatabaseHelper dbHelper;
 
     private SharedPreferencesHandler sharedPrefs;
-
-    //dialogs
-    AlertDialog.Builder builder;
-    AlertDialog deleteDialog;
-    AlertDialog optionDialog;
-
-    private Button addNew;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -97,9 +87,8 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
         footer = (ProgressBar) inflater.inflate(R.layout.footer, null);
 
         //init components
-        allStoriesLoaded = false;
         stories = new ArrayList<>();
-        timelineAdapter = new TimelineAdapter(context);
+        timelineAdapter = new TimelineAdapter(instance);
 
         timeline.setAdapter(timelineAdapter);
         timeline.addFooterView(footer);
@@ -107,17 +96,6 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
         //if MY_STORIES tab is currently active, then load host from the shared prefs.
         if (Consts.TAB_MYSTORIES.equals(mainActivity.getCurrentTabId())) {
             currentPerson = sharedPrefs.getUser();
-
-            /* this was used for test purpose */
-//            addNew = (Button) mFragmentLayout.findViewById(R.id.btn_add_new);
-//            addNew.setVisibility(View.VISIBLE);
-//            addNew.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    mainActivity.pushFragments(FragmentCreateNewStory.getInstance(), true, Consts.TAB_NEWSTORY);
-//                }
-//            });
-            /* end */
         }
 
         /*
@@ -131,43 +109,7 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
         }
 
         /* LISTENERS */
-        // TODO implement onLongClickListener either here or in the adapter ...
 
-        /*
-        timeline.setOnScrollListener(new OnScrollListener() {
-
-            private boolean userScrolled;
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                    userScrolled = true;
-                } else {
-                    userScrolled = false;
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (userScrolled &&
-                        ((firstVisibleItem + visibleItemCount) == totalItemCount) && !loading && !allStoriesLoaded) {
-                    timeline.addFooterView(footer);
-                    load(currentPerson.getId(), lastLoadedStoryId);
-                }
-            }
-        });
-        */
-
-//        openUser = (Button) mFragmentLayout.findViewById(R.id.open_user_btn);
-//        openUser.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                MainActivity activity = (MainActivity) getActivity();
-//                activity.pushFragments(FragmentUser.getInstance(), true, Consts.TAB_USER);
-//                //TODO send user object
-//                FragmentUser.getInstance().setData(null, false);
-//            }
-//        });
 
         return mFragmentLayout;
     }
@@ -177,58 +119,23 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
      * @param newStories new stories retrieved from the db
      */
     public void addTimelineStories(List<Story> newStories) {
-        if (newStories.isEmpty()) {
-            allStoriesLoaded = true;
-        } else {
-            lastLoadedStoryId = newStories.get(newStories.size() - 1).getId();
-        }
-
         stories.addAll(newStories);
         timelineAdapter.updateStories(stories);
 
         timeline.removeFooterView(footer);
-        loading = false;
     }
 
-    private void createDeleteDialog(final int position) {
-        builder = new AlertDialog.Builder(context);
-        builder.setMessage(R.string.delete_check)
-                .setPositiveButton(R.string.delete_true, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        if (onDeleteStory(stories.get(position))) { //try to delete it in the db first
-                            //finally remove it also locally
-                            stories.remove(position);
-                            timelineAdapter.updateStories(stories);
-                        } else {
-                            Toast.makeText(context, "Story could not be deleted...", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        deleteDialog.cancel();
-                    }
-                });
-        deleteDialog = builder.create();
+    private View getChildAtPosition(final AdapterView view, final int position) {
+        final int index = position - view.getFirstVisiblePosition();
+        if ((index >= 0) && (index < view.getChildCount())) {
+            return view.getChildAt(index);
+        } else {
+            return null;
+        }
     }
 
-    private void createOptionsDialog(final int position) {
-        builder = new AlertDialog.Builder(context);
-        builder.setItems(R.array.story_options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int id) {
-                if (id == Consts.EDIT) {
-                    Story targetStory = timelineAdapter.getItem(position);
-                    FragmentCreateNewStory fragment = FragmentCreateNewStory.getInstance();
-                    fragment.setStory(targetStory);
-                    mainActivity.pushFragments(fragment, true, Consts.TAB_EDIT_STORY);
-                } else if (id == Consts.DELETE) {
-                    createDeleteDialog(position);
-                    optionDialog.show();
-                } else { /*ignore*/ }
-            }
-        });
-        optionDialog = builder.create();
+    public Context getContext() {
+        return context;
     }
 
     public static FragmentTimeline getInstance() {
@@ -242,6 +149,10 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
                 Consts.TAB_MYSTORIES : (currentPerson.getFirstname() + " " + currentPerson.getLastname());
     }
 
+    public Person getPerson(){
+        return currentPerson;
+    }
+
     /**
      * This method executes the task used for the initialization of the timeline.
      *
@@ -250,7 +161,6 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
      * @return last loaded story id
      */
     private void init(int authorId, int storyId) {
-        loading = true;
 
         //init task
         task = new TimelineInitTask(instance);
@@ -267,33 +177,12 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
         task.execute(params);
     }
 
-    /**
-     * This method executes the task used for loading of the new stories after the user scrolls down to the bottom of the timeline.
-     *
-     * @param authorId          id of the timeline author
-     * @param lastLoadedStoryId id of the last story in the timeline
-     * @return last loaded story id
-     */
-    private void load(int authorId, int lastLoadedStoryId) {
-        loading = true;
-
-        //init task
-        task = new TimelineLoaderTask(instance);
-        task.setStoryControllerInstance(storyControllerInstance);
-        task.setImageControllerInstance(imageControllerInstance);
-
-        //init params
-        params = new SparseArray();
-        params.append(TimelineLoaderTask.AUTHOR_ID, authorId);
-        params.append(TimelineLoaderTask.LAST_LOADED_STORY_ID, lastLoadedStoryId);
-        params.append(TimelineLoaderTask.LIMIT, LIMIT);
-
-        //execute task with authorId, lastLoadedStoryId and limit
-        task.execute(params);
+    public boolean isMe() {
+        return currentPerson.getId() == sharedPrefs.getUser().getId();
     }
 
     public void moveToPosition(int position) {
-        timeline.smoothScrollToPosition(position);
+        smoothScrollToPositionFromTop(timeline, position);
     }
 
     @Override
@@ -320,8 +209,41 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
         selectedStoryId = story.getId();
     }
 
-    public Person getPerson(){
-        return currentPerson;
+    private void smoothScrollToPositionFromTop(final AbsListView view, final int position) {
+        View child = getChildAtPosition(view, position);
+        // There's no need to scroll if child is already at top or view is already scrolled to its end
+        if ((child != null) && ((child.getTop() == 0) || ((child.getTop() > 0) && !view.canScrollVertically(1)))) {
+            return;
+        }
+
+        view.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(final AbsListView view, final int scrollState) {
+                if (scrollState == SCROLL_STATE_IDLE) {
+                    view.setOnScrollListener(null);
+
+                    // Fix for scrolling bug
+                    new Handler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            view.setSelection(position);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onScroll(final AbsListView view, final int firstVisibleItem, final int visibleItemCount,
+                                 final int totalItemCount) { }
+        });
+
+        // Perform scrolling to position
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                view.smoothScrollToPositionFromTop(position, 0);
+            }
+        });
     }
 
 }

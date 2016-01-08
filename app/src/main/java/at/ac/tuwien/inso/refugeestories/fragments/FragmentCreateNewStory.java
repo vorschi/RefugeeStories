@@ -166,8 +166,7 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
                     Toast.makeText(context, "Story could not be published!", Toast.LENGTH_SHORT).show();
                 }
 
-                ((MainActivity) getActivity()).pushFragments(FragmentTimeline.getInstance(), true, Consts.TAB_MYSTORIES);
-                clearBackStack();
+                ((MainActivity) getActivity()).pushFragments(FragmentTimeline.getInstance(), false, Consts.TAB_MYSTORIES);
                 story = null;
             }
         });
