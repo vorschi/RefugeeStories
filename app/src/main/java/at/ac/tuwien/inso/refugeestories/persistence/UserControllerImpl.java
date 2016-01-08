@@ -169,6 +169,10 @@ public class UserControllerImpl implements IUserController {
         deleteFollowerRecordsByUser(person);
         deleteFollowerRecordsByFollower(person);
 
+        //delete all related like assignments
+        deleteLikerRecordsByUser(person);
+        deleteLikerRecordsByLiker(person);
+
         String where = TableEntry.ID + " = ?";
         String[] whereArgs = { Integer.toString(person.getId()) };
 
