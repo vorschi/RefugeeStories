@@ -133,6 +133,7 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
         /* LISTENERS */
         // TODO implement onLongClickListener either here or in the adapter ...
 
+        /*
         timeline.setOnScrollListener(new OnScrollListener() {
 
             private boolean userScrolled;
@@ -155,6 +156,7 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
                 }
             }
         });
+        */
 
 //        openUser = (Button) mFragmentLayout.findViewById(R.id.open_user_btn);
 //        openUser.setOnClickListener(new View.OnClickListener() {
@@ -259,9 +261,9 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
         params = new SparseArray();
         params.append(TimelineInitTask.AUTHOR_ID, authorId);
         params.append(TimelineInitTask.STORY_ID, storyId);
-        params.append(TimelineInitTask.LIMIT, LIMIT);
+        params.append(TimelineInitTask.ORDER, Consts.DESC);
 
-        //execute task with authorId, storyId and limit
+        //execute task
         task.execute(params);
     }
 

@@ -72,11 +72,15 @@ public class InitActivity extends Activity {
                     List<Person> followingUsers = userControllerInstance.getFollowingByUserId(user.getId());
                     user.setFollowingUsers(followingUsers);
 
+                    List<Person> likers = userControllerInstance.getLikerByUserId(user.getId());
+                    user.setLikers(likers);
+
+                    List<Person> likedUsers = userControllerInstance.getLikedUsersByUserId(user.getId());
+                    user.setLikedUsers(likedUsers);
+
                     List<Language> languages = languageControllerInstance.getLanguagesByUserId(user.getId());
                     user.setLanguages(languages);
                     sharedPrefs.putUser(user);
-
-
                 }
                 Intent intent = new Intent(InitActivity.this, MainActivity.class);
                 startActivity(intent);

@@ -22,6 +22,7 @@ public class UserControllerImpl implements IUserController {
 
     public static final String TABLE_NAME = "user";
     public static final String TABLE_NAME_FOLLOWER = "user_follower";
+    public static final String TABLE_NAME_LIKER = "user_liker";
 
     public UserControllerImpl() {
     }
@@ -57,6 +58,11 @@ public class UserControllerImpl implements IUserController {
     }
 
     public static abstract class TableEntryFollower {
+        public static final String AUTHORID1 = "authorid1";
+        public static final String AUTHORID2 = "authorid2";
+    }
+
+    public static abstract class TableEntryLiker {
         public static final String AUTHORID1 = "authorid1";
         public static final String AUTHORID2 = "authorid2";
     }
@@ -256,6 +262,94 @@ public class UserControllerImpl implements IUserController {
 
         SQLiteDatabase db = myDbHelper.getWritableDatabase();
         boolean deleteSuccessful = db.delete(TABLE_NAME_FOLLOWER, where, whereArgs) > 0;
+        db.close();
+
+        return deleteSuccessful;
+    }
+
+    @Override
+    public int createLikeRecord(Person toLike, Person liker) {
+        ContentValues values = new ContentValues();
+
+        values.put(TableEntryLiker.AUTHORID1, toLike.getId());
+        values.put(TableEntryLiker.AUTHORID2, liker.getId());
+
+        SQLiteDatabase db = myDbHelper.getWritableDatabase();
+
+        int id = MyDatabaseHelper.safeLongToInt(db.insert(TABLE_NAME_LIKER, null, values));
+        db.close();
+
+        return id;
+    }
+
+    @Override
+    public List<Person> getLikerByUserId(int userId) {
+        String selection = TableEntryLiker.AUTHORID1 + " = " + userId;
+        SQLiteDatabase db = myDbHelper.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME_LIKER, null, selection, null, null, null, null);
+
+        List<Person> likers = new ArrayList<Person>();
+        Person liker = null;
+        while(cursor.moveToNext()) {
+            liker = getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntryLiker.AUTHORID2)));
+            likers.add(liker);
+        }
+        cursor.close();
+        db.close();
+
+        return likers;
+    }
+
+    @Override
+    public List<Person> getLikedUsersByUserId(int userId) {
+        String selection = TableEntryLiker.AUTHORID2 + " = " + userId;
+        SQLiteDatabase db = myDbHelper.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME_LIKER, null, selection, null, null, null, null);
+
+        List<Person> likedUsers = new ArrayList<Person>();
+        Person likedUser = null;
+        while(cursor.moveToNext()) {
+            likedUser = getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntryLiker.AUTHORID1)));
+            likedUsers.add(likedUser);
+        }
+        cursor.close();
+        db.close();
+
+        return likedUsers;
+    }
+
+    @Override
+    public boolean deleteLikerRecord(Person toLike, Person liker) {
+        String where = TableEntryLiker.AUTHORID1 + " = ? AND " +
+                TableEntryLiker.AUTHORID2 + " = ?";
+        String[] whereArgs = { Integer.toString(toLike.getId()), Integer.toString(liker.getId()) };
+
+        SQLiteDatabase db = myDbHelper.getWritableDatabase();
+        boolean deleteSuccessful = db.delete(TABLE_NAME_LIKER, where, whereArgs) > 0;
+        db.close();
+
+        return deleteSuccessful;
+    }
+
+    @Override
+    public boolean deleteLikerRecordsByUser(Person toLike) {
+        String where = TableEntryLiker.AUTHORID1 + " = ?";
+        String[] whereArgs = { Integer.toString(toLike.getId()) };
+
+        SQLiteDatabase db = myDbHelper.getWritableDatabase();
+        boolean deleteSuccessful = db.delete(TABLE_NAME_LIKER, where, whereArgs) > 0;
+        db.close();
+
+        return deleteSuccessful;
+    }
+
+    @Override
+    public boolean deleteLikerRecordsByLiker(Person liker) {
+        String where = TableEntryLiker.AUTHORID2 + " = ?";
+        String[] whereArgs = { Integer.toString(liker.getId()) };
+
+        SQLiteDatabase db = myDbHelper.getWritableDatabase();
+        boolean deleteSuccessful = db.delete(TABLE_NAME_LIKER, where, whereArgs) > 0;
         db.close();
 
         return deleteSuccessful;
