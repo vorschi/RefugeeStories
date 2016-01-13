@@ -106,6 +106,8 @@
     <string name="follow">You are now following this user</string>
     <string name="unfollow">You are not following this user anymore!</string>
     <string name="like">You have shown your appreciation for this user</string>
-    <string name="unlike">You do not show your appreciation for this user anymore! </string>
+    <string name="unlike">You do not show your appreciation for this user anymore!</string>
+    <string name="meeting_request_sent">A request for a meeting was sent</string>
+    <string name="meeting_request_sent_already">Request for a meeting has already been sent</string>
 
 </resources>

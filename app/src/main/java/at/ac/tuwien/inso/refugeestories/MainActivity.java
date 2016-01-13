@@ -43,7 +43,6 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
 
     private TextView label;
     private MenuItem follow_pic;
-    private MenuItem meeting_pic;
     private Menu menu;
     private AlertDialog optionDialog;
 
@@ -213,15 +212,6 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
             }
         }
 
-        meeting_pic = menu.findItem(R.id.meeting_btn);
-        if(meeting_pic != null) {
-            if(sharedPrefs.getUser().isMeetingRequested(timeline.getPerson())) {
-                meeting_pic.setEnabled(false);
-            } else {
-                meeting_pic.setEnabled(true);
-            }
-        }
-
         return true;
     }
 
@@ -229,6 +219,7 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
     public boolean onOptionsItemSelected(MenuItem item) {
 
         Fragment currentFragment;
+        Person user = sharedPrefs.getUser();
 
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -252,16 +243,15 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
                 return true;
 
             case R.id.follow_btn:
-                FragmentTimeline timeline = FragmentTimeline.getInstance();
-                Person user = sharedPrefs.getUser();
-                if(user.isSubscribed(timeline.getPerson())) {
-                    userControllerInstance.deleteFollowerRecord(timeline.getPerson(), user);
-                    user.removeFollowingUser(timeline.getPerson());
+                Person timelineUser = getTimelineUser();
+                if(user.isSubscribed(timelineUser)) {
+                    userControllerInstance.deleteFollowerRecord(timelineUser, user);
+                    user.removeFollowingUser(timelineUser);
                     item.setIcon(R.drawable.ic_star_border_white_24dp);
                     writeToast(getString(R.string.unfollow));
                 } else {
-                    userControllerInstance.createFollowerRecord(timeline.getPerson(), user);
-                    user.getFollowingUsers().add(timeline.getPerson());
+                    userControllerInstance.createFollowerRecord(timelineUser, user);
+                    user.getFollowingUsers().add(timelineUser);
                     item.setIcon(R.drawable.ic_star_white_24dp);
                     writeToast(getString(R.string.follow));
                 }
@@ -269,8 +259,12 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
                 return true;
 
             case R.id.meeting_btn:
-                createOptionsDialog(R.string.meeting_check, R.string.meeting_true, item);
-                optionDialog.show();
+                if(user.isMeetingRequested(getTimelineUser())) {
+                    writeToast(getString(R.string.meeting_request_sent_already));
+                } else {
+                    createOptionsDialog(R.string.meeting_check, R.string.meeting_true, item);
+                    optionDialog.show();
+                }
                 return true;
 
             case R.id.report_btn:
@@ -346,6 +340,11 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
         return timeline.getName();
     }
 
+    private Person getTimelineUser() {
+        FragmentTimeline timeline = FragmentTimeline.getInstance();
+        return timeline.getPerson();
+    }
+
     private void createOptionsDialog(final int message, final int check, final MenuItem item) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -358,9 +357,9 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
                             if(!user.isMeetingRequested(timeline.getPerson())) {
                                 userControllerInstance.createMeetingRecord(timeline.getPerson(), user);
                                 user.getRequestedMeetingUsers().add(timeline.getPerson());
-                                item.setEnabled(false);
+                                writeToast(getString(R.string.meeting_request_sent));
+                                sharedPrefs.putUser(user);
                             }
-                            sharedPrefs.putUser(user);
                         }
                     }
                 })
