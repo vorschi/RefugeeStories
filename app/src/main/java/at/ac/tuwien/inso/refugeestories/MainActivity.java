@@ -22,6 +22,7 @@ import android.widget.Toast;
 import at.ac.tuwien.inso.refugeestories.domain.Person;
 import at.ac.tuwien.inso.refugeestories.domain.Story;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentCreateNewStory;
+import at.ac.tuwien.inso.refugeestories.fragments.FragmentLocation;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentNotification;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentStory.OnStorySelectedListener;
@@ -297,7 +298,10 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
             case R.id.menuSortFarthest:
                 // right button
                 return true;
-
+            case R.id.menuMap:
+                FragmentLocation f = new FragmentLocation();
+                pushFragments(f, true, "MAP");
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
