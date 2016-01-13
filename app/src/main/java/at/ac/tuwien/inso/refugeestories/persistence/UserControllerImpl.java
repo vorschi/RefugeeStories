@@ -23,6 +23,7 @@ public class UserControllerImpl implements IUserController {
     public static final String TABLE_NAME = "user";
     public static final String TABLE_NAME_FOLLOWER = "user_follower";
     public static final String TABLE_NAME_LIKER = "user_liker";
+    public static final String TABLE_NAME_MEETING = "user_meeting";
 
     public UserControllerImpl() {
     }
@@ -62,6 +63,11 @@ public class UserControllerImpl implements IUserController {
     }
 
     public static abstract class TableEntryLiker {
+        public static final String AUTHORID1 = "authorid1";
+        public static final String AUTHORID2 = "authorid2";
+    }
+
+    public static abstract class TableEntryMeeting {
         public static final String AUTHORID1 = "authorid1";
         public static final String AUTHORID2 = "authorid2";
     }
@@ -350,6 +356,94 @@ public class UserControllerImpl implements IUserController {
 
         SQLiteDatabase db = myDbHelper.getWritableDatabase();
         boolean deleteSuccessful = db.delete(TABLE_NAME_LIKER, where, whereArgs) > 0;
+        db.close();
+
+        return deleteSuccessful;
+    }
+
+    @Override
+    public int createMeetingRecord(Person toMeet, Person meeter) {
+        ContentValues values = new ContentValues();
+
+        values.put(TableEntryMeeting.AUTHORID1, toMeet.getId());
+        values.put(TableEntryMeeting.AUTHORID2, meeter.getId());
+
+        SQLiteDatabase db = myDbHelper.getWritableDatabase();
+
+        int id = MyDatabaseHelper.safeLongToInt(db.insert(TABLE_NAME_MEETING, null, values));
+        db.close();
+
+        return id;
+    }
+
+    @Override
+    public List<Person> getMeeterByUserId(int userId) {
+        String selection = TableEntryMeeting.AUTHORID1 + " = " + userId;
+        SQLiteDatabase db = myDbHelper.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME_MEETING, null, selection, null, null, null, null);
+
+        List<Person> meeters = new ArrayList<Person>();
+        Person meeter = null;
+        while(cursor.moveToNext()) {
+            meeter = getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntryMeeting.AUTHORID2)));
+            meeters.add(meeter);
+        }
+        cursor.close();
+        db.close();
+
+        return meeters;
+    }
+
+    @Override
+    public List<Person> getRequestedMeetingUsersByUserId(int userId) {
+        String selection = TableEntryMeeting.AUTHORID2 + " = " + userId;
+        SQLiteDatabase db = myDbHelper.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME_MEETING, null, selection, null, null, null, null);
+
+        List<Person> requestedMeetingUsers = new ArrayList<Person>();
+        Person requestedMeetingUser = null;
+        while(cursor.moveToNext()) {
+            requestedMeetingUser = getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntryMeeting.AUTHORID1)));
+            requestedMeetingUsers.add(requestedMeetingUser);
+        }
+        cursor.close();
+        db.close();
+
+        return requestedMeetingUsers;
+    }
+
+    @Override
+    public boolean deleteMeetingRecord(Person toMeet, Person meeter) {
+        String where = TableEntryMeeting.AUTHORID1 + " = ? AND " +
+                TableEntryMeeting.AUTHORID2 + " = ?";
+        String[] whereArgs = { Integer.toString(toMeet.getId()), Integer.toString(meeter.getId()) };
+
+        SQLiteDatabase db = myDbHelper.getWritableDatabase();
+        boolean deleteSuccessful = db.delete(TABLE_NAME_MEETING, where, whereArgs) > 0;
+        db.close();
+
+        return deleteSuccessful;
+    }
+
+    @Override
+    public boolean deleteMeetingRecordsByUser(Person toMeet) {
+        String where = TableEntryMeeting.AUTHORID1 + " = ?";
+        String[] whereArgs = { Integer.toString(toMeet.getId()) };
+
+        SQLiteDatabase db = myDbHelper.getWritableDatabase();
+        boolean deleteSuccessful = db.delete(TABLE_NAME_MEETING, where, whereArgs) > 0;
+        db.close();
+
+        return deleteSuccessful;
+    }
+
+    @Override
+    public boolean deleteMeetingRecordsByMeeter(Person meeter) {
+        String where = TableEntryMeeting.AUTHORID2 + " = ?";
+        String[] whereArgs = { Integer.toString(meeter.getId()) };
+
+        SQLiteDatabase db = myDbHelper.getWritableDatabase();
+        boolean deleteSuccessful = db.delete(TABLE_NAME_MEETING, where, whereArgs) > 0;
         db.close();
 
         return deleteSuccessful;

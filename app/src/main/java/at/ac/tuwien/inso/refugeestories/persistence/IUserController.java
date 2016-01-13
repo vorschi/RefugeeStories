@@ -27,4 +27,11 @@ public interface IUserController {
     boolean deleteLikerRecord(Person toLike, Person liker);
     boolean deleteLikerRecordsByUser(Person toLike);
     boolean deleteLikerRecordsByLiker(Person liker);
+
+    int createMeetingRecord(Person toMeet, Person meeter);
+    List<Person> getMeeterByUserId(int userId);
+    List<Person> getRequestedMeetingUsersByUserId(int userId);
+    boolean deleteMeetingRecord(Person toMeet, Person meeter);
+    boolean deleteMeetingRecordsByUser(Person toMeet);
+    boolean deleteMeetingRecordsByMeeter(Person meeter);
 }

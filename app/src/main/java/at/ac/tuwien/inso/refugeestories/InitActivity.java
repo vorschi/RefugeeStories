@@ -78,6 +78,9 @@ public class InitActivity extends Activity {
                     List<Person> likedUsers = userControllerInstance.getLikedUsersByUserId(user.getId());
                     user.setLikedUsers(likedUsers);
 
+                    List<Person> requestedMeetingUsers = userControllerInstance.getRequestedMeetingUsersByUserId(user.getId());
+                    user.setRequestedMeetingUsers(requestedMeetingUsers);
+
                     List<Language> languages = languageControllerInstance.getLanguagesByUserId(user.getId());
                     user.setLanguages(languages);
                     sharedPrefs.putUser(user);

@@ -25,6 +25,7 @@ public class Person {
     private List<Person> followingUsers;
     private List<Person> likers;
     private List<Person> likedUsers;
+    private List<Person> RequestedMeetingUsers;
 
     public Person() { }
 
@@ -134,5 +135,18 @@ public class Person {
 
     public int countLikers() {
         return getLikers().size();
+    }
+
+    public List<Person> getRequestedMeetingUsers() { return RequestedMeetingUsers; }
+
+    public void setRequestedMeetingUsers(List<Person> requestedMeetingUsers) { RequestedMeetingUsers = requestedMeetingUsers; }
+
+    public boolean isMeetingRequested (Person person) {
+        for(Person requestedMeetingUser : getRequestedMeetingUsers()) {
+            if(requestedMeetingUser.getId() == person.getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -43,6 +43,7 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
 
     private TextView label;
     private MenuItem follow_pic;
+    private MenuItem meeting_pic;
     private Menu menu;
     private AlertDialog optionDialog;
 
@@ -203,14 +204,24 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
             inflater.inflate(R.menu.profile_menu, menu);
 
         follow_pic = menu.findItem(R.id.follow_btn);
+        FragmentTimeline timeline = FragmentTimeline.getInstance();
         if (follow_pic != null){
-            FragmentTimeline timeline = FragmentTimeline.getInstance();
             if(sharedPrefs.getUser().isSubscribed(timeline.getPerson())) {
                 follow_pic.setIcon(R.drawable.ic_star_white_24dp);
             } else {
                 follow_pic.setIcon(R.drawable.ic_star_border_white_24dp);
             }
         }
+
+        meeting_pic = menu.findItem(R.id.meeting_btn);
+        if(meeting_pic != null) {
+            if(sharedPrefs.getUser().isMeetingRequested(timeline.getPerson())) {
+                meeting_pic.setEnabled(false);
+            } else {
+                meeting_pic.setEnabled(true);
+            }
+        }
+
         return true;
     }
 
@@ -258,12 +269,12 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
                 return true;
 
             case R.id.meeting_btn:
-                createOptionsDialog(R.string.meeting_check, R.string.meeting_true);
+                createOptionsDialog(R.string.meeting_check, R.string.meeting_true, item);
                 optionDialog.show();
                 return true;
 
             case R.id.report_btn:
-                createOptionsDialog(R.string.report_check, R.string.report_true);
+                createOptionsDialog(R.string.report_check, R.string.report_true, item);
                 optionDialog.show();
                 return true;
 
@@ -335,12 +346,22 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
         return timeline.getName();
     }
 
-    private void createOptionsDialog(final int message, final int check) {
+    private void createOptionsDialog(final int message, final int check, final MenuItem item) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(message)
                 .setPositiveButton(check, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        if(check == R.string.meeting_true) {
+                            FragmentTimeline timeline = FragmentTimeline.getInstance();
+                            Person user = sharedPrefs.getUser();
+                            if(!user.isMeetingRequested(timeline.getPerson())) {
+                                userControllerInstance.createMeetingRecord(timeline.getPerson(), user);
+                                user.getRequestedMeetingUsers().add(timeline.getPerson());
+                                item.setEnabled(false);
+                            }
+                            sharedPrefs.putUser(user);
+                        }
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
