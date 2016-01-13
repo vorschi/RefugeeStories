@@ -1,12 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Notifications" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/gray"
+        android:id="@+id/not_but1">
+        <at.ac.tuwien.inso.refugeestories.utils.components.RoundedImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:id="@+id/not_pic1"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:src="@drawable/pic08"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="80dp"
+            android:text="Sami Turku has published a new story!"/>
+    </RelativeLayout>
 
-</RelativeLayout>
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/gray"
+        android:id="@+id/not_but2">
+        <at.ac.tuwien.inso.refugeestories.utils.components.RoundedImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:id="@+id/not_pic2"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:src="@drawable/pic09"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="80dp"
+            android:text="Stefan Mayr has published a new story!"/>
+    </RelativeLayout>
+
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/gray"
+        android:id="@+id/not_but3">
+        <at.ac.tuwien.inso.refugeestories.utils.components.RoundedImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:id="@+id/not_pic3"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:src="@drawable/pic10"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="80dp"
+            android:text="Adele Luther is now following you!!"/>
+    </RelativeLayout>
+
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+</LinearLayout>
