@@ -37,7 +37,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         Bitmap original = BitmapFactory.decodeFile(params[0]);
         if (original != null) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            original.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            original.compress(Bitmap.CompressFormat.JPEG, 10, out);
             Bitmap decoded = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
             return decoded;
         } else {
