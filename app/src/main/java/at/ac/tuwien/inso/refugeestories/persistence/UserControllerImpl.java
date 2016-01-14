@@ -54,6 +54,8 @@ public class UserControllerImpl implements IUserController {
         public static final String DOB = "dob";
         public static final String GENDER = "gender";
         public static final String LOCATION = "location";
+        public static final String LAT = "lat";
+        public static final String LNG = "lng";
         public static final String INTERESTS = "interests";
     }
 
@@ -85,6 +87,8 @@ public class UserControllerImpl implements IUserController {
         values.put(TableEntry.DOB, Utils.dateFormat.format(person.getDob()));
         values.put(TableEntry.GENDER, person.getGender());
         values.put(TableEntry.LOCATION, person.getLocation());
+        values.put(TableEntry.LAT, person.getLat());
+        values.put(TableEntry.LNG, person.getLng());
         values.put(TableEntry.INTERESTS, person.getInterests());
         SQLiteDatabase db = myDbHelper.getWritableDatabase();
 
@@ -120,6 +124,8 @@ public class UserControllerImpl implements IUserController {
             }
             person.setGender(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.GENDER)));
             person.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
+            person.setLat(cursor.getDouble(cursor.getColumnIndexOrThrow(TableEntry.LAT)));
+            person.setLng(cursor.getDouble(cursor.getColumnIndexOrThrow(TableEntry.LNG)));
             person.setInterests(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.INTERESTS)));
             person.setLanguages(LanguageControllerImpl.getInstance().getLanguagesByUserId(person.getId()));
         }
@@ -142,6 +148,8 @@ public class UserControllerImpl implements IUserController {
         values.put(TableEntry.DOB, Utils.dateFormat.format(person.getDob()));
         values.put(TableEntry.GENDER, person.getGender());
         values.put(TableEntry.LOCATION, person.getLocation());
+        values.put(TableEntry.LAT, person.getLat());
+        values.put(TableEntry.LNG, person.getLng());
         values.put(TableEntry.INTERESTS, person.getInterests());
         String where = TableEntry.ID + " = ?";
         String[] whereArgs = { Integer.toString(person.getId()) };

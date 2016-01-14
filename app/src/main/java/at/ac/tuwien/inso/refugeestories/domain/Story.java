@@ -13,12 +13,10 @@ public class Story {
     private String text;
     private Date date;
     private String location;
+    private double lat;
+    private double lng;
     private List<Image> images;
     private Person author;
-
-    //these attributes are going to be removed after db introduction
-    private int imgResId;
-    //
 
     public Story() { }
 
@@ -74,9 +72,15 @@ public class Story {
         this.date = date;
     }
 
-    public int getImgResId() {
-        return imgResId;
+    public double getLat() {
+        return lat;
     }
 
-    public void setImgResId(int imgResId) { this.imgResId = imgResId; }
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLng() { return lng; }
+
+    public void setLng(double lng) { this.lng = lng; }
 }

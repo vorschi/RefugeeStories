@@ -18,6 +18,8 @@ public class Person {
     private Date dob;
     private String gender;
     private String location;
+    private double lat;
+    private double lng;
     private String interests;
     private List<Language> languages;
     private List<Story> stories;
@@ -68,6 +70,18 @@ public class Person {
     public String getLocation() { return location; }
 
     public void setLocation(String location) { this.location = location; }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLng() { return lng; }
+
+    public void setLng(double lng) { this.lng = lng; }
 
     public String getInterests() { return interests; }
 

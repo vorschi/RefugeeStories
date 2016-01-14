@@ -49,6 +49,8 @@ public class StoryControllerImpl implements IStoryController {
         public static final String TEXT = "text";
         public static final String DATE = "date";
         public static final String LOCATION = "location";
+        public static final String LAT = "lat";
+        public static final String LNG = "lng";
         public static final String AUTHORID = "authorid";
     }
 
@@ -60,6 +62,8 @@ public class StoryControllerImpl implements IStoryController {
         values.put(TableEntry.TEXT, story.getText());
         values.put(TableEntry.DATE, Utils.dateFormat.format(story.getDate()));
         values.put(TableEntry.LOCATION, story.getLocation());
+        values.put(TableEntry.LAT, story.getLat());
+        values.put(TableEntry.LNG, story.getLng());
         values.put(TableEntry.AUTHORID, story.getAuthor().getId());
 
         SQLiteDatabase db = myDbHelper.getWritableDatabase();
@@ -90,6 +94,8 @@ public class StoryControllerImpl implements IStoryController {
                 e.printStackTrace();
             }
             story.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
+            story.setLat(cursor.getDouble(cursor.getColumnIndexOrThrow(TableEntry.LAT)));
+            story.setLng(cursor.getDouble(cursor.getColumnIndexOrThrow(TableEntry.LNG)));
             story.setAuthor(UserControllerImpl.getInstance().getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.AUTHORID))));
         }
         cursor.close();
@@ -110,7 +116,8 @@ public class StoryControllerImpl implements IStoryController {
 
         String query = "SELECT " + TableEntry.ID + ", " + TableEntry.TITLE + ", " + TableEntry.TEXT + ", " +
                        "substr(date, 7, 4)||\"-\"||substr(date, 4, 2)||\"-\"||substr(date,0,3) as date, " +
-                       TableEntry.LOCATION + ", " + TableEntry.AUTHORID +
+                       TableEntry.LOCATION + ", " + TableEntry.LAT + ", " + TableEntry.LNG +
+                       ", " + TableEntry.AUTHORID +
                        " FROM " + TABLE_NAME +
                        " WHERE " + TableEntry.AUTHORID + " <> " + userId +
                        " ORDER BY " + column + " " + order +
@@ -133,6 +140,8 @@ public class StoryControllerImpl implements IStoryController {
                 e.printStackTrace();
             }
             story.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
+            story.setLat(cursor.getDouble(cursor.getColumnIndexOrThrow(TableEntry.LAT)));
+            story.setLng(cursor.getDouble(cursor.getColumnIndexOrThrow(TableEntry.LNG)));
             story.setAuthor(UserControllerImpl.getInstance().getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.AUTHORID))));
             stories.add(story);
         }
@@ -164,6 +173,8 @@ public class StoryControllerImpl implements IStoryController {
                 e.printStackTrace();
             }
             story.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
+            story.setLat(cursor.getDouble(cursor.getColumnIndexOrThrow(TableEntry.LAT)));
+            story.setLng(cursor.getDouble(cursor.getColumnIndexOrThrow(TableEntry.LNG)));
             story.setAuthor(UserControllerImpl.getInstance().getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.AUTHORID))));
             stories.add(story);
         }
@@ -178,7 +189,7 @@ public class StoryControllerImpl implements IStoryController {
 
         String query = "SELECT " + TableEntry.ID + ", " + TableEntry.TITLE + ", " + TableEntry.TEXT + ", " +
                 "substr(date, 7, 4)||\"-\"||substr(date, 4, 2)||\"-\"||substr(date,0,3) as date, " +
-                TableEntry.LOCATION + ", " + TableEntry.AUTHORID +
+                TableEntry.LOCATION + ", " + TableEntry.LAT + ", " + TableEntry.LNG + ", " + TableEntry.AUTHORID +
                 " FROM " + TABLE_NAME +
                 " WHERE " + TableEntry.AUTHORID + " = " + userId +
                 " ORDER BY " + TableEntry.DATE + " " + order;
@@ -199,6 +210,8 @@ public class StoryControllerImpl implements IStoryController {
                 e.printStackTrace();
             }
             story.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
+            story.setLat(cursor.getDouble(cursor.getColumnIndexOrThrow(TableEntry.LAT)));
+            story.setLng(cursor.getDouble(cursor.getColumnIndexOrThrow(TableEntry.LNG)));
             story.setAuthor(UserControllerImpl.getInstance().getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.AUTHORID))));
             stories.add(story);
         }
@@ -230,6 +243,8 @@ public class StoryControllerImpl implements IStoryController {
                 e.printStackTrace();
             }
             story.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
+            story.setLat(cursor.getDouble(cursor.getColumnIndexOrThrow(TableEntry.LAT)));
+            story.setLng(cursor.getDouble(cursor.getColumnIndexOrThrow(TableEntry.LNG)));
             story.setAuthor(UserControllerImpl.getInstance().getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.AUTHORID))));
             stories.add(story);
         }
@@ -264,6 +279,8 @@ public class StoryControllerImpl implements IStoryController {
                 e.printStackTrace();
             }
             story.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
+            story.setLat(cursor.getDouble(cursor.getColumnIndexOrThrow(TableEntry.LAT)));
+            story.setLng(cursor.getDouble(cursor.getColumnIndexOrThrow(TableEntry.LNG)));
             story.setAuthor(UserControllerImpl.getInstance().getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.AUTHORID))));
             stories.add(story);
         }
@@ -293,6 +310,8 @@ public class StoryControllerImpl implements IStoryController {
                 e.printStackTrace();
             }
             story.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
+            story.setLat(cursor.getDouble(cursor.getColumnIndexOrThrow(TableEntry.LAT)));
+            story.setLng(cursor.getDouble(cursor.getColumnIndexOrThrow(TableEntry.LNG)));
             story.setAuthor(UserControllerImpl.getInstance().getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.AUTHORID))));
             stories.add(story);
         }
@@ -323,6 +342,8 @@ public class StoryControllerImpl implements IStoryController {
                 e.printStackTrace();
             }
             story.setLocation(cursor.getString(cursor.getColumnIndexOrThrow(TableEntry.LOCATION)));
+            story.setLat(cursor.getDouble(cursor.getColumnIndexOrThrow(TableEntry.LAT)));
+            story.setLng(cursor.getDouble(cursor.getColumnIndexOrThrow(TableEntry.LNG)));
             story.setAuthor(UserControllerImpl.getInstance().getSingleRecord(cursor.getInt(cursor.getColumnIndexOrThrow(TableEntry.AUTHORID))));
             stories.add(story);
         }
@@ -340,6 +361,8 @@ public class StoryControllerImpl implements IStoryController {
         values.put(TableEntry.TEXT, story.getText());
         values.put(TableEntry.DATE, Utils.dateFormat.format(story.getDate()));
         values.put(TableEntry.LOCATION, story.getLocation());
+        values.put(TableEntry.LAT, story.getLat());
+        values.put(TableEntry.LNG, story.getLng());
         values.put(TableEntry.AUTHORID, story.getAuthor().getId());
 
         String where = TableEntry.ID + " = ?";
