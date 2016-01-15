@@ -1,5 +1,7 @@
 package at.ac.tuwien.inso.refugeestories.domain;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Date;
 import java.util.List;
 
@@ -83,4 +85,8 @@ public class Story {
     public double getLng() { return lng; }
 
     public void setLng(double lng) { this.lng = lng; }
+
+    public LatLng getLatLng() {
+        return new LatLng(lat, lng);
+    }
 }

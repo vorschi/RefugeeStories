@@ -24,6 +24,7 @@ import at.ac.tuwien.inso.refugeestories.MainActivity;
 import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.domain.Story;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentCreateNewStory;
+import at.ac.tuwien.inso.refugeestories.fragments.FragmentLocation;
 import at.ac.tuwien.inso.refugeestories.fragments.FragmentTimeline;
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
 import at.ac.tuwien.inso.refugeestories.utils.Utils;
@@ -68,7 +69,7 @@ public class TimelineAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         ImageButton btnEdit;
         ImageButton btnDelete;
-
+        ImageButton btnMap;
         TextView txtTimelineItemTitle;
         TextView txtTimelineItemDetails;
         TextView txtTimelineItemText;
@@ -82,7 +83,7 @@ public class TimelineAdapter extends BaseAdapter {
                     .inflate(R.layout.timeline_item, parent, false);
             btnEdit = (ImageButton) convertView.findViewById(R.id.btn_edit);
             btnDelete = (ImageButton) convertView.findViewById(R.id.btn_delete);
-
+            btnMap = (ImageButton) convertView.findViewById(R.id.btn_map);
             txtTimelineItemTitle = (TextView) convertView.findViewById(R.id.timeline_item_title);
             txtTimelineItemDetails = (TextView) convertView.findViewById(R.id.timeline_item_details);
             txtTimelineItemText = (TextView) convertView.findViewById(R.id.timeline_item_text);
@@ -90,11 +91,12 @@ public class TimelineAdapter extends BaseAdapter {
             indicator = (LinePageIndicator) convertView.findViewById(R.id.indicator);
             divider = (ImageView) convertView.findViewById(R.id.timeline_divider);
             convertView.setTag(new ViewHolder(txtTimelineItemTitle, txtTimelineItemDetails, txtTimelineItemText,
-                    viewPager, indicator, divider, btnEdit, btnDelete));
+                    viewPager, indicator, divider, btnEdit, btnDelete, btnMap));
         } else {
             ViewHolder viewHolder = (ViewHolder) convertView.getTag();
             btnEdit = viewHolder.btnEdit;
             btnDelete = viewHolder.btnDelete;
+            btnMap = viewHolder.btnMap;
             txtTimelineItemTitle = viewHolder.txtTimelineItemTitle;
             txtTimelineItemDetails = viewHolder.txtTimelineItemDetails;
             txtTimelineItemText = viewHolder.txtTimelineItemText;
@@ -131,6 +133,15 @@ public class TimelineAdapter extends BaseAdapter {
             btnEdit.setVisibility(Button.GONE);
             btnDelete.setVisibility(Button.GONE);
         }
+
+        btnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentLocation fragmentLocation = FragmentLocation.getInstance();
+                fragmentLocation.setStory(getItem(position));
+                ((MainActivity) fragmentTimeline.getActivity()).pushFragments(fragmentLocation, true, Consts.TAB_EDIT_STORY);
+            }
+        });
 
         txtTimelineItemTitle.setText(story.getTitle());
         txtTimelineItemDetails.setText(Utils.dateFormat.format(stories.get(position).getDate()) + ", " + stories.get(position).getLocation());
@@ -182,6 +193,7 @@ public class TimelineAdapter extends BaseAdapter {
 
         public final ImageButton btnEdit;
         public final ImageButton btnDelete;
+        public final ImageButton btnMap;
 
         public final TextView txtTimelineItemTitle;
         public final TextView txtTimelineItemDetails;
@@ -192,10 +204,10 @@ public class TimelineAdapter extends BaseAdapter {
 
         public ViewHolder(TextView txtTimelineItemTitle, TextView txtTimelineItemDetails,
                           TextView txtTimelineItemText, ViewPager viewPager, LinePageIndicator indicator,
-                          ImageView divider, ImageButton btnEdit, ImageButton btnDelete) {
+                          ImageView divider, ImageButton btnEdit, ImageButton btnDelete, ImageButton btnMap) {
             this.btnEdit = btnEdit;
             this.btnDelete = btnDelete;
-
+            this.btnMap = btnMap;
             this.txtTimelineItemTitle = txtTimelineItemTitle;
             this.txtTimelineItemDetails = txtTimelineItemDetails;
             this.txtTimelineItemText = txtTimelineItemText;
