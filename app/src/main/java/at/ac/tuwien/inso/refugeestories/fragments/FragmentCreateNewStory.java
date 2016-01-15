@@ -237,19 +237,22 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
         story.setAuthor(sharedPrefs.getUser());
         story.setTitle(Utils.capitalize(storyTitle.getText().toString()));
 
-        story.setLocation(selectedPrediction.getDescription());
-        DetailsProviderTask task = new DetailsProviderTask();
-
-        try {
-            LatLng latlng = task.execute(selectedPrediction.getPlaceId()).get();
-            if(latlng != null) {
-                story.setLat(latlng.latitude);
-                story.setLng(latlng.longitude);
+        if(selectedPrediction != null) {
+            story.setLocation(selectedPrediction.getDescription());
+            DetailsProviderTask task = new DetailsProviderTask();
+            try {
+                LatLng latlng = task.execute(selectedPrediction.getPlaceId()).get();
+                if (latlng != null) {
+                    story.setLat(latlng.latitude);
+                    story.setLng(latlng.longitude);
+                } else {
+                    // TODO: network error policy
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
         }
 
         try { // TODO leave original date if updating or not?
@@ -288,7 +291,6 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
             imageControllerInstance.deleteAllRecords(story);
             addImages();
         }
-
         return true;
     }
 

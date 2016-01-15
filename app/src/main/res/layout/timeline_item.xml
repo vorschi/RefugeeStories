@@ -15,43 +15,58 @@
             android:layout_height="wrap_content"
             android:background="@drawable/timeline_header_shape">
 
-            <ImageButton
-                android:id="@+id/btn_delete"
-                android:background="@drawable/ic_clear_white_24dp"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/title_and_controls"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
-                android:layout_alignParentRight="true"
-                android:visibility="gone"/>
-
-            <ImageButton
-                android:id="@+id/btn_edit"
-                android:background="@drawable/ic_mode_edit_white_18dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="60dp"
-                android:visibility="gone"/>
-
-            <TextView
-                android:id="@+id/timeline_item_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/placeholder"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/timeline_item_title"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/placeholder"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:id="@+id/controls"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical">
+
+                    <ImageButton
+                        android:id="@+id/btn_delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/ic_clear_white_24dp"
+                        android:visibility="gone" />
+
+                    <ImageButton
+                        android:id="@+id/btn_edit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="8dp"
+                        android:layout_toLeftOf="@id/btn_delete"
+                        android:background="@drawable/ic_mode_edit_white_18dp"
+                        android:visibility="gone" />
+                </RelativeLayout>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/timeline_item_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/timeline_item_title"
+                android:layout_below="@id/title_and_controls"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
