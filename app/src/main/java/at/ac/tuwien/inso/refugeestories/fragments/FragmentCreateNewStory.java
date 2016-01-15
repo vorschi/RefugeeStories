@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
@@ -18,15 +19,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -39,20 +40,25 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import at.ac.tuwien.inso.refugeestories.MainActivity;
 import at.ac.tuwien.inso.refugeestories.R;
 import at.ac.tuwien.inso.refugeestories.domain.CustomGalleryItem;
 import at.ac.tuwien.inso.refugeestories.domain.Image;
+import at.ac.tuwien.inso.refugeestories.domain.Prediction;
 import at.ac.tuwien.inso.refugeestories.domain.Story;
 import at.ac.tuwien.inso.refugeestories.persistence.ImageControllerImpl;
 import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
 import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
+import at.ac.tuwien.inso.refugeestories.utils.adapters.PlaceAutoCompleteAdapter;
+import at.ac.tuwien.inso.refugeestories.utils.components.CustomAutoCompleteTextView;
 import at.ac.tuwien.inso.refugeestories.utils.components.ExpandableGridView;
 import at.ac.tuwien.inso.refugeestories.utils.SharedPreferencesHandler;
 import at.ac.tuwien.inso.refugeestories.utils.Utils;
 import at.ac.tuwien.inso.refugeestories.utils.adapters.GalleryAdapter;
+import at.ac.tuwien.inso.refugeestories.utils.tasks.MyGooglePlacesApi;
 
 /**
  * Created by Amer Salkovic on 14.11.2015.
@@ -64,9 +70,12 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
     private Context context;
 
     private TextView storyTitle;
-    private TextView storyLocation;
     private TextView storyDate;
     private TextView storyText;
+
+    private CustomAutoCompleteTextView storyLocation;
+    private PlaceAutoCompleteAdapter placeAutoCompleteAdapter;
+    private Prediction selectedPrediction;
 
     private Button btnPublishStory;
     private ImageButton btnAddPhotos;
@@ -89,12 +98,14 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
     private ImageControllerImpl imageControllerInstance;
     private MyDatabaseHelper dbHelper;
 
+    private MyGooglePlacesApi placesApi;
+
     //dialog
     AlertDialog.Builder builder;
     AlertDialog selectPhotosDialog;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View contentView = inflater.inflate(R.layout.fragment_create_new_story, container, false);
 
         //init db, shared preferences and imageLoader
@@ -108,11 +119,20 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
 
         selectedImages = new ArrayList<>();
         initImageLoader();
+        placesApi = new MyGooglePlacesApi();
 
         //init other components
         storyTitle = (TextView) contentView.findViewById(R.id.new_story_title);
 
-        storyLocation = (TextView) contentView.findViewById(R.id.new_story_location);
+        storyLocation = (CustomAutoCompleteTextView) contentView.findViewById(R.id.atv_location);
+        placeAutoCompleteAdapter = new PlaceAutoCompleteAdapter(context, placesApi);
+        storyLocation.setAdapter(placeAutoCompleteAdapter);
+        storyLocation.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view,  int position, long id) {
+                selectedPrediction = placeAutoCompleteAdapter.getItem(position);
+            }
+        });
 
         storyDate = (TextView) contentView.findViewById(R.id.new_story_date);
         storyDate.setText(Utils.dateFormat.format(new Date()));
@@ -216,7 +236,21 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
 
         story.setAuthor(sharedPrefs.getUser());
         story.setTitle(Utils.capitalize(storyTitle.getText().toString()));
-        story.setLocation(Utils.capitalize(storyLocation.getText().toString()));
+
+        story.setLocation(selectedPrediction.getDescription());
+        DetailsProviderTask task = new DetailsProviderTask();
+
+        try {
+            LatLng latlng = task.execute(selectedPrediction.getPlaceId()).get();
+            if(latlng != null) {
+                story.setLat(latlng.latitude);
+                story.setLng(latlng.longitude);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
         try { // TODO leave original date if updating or not?
             story.setDate(Utils.dateFormat.parse(storyDate.getText().toString()));
@@ -242,7 +276,7 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
 
         //Images
         if (selectedImages.isEmpty()) {
-            if(!isNew) {
+            if (!isNew) {
                 imageControllerInstance.deleteAllRecords(story);
             }
             return true; //Ok, images are not required / not changed
@@ -342,12 +376,12 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
             String monthOfYearString;
             monthOfYear++;
 
-            if(dayOfMonth < 10) {
+            if (dayOfMonth < 10) {
                 dayOfMonthString = "0" + dayOfMonth;
             } else {
                 dayOfMonthString = Integer.toString(dayOfMonth);
             }
-            if(monthOfYear < 10) {
+            if (monthOfYear < 10) {
                 monthOfYearString = "0" + monthOfYear;
             } else {
                 monthOfYearString = Integer.toString(monthOfYear);
@@ -410,6 +444,15 @@ public class FragmentCreateNewStory extends Fragment implements OnDateSetListene
         }
 
         return true;
+    }
+
+    private class DetailsProviderTask extends AsyncTask<String, Void, LatLng> {
+
+        @Override
+        protected LatLng doInBackground(String... strings) {
+            return placesApi.getPlaceDetails(strings[0]);
+        }
+
     }
 
 }
