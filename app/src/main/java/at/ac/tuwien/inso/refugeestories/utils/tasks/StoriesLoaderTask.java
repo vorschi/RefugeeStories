@@ -21,7 +21,7 @@ public class StoriesLoaderTask extends LoaderTask {
 
     @Override
     protected List<Story> doInBackground(SparseArray... sparseArrays) {
-        if (sparseArrays.length <= 0 || sparseArrays[0].size() != 5) {
+        if (sparseArrays.length <= 0 || sparseArrays[0].size() != 6) {
             throw new InvalidParameterException("Invalid or missing parameters");
         }
         SparseArray params = sparseArrays[0];
@@ -30,7 +30,8 @@ public class StoriesLoaderTask extends LoaderTask {
                 (int) params.get(Consts.OFFSET),
                 (int) params.get(Consts.AUTHOR_ID),
                 (String) params.get(Consts.COLUMN),
-                (String) params.get(Consts.ORDER)
+                (String) params.get(Consts.ORDER),
+                (String) params.get(Consts.SEARCH)
         );
         for (Story story : stories) {
             story.setImages(imageControllerInstance.getImagesByStoryId(story.getId()));

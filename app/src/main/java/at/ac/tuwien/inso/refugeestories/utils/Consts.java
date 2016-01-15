@@ -39,6 +39,7 @@ public class Consts {
     public static final int AUTHOR_ID = 2;
     public static final int COLUMN = 3;
     public static final int ORDER = 4;
+    public static final int SEARCH = 5;
 
     //Title photo
     public static final int TITLE_PHOTO = 0;

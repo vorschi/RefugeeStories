@@ -111,17 +111,31 @@ public class StoryControllerImpl implements IStoryController {
      * @param userId - id of a current user, in order to avoid fetching of his own stories
      * @return list of stories for explore view
      */
-    public List<Story> getOrderedStories(int limit, int offset, int userId, String column, String order) {
+    public List<Story> getOrderedStories(int limit, int offset, int userId, String column, String order, String search) {
         SQLiteDatabase db = myDbHelper.getReadableDatabase();
 
-        String query = "SELECT " + TableEntry.ID + ", " + TableEntry.TITLE + ", " + TableEntry.TEXT + ", " +
-                       "substr(date, 7, 4)||\"-\"||substr(date, 4, 2)||\"-\"||substr(date,0,3) as date, " +
-                       TableEntry.LOCATION + ", " + TableEntry.LAT + ", " + TableEntry.LNG +
-                       ", " + TableEntry.AUTHORID +
-                       " FROM " + TABLE_NAME +
-                       " WHERE " + TableEntry.AUTHORID + " <> " + userId +
-                       " ORDER BY " + column + " " + order +
-                       " LIMIT " + limit + " OFFSET " + offset;
+        String[] searchWords = search.split("\\s*(;|,|\\s)\\s*");
+
+        String query = "SELECT s." + TableEntry.ID + ", s." + TableEntry.TITLE + ", s." + TableEntry.TEXT + ", " +
+                       "substr(s.date, 7, 4)||\"-\"||substr(s.date, 4, 2)||\"-\"||substr(s.date,0,3) as date, s." +
+                       TableEntry.LOCATION + ", s." + TableEntry.LAT + ", s." + TableEntry.LNG +
+                       ", s." + TableEntry.AUTHORID +
+                       " FROM " + TABLE_NAME + " s , " + UserControllerImpl.TABLE_NAME + " u" +
+                       " WHERE s." + TableEntry.AUTHORID + " <> " + userId +
+                       " AND s." + TableEntry.AUTHORID + " = u." + UserControllerImpl.TableEntry.ID;
+
+        for(int i=0; i < searchWords.length; i++) {
+            query = query + " AND (s." + TableEntry.TITLE + " like '%" + searchWords[i] +
+                    "%' OR s." + TableEntry.TEXT + " like '%" + searchWords[i] +
+                    "%' OR s." + TableEntry.LOCATION + " like '%" + searchWords[i] +
+                    "%' OR u." + UserControllerImpl.TableEntry.FIRSTNAME + " like '%" + searchWords[i] +
+                    "%' OR u." + UserControllerImpl.TableEntry.LASTNAME + " like '%" + searchWords[i] +
+                    "%' OR u." + UserControllerImpl.TableEntry.NATIONALITY + " like '%" + searchWords[i] +
+                    "%' OR u." + UserControllerImpl.TableEntry.INTERESTS + " like '%" + searchWords[i] + "%')";
+        }
+
+        query = query + " ORDER BY " + column + " " + order +
+                        " LIMIT " + limit + " OFFSET " + offset;
 
         Log.i(StoryControllerImpl.class.getSimpleName(), query);
         Cursor cursor = db.rawQuery(query, null);

@@ -40,6 +40,7 @@ public class FragmentStory extends Fragment {
     private int offset;
     private String column;
     private String order;
+    private String search;
 
     private Context context;
 
@@ -67,6 +68,7 @@ public class FragmentStory extends Fragment {
         offset = 0;
         column = StoryControllerImpl.TableEntry.DATE;
         order = Consts.DESC;
+        search = "";
 
         //initialize recyclerView and other components
         myStoriesView = (RecyclerView) contentView.findViewById(R.id.my_stories_view);
@@ -142,6 +144,7 @@ public class FragmentStory extends Fragment {
         params.append(Consts.AUTHOR_ID, sharedPrefs.getUser().getId());
         params.append(Consts.COLUMN, column);
         params.append(Consts.ORDER, order);
+        params.append(Consts.SEARCH, search);
 
         /*
         execute task with limit and offset, userId, (sort) column and order params
@@ -180,6 +183,15 @@ public class FragmentStory extends Fragment {
         offset = 0;
         this.column = column;
         this.order = order;
+        endlessRecyclerOnScrollListener.setPreviousTotal(0);
+        executeLoaderTask();
+    }
+
+    public void onSearchStringEntered(String search) {
+        stories.clear();
+        storyAdapter.updateStories(stories);
+        offset = 0;
+        this.search = search;
         endlessRecyclerOnScrollListener.setPreviousTotal(0);
         executeLoaderTask();
     }

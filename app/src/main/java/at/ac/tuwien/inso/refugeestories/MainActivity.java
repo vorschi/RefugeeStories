@@ -1,7 +1,10 @@
 package at.ac.tuwien.inso.refugeestories;
 
 import android.app.AlertDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +48,7 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
 
     private TextView label;
     private MenuItem follow_pic;
+    private MenuItem search_pic;
     private Menu menu;
     private AlertDialog optionDialog;
 
@@ -86,6 +91,13 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
         dbHelper = new MyDatabaseHelper(this.getBaseContext());
         UserControllerImpl.initializeInstance(dbHelper);
         userControllerInstance = UserControllerImpl.getInstance();
+
+        handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
     }
 
     private View createTabView(final int id, final String text) {
@@ -213,6 +225,16 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
             }
         }
 
+        // Associate searchable configuration with the SearchView
+        search_pic = menu.findItem(R.id.search_btn);
+        if(search_pic != null) {
+            SearchManager searchManager =
+                    (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            SearchView searchView =
+                    (SearchView) search_pic.getActionView();
+            searchView.setSearchableInfo(
+                    searchManager.getSearchableInfo(getComponentName()));
+        }
         return true;
     }
 
@@ -369,6 +391,20 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
                     }
                 });
         optionDialog = builder.create();
+    }
+
+    private void showResults(String query) {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.realtabcontent);
+        if(currentFragment instanceof FragmentStory) {
+            ((FragmentStory) currentFragment).onSearchStringEntered(query);
+        }
+    }
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            showResults(query);
+        }
     }
 
 }
