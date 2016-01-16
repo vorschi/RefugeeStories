@@ -16,6 +16,7 @@ public class Consts {
     public static final String TAB_MYPROFILE = "My profile";
     public static final String TAB_NEWSTORY = "Create new story";
     public static final String TAB_EDIT_STORY = "Edit story";
+    public static final String TAB_MAP = "Map";
 
     //STORY DIALOG OPTIONS
     public static final int EDIT = 0;

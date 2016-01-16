@@ -11,12 +11,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TabHost;
@@ -150,13 +152,10 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
         public void onTabChanged(String tabId) {
             //Use FragmentStory for both stories and explore
             if (tabId.equals(Consts.TAB_MYSTORIES)) {
-                pushFragments(FragmentTimeline.getInstance(), false, tabId);
-                System.out.println("mystories");
+               pushFragments(FragmentTimeline.getNewInstance(), false, tabId);
             }
-            else if (tabId.equals(Consts.TAB_EXPLORE)) {
+            else if (tabId.equals(Consts.TAB_EXPLORE))
                 pushFragments(FragmentStory.getInstance(), false, tabId);
-                System.out.println("explore");
-            }
             else
                 pushFragments(FragmentNotification.getInstance(), false, tabId);
         }
@@ -285,7 +284,7 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
                 if(user.isMeetingRequested(getTimelineUser())) {
                     writeToast(getString(R.string.meeting_request_sent_already));
                 } else {
-                    createOptionsDialog(R.string.meeting_check, R.string.meeting_true, item);
+                    createMessageDialog(R.string.meeting_check, R.string.meeting_true, item);
                     optionDialog.show();
                 }
                 return true;
@@ -322,6 +321,10 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+
+            case R.id.settings_btn:
+                writeToast("This feature is currently not available!");
+                return true;
         }
     }
 
@@ -390,6 +393,39 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
                         // User cancelled the dialog
                     }
                 });
+        optionDialog = builder.create();
+    }
+
+    private void createMessageDialog(final int message, final int check, final MenuItem item){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(message);
+
+        final EditText input = new EditText(this);
+
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        builder.setPositiveButton(check, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(check == R.string.meeting_true) {
+                    FragmentTimeline timeline = FragmentTimeline.getInstance();
+                    Person user = sharedPrefs.getUser();
+                    if(!user.isMeetingRequested(timeline.getPerson())) {
+                        userControllerInstance.createMeetingRecord(timeline.getPerson(), user);
+                        user.getRequestedMeetingUsers().add(timeline.getPerson());
+                        writeToast(getString(R.string.meeting_request_sent));
+                        sharedPrefs.putUser(user);
+                    }
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+
         optionDialog = builder.create();
     }
 

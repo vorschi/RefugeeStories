@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.Date;
 
 import at.ac.tuwien.inso.refugeestories.R;
@@ -48,6 +50,7 @@ public class FragmentUser extends Fragment {
     private TextView lbl_email;
     private String temp="";
     private BitmapWorkerTask bitmapWorker;
+    private TextView like_text;
 
     private ImageButton likeButton;
     private Button showFriendsButton;
@@ -73,6 +76,7 @@ public class FragmentUser extends Fragment {
         user_interests = (TextView) contentView.findViewById(R.id.user_interests);
         user_email = (TextView) contentView.findViewById(R.id.user_email);
         lbl_email = (TextView) contentView.findViewById(R.id.lbl_email);
+        like_text = (TextView) contentView.findViewById(R.id.like_text);
 
         likeButton = (ImageButton) contentView.findViewById(R.id.btn_like);
         showFriendsButton = (Button) contentView.findViewById(R.id.btn_see_friendlist);
@@ -99,6 +103,9 @@ public class FragmentUser extends Fragment {
                         writeToast(getString(R.string.like));
                     }
                     sharedPrefs.putUser(user);
+                    //TODO not working, list is always null
+                    //also user-object is current user, cannot get liked-number of actual visited profile
+                    //like_text.setText("Appreciations: "+user.getLikers().size());
                 }
             }
         });
@@ -106,8 +113,7 @@ public class FragmentUser extends Fragment {
 
         showFriendsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "OPENING LIST OF FRIENDS", Toast.LENGTH_LONG);
-                toast.show();
+                writeToast("This feature is currently not available!");
             }
         });
 
@@ -129,8 +135,6 @@ public class FragmentUser extends Fragment {
 
     public void setData(Person user, boolean isMyUser) {
         this.isMyUser = isMyUser;
-        //TODO:write data in textfields of current profile
-        //dummie-entries
         user_forename.setText(user.getFirstname());
         user_surname.setText(user.getLastname());
         user_country.setText(user.getNationality());
@@ -148,8 +152,6 @@ public class FragmentUser extends Fragment {
         user_gender.setText(user.getGender());
         user_location.setText(user.getLocation());
         user_interests.setText(user.getInterests());
-
-
 
         if (isMyUser) {
             likeButton.setVisibility(View.GONE);
@@ -173,6 +175,8 @@ public class FragmentUser extends Fragment {
         } else {
             likeButton.setImageResource(R.drawable.heart_border_64dp);
         }
+        //TODO
+        //like_text.setText("Appreciations: "+user.getLikedUsers().size());
     }
 
     private void createOptionsDialog(final int message, final int check) {

@@ -76,7 +76,7 @@
     <string name="report_true">Report</string>
     <string name="friendship_check">Do you really want to send a friendship request to this user?</string>
     <string name="friendship_true">Send request</string>
-    <string name="meeting_check">Do you really want to request a meeting with this user?</string>
+    <string name="meeting_check">If you want, leave a message for the user before the request:</string>
     <string name="meeting_true">Request meeting</string>
     <string name="cancel">Cancel</string>
 

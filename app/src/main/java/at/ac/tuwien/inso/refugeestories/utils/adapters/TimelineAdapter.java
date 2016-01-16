@@ -139,7 +139,7 @@ public class TimelineAdapter extends BaseAdapter {
             public void onClick(View view) {
                 FragmentLocation fragmentLocation = FragmentLocation.getInstance();
                 fragmentLocation.setStory(getItem(position));
-                ((MainActivity) fragmentTimeline.getActivity()).pushFragments(fragmentLocation, true, Consts.TAB_EDIT_STORY);
+                ((MainActivity) fragmentTimeline.getActivity()).pushFragments(fragmentLocation, true, Consts.TAB_MAP);
             }
         });
 

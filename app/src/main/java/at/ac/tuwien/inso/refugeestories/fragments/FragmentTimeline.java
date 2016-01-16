@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Toast;
 
+import java.io.FileReader;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
@@ -139,9 +140,14 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
     }
 
     public static FragmentTimeline getInstance() {
-            if (instance == null)
-                instance = new FragmentTimeline();
-            return instance;
+        if (instance == null)
+            instance = new FragmentTimeline();
+        return instance;
+    }
+
+    public static FragmentTimeline getNewInstance(){
+        instance = new FragmentTimeline();
+        return instance;
     }
 
     public String getName() {
