@@ -147,7 +147,20 @@ public class Person {
         }
     }
 
+    public void removeLiker(Person person) {
+        for(Person liker : getLikers()) {
+            if(liker.getId() == person.getId()) {
+                getLikers().remove(liker);
+                return;
+            }
+        }
+    }
+
     public int countLikers() {
+        List<Person> likers = getLikers();
+        if(likers == null) {
+            return 0;
+        }
         return getLikers().size();
     }
 

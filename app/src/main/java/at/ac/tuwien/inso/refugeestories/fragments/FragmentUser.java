@@ -91,6 +91,7 @@ public class FragmentUser extends Fragment {
             public void onClick(View v) {
                 if(currentUser != null) {
                     Person user = sharedPrefs.getUser();
+                    int likers = currentUser.countLikers();
                     if (user.isLiked(currentUser)) {
                         userControllerInstance.deleteLikerRecord(currentUser, user);
                         user.removeLikedUser(currentUser);
@@ -99,13 +100,12 @@ public class FragmentUser extends Fragment {
                     } else {
                         userControllerInstance.createLikeRecord(currentUser, user);
                         user.getLikedUsers().add(currentUser);
+                        likers = currentUser.countLikers() + 1;
                         likeButton.setImageResource(R.drawable.heart_full_64dp);
                         writeToast(getString(R.string.like));
                     }
                     sharedPrefs.putUser(user);
-                    //TODO not working, list is always null
-                    //also user-object is current user, cannot get liked-number of actual visited profile
-                    //like_text.setText("Appreciations: "+user.getLikers().size());
+                    like_text.setText("Appreciations: " + likers);
                 }
             }
         });
@@ -170,13 +170,15 @@ public class FragmentUser extends Fragment {
         bitmapWorker = new BitmapWorkerTask(userImage);
         bitmapWorker.execute(currentUser.getImg());
 
+        int likers = currentUser.countLikers();
         if (sharedPrefs.getUser().isLiked(currentUser)) {
             likeButton.setImageResource(R.drawable.heart_full_64dp);
+            likers = currentUser.countLikers() + 1;
         } else {
             likeButton.setImageResource(R.drawable.heart_border_64dp);
         }
         //TODO
-        //like_text.setText("Appreciations: "+user.getLikedUsers().size());
+        like_text.setText("Appreciations: "+ likers);
     }
 
     private void createOptionsDialog(final int message, final int check) {
