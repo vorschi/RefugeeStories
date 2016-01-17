@@ -32,8 +32,8 @@ public class FragmentNotification extends Fragment {
             @Override
             public void onClick(View view) {
                 //TODO redirect to the latest story of Sami Turku
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "JAAAAAAAAAAAAAAAAAAAAAAAAAAAA", Toast.LENGTH_SHORT);
-                toast.show();
+                //Toast toast = Toast.makeText(getActivity().getApplicationContext(), "JAAAAAAAAAAAAAAAAAAAAAAAAAAAA", Toast.LENGTH_SHORT);
+                //toast.show();
             }
         });
         but2 = (RelativeLayout)contentView.findViewById(R.id.not_but2);
@@ -41,8 +41,8 @@ public class FragmentNotification extends Fragment {
             @Override
             public void onClick(View view) {
                 //TODO redirect to latest story of Stefan Mayr
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "JAAAAAAAAAAAAAAAAAAAAAAAAAAAA", Toast.LENGTH_SHORT);
-                toast.show();
+                //Toast toast = Toast.makeText(getActivity().getApplicationContext(), "JAAAAAAAAAAAAAAAAAAAAAAAAAAAA", Toast.LENGTH_SHORT);
+                //toast.show();
             }
         });
         but3 = (RelativeLayout)contentView.findViewById(R.id.not_but3);
@@ -50,8 +50,8 @@ public class FragmentNotification extends Fragment {
             @Override
             public void onClick(View view) {
                 //TODO redirect to your own timeline
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "JAAAAAAAAAAAAAAAAAAAAAAAAAAAA", Toast.LENGTH_SHORT);
-                toast.show();
+                //Toast toast = Toast.makeText(getActivity().getApplicationContext(), "JAAAAAAAAAAAAAAAAAAAAAAAAAAAA", Toast.LENGTH_SHORT);
+                //toast.show();
             }
         });
 

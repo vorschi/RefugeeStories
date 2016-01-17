@@ -293,13 +293,10 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
                 createOptionsDialog(R.string.report_check, R.string.report_true, item);
                 optionDialog.show();
                 return true;
-
-            //TODO: implement filter-options
             case R.id.menuSortNewest:
                 currentFragment = getSupportFragmentManager().findFragmentById(R.id.realtabcontent);
                 if(currentFragment instanceof FragmentStory) {
                     ((FragmentStory) currentFragment).onSortOptionSelected(StoryControllerImpl.TableEntry.DATE, Consts.DESC);
-                    writeToast("sort by newest");
                     return true;
                 } else {
                     return false;
@@ -308,17 +305,14 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
                 currentFragment = getSupportFragmentManager().findFragmentById(R.id.realtabcontent);
                 if(currentFragment instanceof FragmentStory) {
                     ((FragmentStory) currentFragment).onSortOptionSelected(StoryControllerImpl.TableEntry.DATE, Consts.ASC);
-                    writeToast("sort by oldest");
                     return true;
                 } else {
                     return false;
                 }
-            case R.id.menuSortNearest:
-                // right button
-                return true;
-            case R.id.menuSortFarthest:
-                // right button
-                return true;
+//            case R.id.menuSortNearest:
+//                return true;
+//            case R.id.menuSortFarthest:
+//                return true;
             default:
                 return super.onOptionsItemSelected(item);
 

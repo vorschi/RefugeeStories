@@ -18,12 +18,12 @@
             <item
                 android:id="@+id/menuSortOldest"
                 android:title="Sort by oldest" />
-            <item
-                android:id="@+id/menuSortNearest"
-                android:title="Sort by nearset" />
-            <item
-                android:id="@+id/menuSortFarthest"
-                android:title="Sort by farthest"/>
+            <!--<item-->
+                <!--android:id="@+id/menuSortNearest"-->
+                <!--android:title="Sort by nearset" />-->
+            <!--<item-->
+                <!--android:id="@+id/menuSortFarthest"-->
+                <!--android:title="Sort by farthest"/>-->
         </menu>
     </item>
 </menu>
