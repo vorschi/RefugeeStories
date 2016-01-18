@@ -74,8 +74,9 @@ public class FragmentNotification extends Fragment {
             @Override
             public void onClick(View view) {
                 //redirect to your own timeline
-                FragmentTimeline timeline = FragmentTimeline.getInstance();
-                ((MainActivity) getActivity()).pushFragments(timeline, false, Consts.TAB_MYSTORIES);
+                //FragmentTimeline timeline = FragmentTimeline.getInstance();
+                ((MainActivity) getActivity()).myStories();
+               // ((MainActivity) getActivity()).pushFragments(timeline, false, Consts.TAB_MYSTORIES);
             }
         });
 

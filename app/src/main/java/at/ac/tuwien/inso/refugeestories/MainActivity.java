@@ -45,7 +45,7 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
     private final String TAG = this.getClass().getSimpleName();
 
     public static final String M_CURRENT_TAB = "M_CURRENT_TAB";
-    private TabHost mTabHost;
+    public TabHost mTabHost;
     private String mCurrentTab;
 
     private TextView label;
@@ -435,6 +435,10 @@ public class MainActivity extends FragmentActivity implements OnStorySelectedLis
             String query = intent.getStringExtra(SearchManager.QUERY);
             showResults(query);
         }
+    }
+
+    public void myStories(){
+        mTabHost.setCurrentTab(0);
     }
 
 }
