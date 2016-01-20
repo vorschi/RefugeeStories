@@ -20,6 +20,7 @@ import at.ac.tuwien.inso.refugeestories.domain.Story;
 import at.ac.tuwien.inso.refugeestories.persistence.ImageControllerImpl;
 import at.ac.tuwien.inso.refugeestories.persistence.MyDatabaseHelper;
 import at.ac.tuwien.inso.refugeestories.persistence.StoryControllerImpl;
+import at.ac.tuwien.inso.refugeestories.persistence.UserControllerImpl;
 import at.ac.tuwien.inso.refugeestories.utils.Consts;
 
 /**
@@ -73,9 +74,14 @@ public class FragmentNotification extends Fragment {
         but3.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                //redirect to your own timeline
+                //redirect to user Adele Luther
                 //FragmentTimeline timeline = FragmentTimeline.getInstance();
-                ((MainActivity) getActivity()).myStories();
+                FragmentTimeline timeline = FragmentTimeline.getInstance();
+                Story s = getStory(17);
+                timeline.onStorySelected(s);
+                Person p = s.getAuthor();
+                ((MainActivity) getActivity()).pushFragments(FragmentUser.getInstance(), true, Consts.TAB_USER);
+                FragmentUser.getInstance().setData(p, false);
                // ((MainActivity) getActivity()).pushFragments(timeline, false, Consts.TAB_MYSTORIES);
             }
         });

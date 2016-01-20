@@ -151,8 +151,12 @@ public class FragmentTimeline extends Fragment implements FragmentStory.OnStoryS
     }
 
     public String getName() {
-        return (currentPerson.getId() == sharedPrefs.getUser().getId()) ?
-                Consts.TAB_MYSTORIES : (currentPerson.getFirstname() + " " + currentPerson.getLastname());
+        if(sharedPrefs != null) {
+            return (currentPerson.getId() == sharedPrefs.getUser().getId()) ?
+                    Consts.TAB_MYSTORIES : (currentPerson.getFirstname() + " " + currentPerson.getLastname());
+        } else {
+            return currentPerson.getFirstname() + " " + currentPerson.getLastname();
+        }
     }
 
     public Person getPerson(){
